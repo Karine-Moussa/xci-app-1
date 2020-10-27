@@ -14,70 +14,16 @@ library(plotly)
 # For now, just setting it to where this script is saved
 current_path = rstudioapi::getActiveDocumentContext()$path 
 setwd(dirname(current_path ))
+rm(current_path)
 
-# Load files and pre-processed data
-x_expr <- read.delim("data_sources/x_expr.tsv",header=T,sep="\t",na.strings="?")
+### Source Functions ###
+source("functions/format_input_data.R")
+source("functions/create_gene_objects.R")
+
+### Load files and pre-processed data
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
-# Change parameters into a categorical bins
-attach(x_expr)
-XCI=as.factor(XCI)
-GENE=as.factor(GENE)
-
-# Default values
-
-# Functions 
-#### Create gene class: attributes for each gene ######
-create_single_gene_stats <- function(gene)
-    ### User passes in a gene name from the x_expr list
-    ### Function returns the object "<gene>_stats" with attributes of gene
-    ### Usage: assign((paste0(gene, "_stats")), create_single_gene_stats(gene))
-{assign(paste0(gene, "_stats"),
-        # Add any attributes of interest to this list
-        (list(
-            # Gene name
-            gene_name = gene,
-            # Vector of escape calls:
-            escape = c(XCI=x_expr[x_expr$GENE==gene,"XCI"]),
-            # Sample where the gene came from:
-            parent_sample = c(XCI=x_expr[x_expr$GENE==gene,"sample"]),
-            # Escape state (based on Vector of escape calls): 
-            state = ifelse(all(c(XCI=x_expr[x_expr$GENE==gene,"XCI"]) == "S"), "SUPPRESS",
-                           ifelse(all(c(XCI=x_expr[x_expr$GENE==gene,"XCI"]) == "E"),"ESCAPE",
-                                  "VARIABLE")),
-            tau = c(XCI=x_expr[x_expr$GENE==gene,"tau"])
-        )
-        )
-)
-}
-# Create gene class object for multiple genes at once
-create_multiple_gene_stats <- function(gene_list){
-    ### User passes a list of genes 
-    ### Function returns a list of "<gene>_stats" for each passed argument
-    ### Usage 
-    for(gene in gene_list) {
-        assign((paste0(gene, "_stats")), create_single_gene_stats(gene),
-               env = globalenv())
-    }
-}
-
-# Create a table summarizing genes and escape states
-create_table_with_multiple_gene_stats <- function(gene_list){
-    ### User passes a list of genes
-    ### Function returns a table with gene statistics based on 
-    ###   the attributes in the "<gene>_stats" object
-    df <- data.frame(matrix(vector(), 0, 2))
-    for (gene in gene_list){
-        # Create gene stat df
-        gene_stat <- create_single_gene_stats(gene)
-        # Collect parameters of interest and add to gene_stat_table
-        gene_stat_vector <- c(gene_stat$gene_name, gene_stat$state)
-        df <- rbind(df, gene_stat_vector)
-    }
-    names(df)[1] <- "GENE"
-    names(df)[2] <- "ESCAPE.STATE"
-    return(df)
-}
+### Default values #####
 
 # shinyapp
 ui <- fluidPage(title = "XCI Data",
@@ -106,7 +52,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_tau", height = "600px")
+                                plotlyOutput(outputId = "gene_pvalue", height = "600px")
                             )
                         )
                     ),
@@ -132,7 +78,7 @@ ui <- fluidPage(title = "XCI Data",
                                 br(),
                             ),
                             mainPanel(
-                                plotOutput(outputId = "individual_gene_tau_plot")
+                                plotOutput(outputId = "individual_gene_pvalue_plot")
                             )
                         )
                     ),
@@ -158,7 +104,7 @@ server <- function(input, output, session) {
     ##################
     ## TAB 1 OUTPUT
     ##################
-    output$gene_tau <- renderPlotly({
+    output$gene_pvalue <- renderPlotly({
         # This is the interactive plot which covers the default plot
         #validate(
         #    need(input$geneofinterest !="", "Please input a gene of interest")
@@ -167,21 +113,21 @@ server <- function(input, output, session) {
         gene_color <- ifelse(GENE==geneofinterest,"blue",
                         ifelse(GENE!=geneofinterest,"grey",
                             "black"))
-        genetau_color = gene_color
-        mytheme <- theme(axis.text.x=element_blank())
-        genetau_plot <- ggplot(data = x_expr, aes(x=GENE, y=tau)) + 
-            ggtitle('Gene vs. Tau') + 
-            xlab("Gene") + ylab("Tau") + 
+        genepvalue_color = gene_color
+        mytheme <- theme(axis.text.x = element_blank())
+        genepvalue <- ggplot(data = x_expr, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
+            ylim(0, 400) + 
+            labs("GENE vs. -10log(p_value)", x = "Gene", y = "-log10(p_value)") + 
             mytheme + 
-            geom_point(color=genetau_color)
-        # next steps: make this plot look better
-        ggplotly(genetau_plot)
+            geom_point(color=genepvalue_color)
+        genepvalue
+        ggplotly(genetau, tooltip = c("x","y","text"))
     })
     
     ##################
     ## TAB 2 OUTPUT
     ##################
-    output$individual_gene_tau_plot <- renderPlot({
+    output$individual_gene_pvalue_plot <- renderPlot({
         validate(
             need(input$geneofinterest2 !="", "Please input a gene of interest")
         )
