@@ -35,7 +35,7 @@ ui <- fluidPage(title = "XCI Data",
                             # Create a sidebar panel containing input controls ----
                             sidebarPanel(
                                 h3("Observing XCI escape calls from 102 samples"),
-                                autocomplete_input("geneofinterest1", "Gene of Interest:", GENE, value = ""),
+                                autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr[,"GENE"])), value = ""),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -62,7 +62,7 @@ ui <- fluidPage(title = "XCI Data",
                         sidebarLayout(
                             sidebarPanel(
                                 h3("Observing XCI escape calls per Gene"),
-                                autocomplete_input("geneofinterest2", "Gene of Interest:", GENE, value = ""),
+                                autocomplete_input("geneofinterest2", "Gene of Interest:", c(unique(x_expr[,"GENE"])), value = ""),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -138,9 +138,11 @@ server <- function(input, output, session) {
         geneofinterest_tauplot <- ggplot(geneofinterest_tautable, aes(x = gene, y = tau)) +
             ylim(0,.5) + 
             geom_violin(fill = "purple") + 
-            labs("Tau distribution per Gene", x = "Gene", y = "Tau")
+            labs("Tau distribution per Gene", x = "Gene", y = "Tau") 
+            #geom_text(label=paste0('p-value = ', p_value),
+                      #family = 'Helvetica', size = 4)
         geneofinterest_tauplot <- geneofinterest_tauplot + 
-            geom_boxplot(width = 0.01, fill = "gray")
+            geom_boxplot(width = 0.03, fill = "white")
         geneofinterest_tauplot
     })
     

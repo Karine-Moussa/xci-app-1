@@ -12,6 +12,8 @@ create_single_gene_stats <- function(gene)
             gene_id = c(id=x_expr[x_expr$GENE==gene,"gene_id"])[1],
             # Vector of escape calls:
             status = c(stat=x_expr[x_expr$GENE==gene,"status"]),
+            # P_value
+            p_value = c(p=x_expr[x_expr$GENE==gene,"p_value"]),
             # Sample where the gene came from:
             parent_sample = c(ps=x_expr[x_expr$GENE==gene,"sample"]),
             # Escape state (based on Vector of escape calls): 
