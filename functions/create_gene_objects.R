@@ -20,7 +20,8 @@ create_single_gene_stats <- function(gene)
             escape_category = ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "S"), "SUPPRESS",
                            ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "E"),"ESCAPE",
                                   "VARIABLE")),
-            tau = c(tau=x_expr[x_expr$GENE==gene,"tau"])
+            tau = c(tau=x_expr[x_expr$GENE==gene,"tau"]),
+            cell_type = c(ctype=rep("lymphoblast",length(x_expr[x_expr$GENE==gene,"status"])))
         )
         )
 )

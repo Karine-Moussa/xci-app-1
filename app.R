@@ -52,7 +52,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_pvalue", height = "600px")
+                                plotlyOutput(outputId = "gene_pvalue", height = "400px")
                             )
                         )
                     ),
@@ -78,7 +78,8 @@ ui <- fluidPage(title = "XCI Data",
                                 br(),
                             ),
                             mainPanel(
-                                plotOutput(outputId = "individual_gene_pvalue_plot")
+                                fluidRow(plotOutput(outputId = "individual_gene_pvalue_plot")),
+                                fluidRow(dataTableOutput(outputId = "gene_detail_table"))
                             )
                         )
                     ),
@@ -114,14 +115,20 @@ server <- function(input, output, session) {
                         ifelse(GENE!=geneofinterest,"grey",
                             "black"))
         genepvalue_color = gene_color
-        mytheme <- theme(axis.text.x = element_blank())
+        mytheme <- theme(axis.text.x = element_blank(),
+                         plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.5), 
+                         legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
+                         legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
+                         axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
+                         axis.text = element_text(family = "Courier", colour = "cornflowerblue", size = (10), face = "bold"))
         genepvalue <- ggplot(data = x_expr, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
             ylim(0, 400) + 
-            labs("GENE vs. -10log(p_value)", x = "Gene", y = "-log10(p_value)") + 
+            ggtitle("Gene vs. Escape Call") + 
+            xlab("Gene") + ylab("-log10(p_value)") + 
             mytheme + 
             geom_point(color=genepvalue_color)
         genepvalue
-        ggplotly(genetau, tooltip = c("x","y","text"))
+        ggplotly(genepvalue)
     })
     
     ##################
@@ -135,21 +142,39 @@ server <- function(input, output, session) {
         assign("geneofinterest_stats", create_single_gene_stats(geneofinterest))
         geneofinterest_tautable <- data.frame("gene" = rep(geneofinterest_stats$gene_name,length(geneofinterest_stats$tau)),
                                               "tau" = geneofinterest_stats$tau)
+        mytheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (22), hjust = 0.5), 
+                        legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
+                        legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
+                        axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
+                        axis.text = element_text(family = "Courier", colour = "cornflowerblue", size = (16), face = "bold"))
         geneofinterest_tauplot <- ggplot(geneofinterest_tautable, aes(x = gene, y = tau)) +
             ylim(0,.5) + 
             geom_violin(fill = "purple") + 
-            labs("Tau distribution per Gene", x = "Gene", y = "Tau") 
+            ggtitle("Tau Distribution") + 
+            xlab("Gene") + 
+            ylab("Tau") + mytheme
             #geom_text(label=paste0('p-value = ', p_value),
                       #family = 'Helvetica', size = 4)
         geneofinterest_tauplot <- geneofinterest_tauplot + 
             geom_boxplot(width = 0.03, fill = "white")
         geneofinterest_tauplot
     })
+    output$gene_detail_table <- renderDataTable({
+        validate(need(input$geneofinterest2,""))
+        geneofinterest <- rv$geneofinterest2
+        assign(("gene_stats"), create_single_gene_stats(geneofinterest))
+        genestatdf <- data.frame(sample = gene_stats$parent_sample,
+                                 cell_type = gene_stats$cell_type,
+                                 status = gene_stats$status,
+                                 tau = gene_stats$tau,
+                                 p_value = gene_stats$p_value)
+    })
     
     ##################
     ## TAB 3 OUTPUT
     ##################
     output$tau_hist <- renderPlot({
+
         hist(rv$tau_data, breaks = 30, col = "grey", border = "white",
              xlab = "Xi/TotalExpression",
              main = "TAU")
