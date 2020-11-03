@@ -14,7 +14,7 @@ create_single_gene_stats <- function(gene)
             status = c(stat=x_expr[x_expr$GENE==gene,"status"]),
             # P_value (vector)
             p_value = c(p=x_expr[x_expr$GENE==gene,"p_value"]),
-            # Average, min, and max p_value (each single)
+            # Average, min, and max p_value (single)
             avg_p_value = mean(c(x_expr[x_expr$GENE==gene,"p_value"])),
             min_p_value = min(c(x_expr[x_expr$GENE==gene,"p_value"])),
             max_p_value = max(c(x_expr[x_expr$GENE==gene,"p_value"])),
@@ -30,6 +30,10 @@ create_single_gene_stats <- function(gene)
             perc_samples_esc = sum(c(x_expr[x_expr$GENE==gene,"status"]) == "E")/length(c(x_expr[x_expr$GENE==gene,"status"])),
             # Tau (vector)
             tau = c(tau=x_expr[x_expr$GENE==gene,"tau"]),
+            # Average, min, and max tau_value (single)
+            avg_tau_value = mean(c(x_expr[x_expr$GENE==gene,"tau"])),
+            min_tau_value = min(c(x_expr[x_expr$GENE==gene,"tau"])),
+            max_tau_value = max(c(x_expr[x_expr$GENE==gene,"tau"])),
             # Cell Type (vector)
             cell_type = c(ctype=rep("lymphoblast",length(x_expr[x_expr$GENE==gene,"status"])))
         )

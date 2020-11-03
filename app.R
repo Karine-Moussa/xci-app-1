@@ -144,6 +144,9 @@ server <- function(input, output, session) {
         avg_p_value <- geneofinterest_stats$avg_p_value
         min_p_value <- geneofinterest_stats$min_p_value
         max_p_value <- geneofinterest_stats$max_p_value
+        avg_tau_value <- geneofinterest_stats$avg_tau_value
+        min_tau_value <- geneofinterest_stats$min_tau_value
+        max_tau_value <- geneofinterest_stats$max_tau_value
         perc_samples_esc <- geneofinterest_stats$perc_samples_esc
         tautable <- data.frame("gene" = rep(geneofinterest_stats$gene_name,length(geneofinterest_stats$tau)),
                                "tau" = geneofinterest_stats$tau,
@@ -164,16 +167,19 @@ server <- function(input, output, session) {
             xlab("Gene") + 
             ylab("Tau") + mytheme
         geneofinterest_tauplot <- geneofinterest_tauplot + 
+            # Add boxplots
             geom_boxplot(width = 0.03, fill = "white") + 
-            annotate("text", x=labelx, y=labely, 
-                     label=paste0('avg p-value : ', sprintf("%1.3f", avg_p_value)),
-                      family = 'Helvetica', size = 6, hjust = 1) + 
-            annotate("text", x=labelx, y=labely-0.05, 
-                     label=paste0('min p-value : ', sprintf("%1.3f", min_p_value)),
-                     family = 'Helvetica', size = 6, hjust = 1) + 
-            annotate("text", x=labelx, y=labely-0.1, 
-                     label=paste0('max p-value : ', sprintf("%1.3f", max_p_value)),
-                     family = 'Helvetica', size = 6, hjust = 1)
+            # Annotate with tau values and p-values
+            annotate("text", x=labelx-1.0, y=c(labely,labely-0.05,labely-0.1), 
+                     label=c(paste0('avg tau: ', sprintf("%1.3f", avg_tau_value)), 
+                            paste0('min tau: ', sprintf("%1.3f", min_tau_value)),
+                            paste0('max tau: ', sprintf("%1.3f", max_tau_value))),
+                     family = 'Helvetica', color = "steelblue", size = 6, hjust = 0) + 
+            annotate("text", x=labelx, y=c(labely,labely-0.05,labely-0.1), 
+                     label=c(paste0('avg p-value: ', sprintf("%1.3f", avg_p_value)), 
+                             paste0('min p-value: ', sprintf("%1.3f", min_p_value)),
+                             paste0('max p-value: ', sprintf("%1.3f", max_p_value))),
+                     family = 'Helvetica', color = "black", size = 6, hjust = 1)
         geneofinterest_tauplot
     })
     output$individual_gene_pvalue_plot <- renderPlot({plot(iris)})
