@@ -39,15 +39,24 @@ gene_color <-ifelse(GENE==geneofinterest,"blue",
                     ifelse(GENE!=geneofinterest,"grey",
                         "black"))
 genepvalue_color <- gene_color
-# ggplot scatter
-mytheme <- theme(axis.text.x = element_blank())
-genepvalue <- ggplot(data = x_expr, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
-    ylim(0, 400) + 
-    labs("GENE vs. -10log(p_value)", x = "Gene", y = "-log10(p_value)") + 
-    mytheme + 
-    geom_point(color=genepvalue_color)
+# ggplot scatter ONE SAMPLE
+sample_name <- SAMPLE_NAMES[1]
+mytheme <- theme(axis.text.x = element_blank(),
+                 plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.5), 
+                 legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
+                 legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
+                 axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
+                 axis.text = element_text(family = "Courier", colour = "cornflowerblue", size = (10), face = "bold"))
+genepvalue <- ggplot(data = subset(x_expr, sample == sample_name), aes(x = reorder(GENE, start), y = -log10(p_value))) + 
+  ylim(0, 400) + 
+  ggtitle("Gene vs. Escape Call") + 
+  xlab(paste0("Sample ", sample_name," Genes")) + ylab("-log10(p_value)") +
+  mytheme + 
+  geom_point(color="gray")
 genepvalue
-ggplotly(genepvalue, tooltip = c("x","y","text"))
+ggplotly(genepvalue)
+# ggplot scatter PER SAMPLE
+
 
 # ESCAPE STATE FREQUENCY BAR PLOT
 # ggplot bar for gene stats

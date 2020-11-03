@@ -6,5 +6,7 @@ attach(x_expr)
 # Sort by gene start position
 x_expr <- x_expr[order(start),]
 # Format categorical data
-STATUS=as.factor(status)
-GENE=as.factor(GENE)
+STATUS <- as.factor(status)
+GENE <- as.factor(GENE)
+SAMPLE_NAMES <- c(unique(x_expr[,"sample"]))
+P_SIG <- 5e-10

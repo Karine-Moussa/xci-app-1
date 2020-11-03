@@ -120,7 +120,7 @@ server <- function(input, output, session) {
                          legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
                          legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
-                         axis.text = element_text(family = "Courier", colour = "cornflowerblue", size = (10), face = "bold"))
+                         axis.text = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=45))
         genepvalue <- ggplot(data = x_expr, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
             ylim(0, 400) + 
             ggtitle("Gene vs. Escape Call") + 
@@ -149,10 +149,14 @@ server <- function(input, output, session) {
                         axis.text = element_text(family = "Courier", colour = "cornflowerblue", size = (16), face = "bold"))
         geneofinterest_tauplot <- ggplot(geneofinterest_tautable, aes(x = gene, y = tau)) +
             ylim(0,.5) + 
-            geom_violin(fill = "purple") + 
+            geom_violin(fill = "cornflowerblue", alpha = 0.5) + 
             ggtitle("Tau Distribution") + 
             xlab("Gene") + 
-            ylab("Tau") + mytheme
+            ylab("Tau") + mytheme + 
+            geom_text(x=0, y=0, label="label1",
+                      family = 'Helvetica', size = 4) + 
+            geom_text(x=0, y=5, label="label2",
+                      family = 'Helvetica', size = 4)
             #geom_text(label=paste0('p-value = ', p_value),
                       #family = 'Helvetica', size = 4)
         geneofinterest_tauplot <- geneofinterest_tauplot + 
