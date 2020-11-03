@@ -14,8 +14,10 @@ create_single_gene_stats <- function(gene)
             status = c(stat=x_expr[x_expr$GENE==gene,"status"]),
             # P_value (vector)
             p_value = c(p=x_expr[x_expr$GENE==gene,"p_value"]),
-            # Average p_value (single)
+            # Average, min, and max p_value (each single)
             avg_p_value = mean(c(x_expr[x_expr$GENE==gene,"p_value"])),
+            min_p_value = min(c(x_expr[x_expr$GENE==gene,"p_value"])),
+            max_p_value = max(c(x_expr[x_expr$GENE==gene,"p_value"])),
             # Sample where the gene came from (vector)
             parent_sample = c(ps=x_expr[x_expr$GENE==gene,"sample"]),
             # Escape state (based on Vector of escape calls) (single)

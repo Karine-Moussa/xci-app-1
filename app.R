@@ -78,8 +78,8 @@ ui <- fluidPage(title = "XCI Data",
                                 br(),
                             ),
                             mainPanel(
-                                fluidRow(plotOutput(outputId = "individual_gene_pvalue_plot")),
-                                fluidRow(dataTableOutput(outputId = "gene_detail_table"))
+                                (plotOutput(outputId = "individual_gene_tau_plot")),
+                                (dataTableOutput(outputId = "gene_detail_table"))
                             )
                         )
                     ),
@@ -134,35 +134,49 @@ server <- function(input, output, session) {
     ##################
     ## TAB 2 OUTPUT
     ##################
-    output$individual_gene_pvalue_plot <- renderPlot({
+    output$individual_gene_tau_plot <- renderPlot({
         validate(
             need(input$geneofinterest2 !="", "Please input a gene of interest")
         )
         geneofinterest <- rv$geneofinterest2
+        
         assign("geneofinterest_stats", create_single_gene_stats(geneofinterest))
-        geneofinterest_tautable <- data.frame("gene" = rep(geneofinterest_stats$gene_name,length(geneofinterest_stats$tau)),
-                                              "tau" = geneofinterest_stats$tau)
+        avg_p_value <- geneofinterest_stats$avg_p_value
+        min_p_value <- geneofinterest_stats$min_p_value
+        max_p_value <- geneofinterest_stats$max_p_value
+        perc_samples_esc <- geneofinterest_stats$perc_samples_esc
+        tautable <- data.frame("gene" = rep(geneofinterest_stats$gene_name,length(geneofinterest_stats$tau)),
+                               "tau" = geneofinterest_stats$tau,
+                               "p_value" = geneofinterest_stats$p_value)
+        
         mytheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (22), hjust = 0.5), 
                         legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
                         legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
                         axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                         axis.text = element_text(family = "Courier", colour = "cornflowerblue", size = (16), face = "bold"))
-        geneofinterest_tauplot <- ggplot(geneofinterest_tautable, aes(x = gene, y = tau)) +
+        labelx = 1.5
+        labely = 0.25
+        
+        geneofinterest_tauplot <- ggplot(tautable, aes(x = gene, y = tau)) +
             ylim(0,.5) + 
             geom_violin(fill = "cornflowerblue", alpha = 0.5) + 
             ggtitle("Tau Distribution") + 
             xlab("Gene") + 
-            ylab("Tau") + mytheme + 
-            geom_text(x=0, y=0, label="label1",
-                      family = 'Helvetica', size = 4) + 
-            geom_text(x=0, y=5, label="label2",
-                      family = 'Helvetica', size = 4)
-            #geom_text(label=paste0('p-value = ', p_value),
-                      #family = 'Helvetica', size = 4)
+            ylab("Tau") + mytheme
         geneofinterest_tauplot <- geneofinterest_tauplot + 
-            geom_boxplot(width = 0.03, fill = "white")
+            geom_boxplot(width = 0.03, fill = "white") + 
+            annotate("text", x=labelx, y=labely, 
+                     label=paste0('avg p-value : ', sprintf("%1.3f", avg_p_value)),
+                      family = 'Helvetica', size = 6, hjust = 1) + 
+            annotate("text", x=labelx, y=labely-0.05, 
+                     label=paste0('min p-value : ', sprintf("%1.3f", min_p_value)),
+                     family = 'Helvetica', size = 6, hjust = 1) + 
+            annotate("text", x=labelx, y=labely-0.1, 
+                     label=paste0('max p-value : ', sprintf("%1.3f", max_p_value)),
+                     family = 'Helvetica', size = 6, hjust = 1)
         geneofinterest_tauplot
     })
+    output$individual_gene_pvalue_plot <- renderPlot({plot(iris)})
     output$gene_detail_table <- renderDataTable({
         validate(need(input$geneofinterest2,""))
         geneofinterest <- rv$geneofinterest2
