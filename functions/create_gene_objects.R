@@ -10,6 +10,11 @@ create_single_gene_stats <- function(gene)
             gene_name = gene,
             # Gene ID (single)
             gene_id = c(id=x_expr[x_expr$GENE==gene,"gene_id"])[1],
+            # Sample where the gene came from (vector)
+            parent_sample = c(ps=x_expr[x_expr$GENE==gene,"sample"]),
+            # Start and end bp
+            start = c(start=x_expr[x_expr$GENE==gene,"start"])[1],
+            end = c(end=x_expr[x_expr$GENE==gene,"end"])[1],
             # Escape status (vector)
             status = c(stat=x_expr[x_expr$GENE==gene,"status"]),
             # P_value (vector)
@@ -18,15 +23,11 @@ create_single_gene_stats <- function(gene)
             avg_p_value = mean(c(x_expr[x_expr$GENE==gene,"p_value"])),
             min_p_value = min(c(x_expr[x_expr$GENE==gene,"p_value"])),
             max_p_value = max(c(x_expr[x_expr$GENE==gene,"p_value"])),
-            # Sample where the gene came from (vector)
-            parent_sample = c(ps=x_expr[x_expr$GENE==gene,"sample"]),
             # Escape state (based on Vector of escape calls) (single)
             escape_category = ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "S"), "SUPPRESS",
                            ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "E"),"ESCAPE",
                                   "VARIABLE")),
             # Percentage of samples for which gene escaped (single)
-            #num_esc = sum(c(x_expr[x_expr$GENE==gene,"status"]) == "E"),
-            #num_sup = sum(c(x_expr[x_expr$GENE==gene,"status"]) == "S"),
             perc_samples_esc = sum(c(x_expr[x_expr$GENE==gene,"status"]) == "E")/length(c(x_expr[x_expr$GENE==gene,"status"])),
             # Tau (vector)
             tau = c(tau=x_expr[x_expr$GENE==gene,"tau"]),
@@ -34,6 +35,8 @@ create_single_gene_stats <- function(gene)
             avg_tau_value = mean(c(x_expr[x_expr$GENE==gene,"tau"])),
             min_tau_value = min(c(x_expr[x_expr$GENE==gene,"tau"])),
             max_tau_value = max(c(x_expr[x_expr$GENE==gene,"tau"])),
+            # Stain color
+            #stain_color = BandColor[xchrom_map$density == "NA"] = xcolors[1],
             # Cell Type (vector)
             cell_type = c(ctype=rep("lymphoblast",length(x_expr[x_expr$GENE==gene,"status"])))
         )
@@ -64,11 +67,20 @@ create_table_with_multiple_gene_stats <- function(gene_list){
         # Collect parameters of interest and add to gene_stat_table
         gene_category_vector <- c(gene_stat$gene_name, 
                                   gene_stat$escape_category, 
-                                  gene_stat$avg_p_value)
+                                  gene_stat$avg_p_value,
+                                  gene_stat$start,
+                                  gene_stat$end)
         df <- rbind(df, gene_category_vector)
     }
     names(df)[1] <- "GENE"
-    names(df)[2] <- "ESCAPE.CATEGORY"
-    names(df)[3] <- "AVG.P.VAL"
+    names(df)[2] <- "ESCAPE_CATEGORY"
+    names(df)[3] <- "AVG_P_VAL"
+    names(df)[4] <- "START"
+    names(df)[5] <- "END"
     return(df)
 }
+# Create csv file with summary information for each gene
+# Save gene list to csv file in data_intermediate
+gene_list_all = c(unique(x_expr[,"GENE"]))
+GENE_STAT_TABLE <- create_table_with_multiple_gene_stats(gene_list_all)
+write.csv(GENE_STAT_TABLE, "data_intermediate/gene_stat_table.csv")

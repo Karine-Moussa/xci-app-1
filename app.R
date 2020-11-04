@@ -97,8 +97,7 @@ server <- function(input, output, session) {
         tau_data = x_expr$tau,
         geneofinterest1 = "",
         geneofinterest2 = ""
-        )
-    
+    )
     observeEvent(input$geneofinterest1, { rv$geneofinterest1 <- input$geneofinterest1 })
     observeEvent(input$geneofinterest2, { rv$geneofinterest2 <- input$geneofinterest2 })
 
@@ -116,14 +115,14 @@ server <- function(input, output, session) {
                             "black"))
         genepvalue_color = gene_color
         mytheme <- theme(axis.text.x = element_blank(),
-                         plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.5), 
+                         plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.0), 
                          legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
                          legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=45))
         genepvalue <- ggplot(data = x_expr, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
             ylim(0, 400) + 
-            ggtitle("Gene vs. Escape Call") + 
+            ggtitle("X-Chromosome Escape Calls") + 
             xlab("Gene") + ylab("-log10(p_value)") + 
             mytheme + 
             geom_point(color=genepvalue_color)
