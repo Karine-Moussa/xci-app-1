@@ -125,7 +125,7 @@ server <- function(input, output, session) {
             ggtitle("X-Chromosome Escape Calls") + 
             xlab("Gene") + ylab("-log10(p_value)") + 
             mytheme + 
-            geom_point(color=genepvalue_color)
+            geom_point(colour = x_expr$BandColor)
         genepvalue
         ggplotly(genepvalue)
     })
@@ -194,7 +194,7 @@ server <- function(input, output, session) {
                                  cell_type = gene_stats$cell_type,
                                  status = gene_stats$status,
                                  tau = gene_stats$tau,
-                                 p_value = gene_stats$p_value)
+                                 p_value = gene_stats$p_values)
     })
     
     ##################
