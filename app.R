@@ -35,7 +35,7 @@ ui <- fluidPage(title = "XCI Data",
                             # Create a sidebar panel containing input controls ----
                             sidebarPanel(
                                 h3("Observing XCI escape calls from 102 samples"),
-                                autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr[,"GENE"])), value = ""),
+                                autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -62,7 +62,7 @@ ui <- fluidPage(title = "XCI Data",
                         sidebarLayout(
                             sidebarPanel(
                                 h3("Observing XCI escape calls per Gene"),
-                                autocomplete_input("geneofinterest2", "Gene of Interest:", c(unique(x_expr[,"GENE"])), value = ""),
+                                autocomplete_input("geneofinterest2", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -94,7 +94,7 @@ server <- function(input, output, session) {
     
     # Reactive values
     rv <- reactiveValues(
-        tau_data = x_expr$tau,
+        tau_data = x_expr_mod$tau,
         geneofinterest1 = "",
         geneofinterest2 = ""
     )
@@ -120,12 +120,12 @@ server <- function(input, output, session) {
                          legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=45))
-        genepvalue <- ggplot(data = x_expr, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
+        genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
             ylim(0, 400) + 
             ggtitle("X-Chromosome Escape Calls") + 
             xlab("Gene") + ylab("-log10(p_value)") + 
             mytheme + 
-            geom_point(colour = x_expr$BandColor)
+            geom_point(colour = x_expr_mod$BandColor)
         genepvalue
         ggplotly(genepvalue)
     })

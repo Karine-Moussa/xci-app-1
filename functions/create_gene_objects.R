@@ -3,7 +3,7 @@ create_single_gene_stats <- function(gene)
     ### User passes in a gene name from the x_expr list
     ### Function returns the object "<gene>_stats" with attributes of gene
     ### Usage: assign((paste0(gene, "_stats")), create_single_gene_stats(gene))
-# First, set up function for fining gene color stain and region
+# First, set up function for finding gene color stain and region
 {
     gene_start <- gene_stat_table[gene_stat_table$GENE==gene,"START"]
     for (row_num in (1:nrow(xchrom_map_colored))){
@@ -98,3 +98,6 @@ create_table_with_multiple_gene_stats <- function(gene_list){
 gene_list_all <- c(unique(x_expr[,"GENE"]))
 gene_stat_table <- create_table_with_multiple_gene_stats(gene_list_all)
 write.csv(gene_stat_table, "data_intermediate/gene_stat_table.csv")
+
+# clean up variables
+rm(gene_list_all)

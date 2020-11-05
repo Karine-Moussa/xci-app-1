@@ -1,11 +1,20 @@
-### Functions that are used in app.R
+### Initialzations and Functions used in app.R
 
-**format_input_data.R**
-Formats input x_expr data and global variables
-for use in app.R
+**format_input_data.R**\
+*initalization*\
+Initiliazes input x_expr data and global variables\
+used in app.R
+
+**x_expr_modificaitons.R**\
+*initalization*\
+Adds pertinent information to x_expr data frame\
+and intializes x_expr_mod for use in downstream\
+processing/visualizaiton.\
 
 **create_gene_objects.R**
-Includes functions that create class objects for 
-each gene, creates a summary chart of average p_values
-for each gene, and outputs summary chart to 
-data_intermediate/___.csv
+*functions*\
+Includes functions to create class objects for\ 
+each gene, and function to creates a summary 
+chart with all genes.\
+*initialization*\
+Outputs summary chart to data_intermediate/gene_stat_table.csv\
