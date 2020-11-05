@@ -12,4 +12,4 @@ GENE <- as.factor(GENE)
 SAMPLE_NAMES <- c(unique(x_expr[,"sample"]))
 
 # P-value significance
-P_SIG <- 5e-10
+P_SIG <- 5e-8

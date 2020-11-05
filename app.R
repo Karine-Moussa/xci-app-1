@@ -121,11 +121,13 @@ server <- function(input, output, session) {
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=45))
         genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
-            ylim(0, 400) + 
+            ylim(0, 15) + 
             ggtitle("X-Chromosome Escape Calls") + 
             xlab("Gene") + ylab("-log10(p_value)") + 
             mytheme + 
-            geom_point(colour = x_expr_mod$BandColor)
+            geom_point(colour = x_expr_mod$BandColor) + 
+            geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
+            annotate("text", x = "ZNF75D", y = -log10(P_SIG)+0.5, label = paste0("p = ", P_SIG))
         genepvalue
         ggplotly(genepvalue)
     })
