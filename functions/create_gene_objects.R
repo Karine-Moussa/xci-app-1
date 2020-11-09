@@ -9,6 +9,9 @@ create_single_gene_stats <- function(gene)
     for (row_num in (1:nrow(xchrom_map_colored))){
         in_region <- between(gene_start, xchrom_map_colored[row_num,"bp_start"],xchrom_map_colored[row_num,"bp_stop"])
         gene_stain <- ifelse(in_region==T, xchrom_map_colored[row_num,"BandColor"],"")
+        chrom_tmp <- ifelse(in_region==T, xchrom_map_colored[row_num,"X.chromosome"],"")
+        arm_tmp <- ifelse(in_region==T, xchrom_map_colored[row_num,"arm"],"")
+        band_tmp <- ifelse(in_region==T, xchrom_map_colored[row_num,"band"],"")
         # Break out of this loop once we find a stain color
         if(gene_stain != ""){break}
         }
@@ -27,6 +30,10 @@ create_single_gene_stats <- function(gene)
             end = c(end=x_expr[x_expr$GENE==gene,"end"])[1],
             # Stain color (single)
             band_color = gene_stain,
+            # Chromosomal location 
+            chrom = chrom_tmp,
+            arm = arm_tmp,
+            band = band_tmp,
             # Escape status (vector)
             status = c(stat=x_expr[x_expr$GENE==gene,"status"]),
             # P_value (vector)
@@ -82,7 +89,8 @@ create_table_with_multiple_gene_stats <- function(gene_list){
                                   gene_stat$avg_p_value,
                                   gene_stat$start,
                                   gene_stat$end,
-                                  gene_stat$band_color)
+                                  gene_stat$band_color,
+                                  paste0(gene_stat$chrom, gene_stat$arm, gene_stat$band))
         df <- rbind(df, gene_category_vector)
     }
     names(df)[1] <- "GENE"
@@ -91,6 +99,7 @@ create_table_with_multiple_gene_stats <- function(gene_list){
     names(df)[4] <- "START"
     names(df)[5] <- "END"
     names(df)[6] <- "BAND_COLOR"
+    names(df)[7] <- "CHROM_POS"
     return(df)
 }
 # Create csv file with summary information for each gene

@@ -5,9 +5,9 @@
 Initiliazes input x_expr data and global variables\
 used in app.R
 
-**x_expr_modificaitons.R**\
+**x_expr_mods.R**\
 *initalization*\
-Adds pertinent information to x_expr data frame\
+Adds information to x_expr data frame\
 and intializes x_expr_mod for use in downstream\
 processing/visualization.
 

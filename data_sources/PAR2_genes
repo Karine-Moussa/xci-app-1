@@ -1,0 +1,11 @@
+HGNC ID	Approved symbol	Approved name	Status	Locus type	Previous symbols	Alias symbols	Chromosome	NCBI Gene ID	Ensembl gene ID	Vega gene ID	Group ID	Group name
+HGNC:460	AMD1P2	adenosylmethionine decarboxylase 1 pseudogene 2	Approved	pseudogene	AMD2, AMD, AMDP1	AMDPX, AMDPY	Xq28 and Yq12	263	ENSG00000237801	OTTHUMG00000022673	716	Pseudoautosomal region 2
+HGNC:37115	DDX11L16	DEAD/H-box helicase 11 like 16 (pseudogene)	Approved	pseudogene			Xq28 and Yq12	727856	ENSG00000227159	OTTHUMG00000022678	716	Pseudoautosomal region 2
+HGNC:38719	DPH3P2	diphthamide biosynthesis 3 pseudogene 2	Approved	pseudogene			Xq28 and Yq12	106478926	ENSG00000237040	OTTHUMG00000022680	716	Pseudoautosomal region 2
+HGNC:6030	IL9R	interleukin 9 receptor	Approved	gene with protein product		CD129	Xq28 and Yq12	3581	ENSG00000124334	OTTHUMG00000022720	716	Pseudoautosomal region 2
+HGNC:11271	SPRY3	sprouty RTK signaling antagonist 3	Approved	gene with protein product		HSPRY3	Xq28 and Yq12	10251	ENSG00000168939	OTTHUMG00000022675	716	Pseudoautosomal region 2
+HGNC:38160	ELOCP24	elongin C pseudogene 24	Approved	pseudogene	TCEB1P25, TCEB1P24		Xq28 and Yq12	100287692	ENSG00000228410	OTTHUMG00000040493	716	Pseudoautosomal region 2
+HGNC:23270	TRPC6P	transient receptor potential cation channel subfamily C member 6, pseudogene	Approved	pseudogene		TRPC6L	Xq28 and Yq12	644218	ENSG00000223484	OTTHUMG00000022681	716	Pseudoautosomal region 2
+HGNC:11486	VAMP7	vesicle associated membrane protein 7	Approved	gene with protein product	SYBL1	VAMP-7, TI-VAMP	Xq28 and Yq12	6845	ENSG00000124333	OTTHUMG00000022679	716	Pseudoautosomal region 2
+HGNC:31685	WASH6P	WASP family homolog 6, pseudogene	Approved	pseudogene	FAM39A, CXYorf1		Xq28 and Yq12	653440	ENSG00000182484	OTTHUMG00000022677	716	Pseudoautosomal region 2
+HGNC:38513	WASIR1	WASH and IL9R antisense RNA 1	Approved	RNA, long non-coding	NCRNA00286B		Xq28 and Yq12	100128260	ENSG00000185203	OTTHUMG00000022676	716	Pseudoautosomal region 2
