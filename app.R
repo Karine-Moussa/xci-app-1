@@ -55,7 +55,8 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_pvalue", height = "500px")
+                                plotlyOutput(outputId = "gene_pvalue", height = "500px"),
+                                img(src = "xchrom-850bp-annotated.png", height = "200px")
                             )
                         )
                     ),
@@ -129,16 +130,18 @@ server <- function(input, output, session) {
             mytheme + 
             ylim(0, 15) + 
             ggtitle("X-Chromosome Escape Calls") + 
-            xlab("Gene") +  
+            xlab("X-Chromosome Region") +  
             geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=15), 
-                      fill="lightblue", alpha=0.5) + 
+                      fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=15), 
-                      fill="lightblue", alpha=0.5) + 
+                      fill="lightblue", alpha=0.25) + 
+            geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=15), 
+                      fill="pink", alpha=0.25) + 
             geom_point(colour = x_expr_mod$BandColor, size = 1) + 
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x = "ZNF75D", y = -log10(P_SIG)+0.5, 
                      label = paste0("p = ", P_SIG), size = (4)) + 
-            annotate("text", x="PIR", y=16, label="PAR1", size=4) + 
+            #annotate("text", x="PIR", y=16, label="PAR1", size=4) + 
             coord_cartesian(ylim = c(0, 15), clip = "off") +
             scale_x_discrete(breaks=x_labels_genes,labels=x_labels_pos,
                              guide = guide_axis(check.overlap = T))

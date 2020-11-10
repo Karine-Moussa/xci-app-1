@@ -18,6 +18,10 @@ for (i in 1:length(x_labels_genes)){
 # Tab 1 Par Region Shading
 par1_boundaries <- c("PLCXD1","TBCAP1")
 par2_boundaries <- c("IDS","TMLHE")
+centre_boundaries <- c("MAGED2","RRAGB")
+
+# Tab 1 Xchrom Map
+xchrom_png <- readPNG('images/xchrom-850bp-annotated.png')
 
 # clean up variables
 rm(i)
