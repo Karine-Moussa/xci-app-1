@@ -55,7 +55,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_pvalue", height = "400px")
+                                plotlyOutput(outputId = "gene_pvalue", height = "500px")
                             )
                         )
                     ),
@@ -123,15 +123,23 @@ server <- function(input, output, session) {
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
                          axis.text.x = element_text(family = "Helvetica", colour = "black", size = (6), face = "bold", angle=60, hjust=1),
-                         panel.grid.major = element_blank())
+                         panel.grid.major = element_blank(),
+                         panel.background = element_rect(fill = "white"))
         genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
+            mytheme + 
             ylim(0, 15) + 
             ggtitle("X-Chromosome Escape Calls") + 
-            xlab("Gene") + 
-            mytheme + 
+            xlab("Gene") +  
+            geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=15), 
+                      fill="lightblue", alpha=0.5) + 
+            geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=15), 
+                      fill="lightblue", alpha=0.5) + 
             geom_point(colour = x_expr_mod$BandColor, size = 1) + 
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = "ZNF75D", y = -log10(P_SIG)+0.5, label = paste0("p = ", P_SIG), size = (4)) + 
+            annotate("text", x = "ZNF75D", y = -log10(P_SIG)+0.5, 
+                     label = paste0("p = ", P_SIG), size = (4)) + 
+            annotate("text", x="PIR", y=16, label="PAR1", size=4) + 
+            coord_cartesian(ylim = c(0, 15), clip = "off") +
             scale_x_discrete(breaks=x_labels_genes,labels=x_labels_pos,
                              guide = guide_axis(check.overlap = T))
         genepvalue
