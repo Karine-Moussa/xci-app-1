@@ -55,7 +55,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_pvalue", height = "500px"),
+                                plotlyOutput(outputId = "gene_pvalue", height = "400px"),
                                 img(src = "xchrom-850bp-annotated.png", height = "200px")
                             )
                         )
