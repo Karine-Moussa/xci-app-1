@@ -122,13 +122,14 @@ server <- function(input, output, session) {
                          legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
-                         axis.text.x = element_text(family = "Helvetica", colour = "black", size = (6), face = "bold", angle=60, hjust=1))
+                         axis.text.x = element_text(family = "Helvetica", colour = "black", size = (6), face = "bold", angle=60, hjust=1),
+                         panel.grid.major = element_blank())
         genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
             ylim(0, 15) + 
             ggtitle("X-Chromosome Escape Calls") + 
             xlab("Gene") + 
             mytheme + 
-            geom_point(colour = x_expr_mod$BandColor) + 
+            geom_point(colour = x_expr_mod$BandColor, size = 1) + 
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x = "ZNF75D", y = -log10(P_SIG)+0.5, label = paste0("p = ", P_SIG), size = (4)) + 
             scale_x_discrete(breaks=x_labels_genes,labels=x_labels_pos,
