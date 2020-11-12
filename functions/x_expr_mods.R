@@ -1,9 +1,7 @@
 # Adding to x_expr data
 # This will return x_expr_mod, a modified version of 
 # the original x_expr_mod data frame.
-x_expr_mod <- data.frame()
 
-#### Create x_expr data table with colors
 # Create vector of BandColors based on gene_stat_table
 BandColor <- rep("",nrow(x_expr))
 ChromPos <- rep("",nrow(x_expr))
@@ -13,14 +11,25 @@ for (gene in x_expr$GENE){
     BandColor[i] <- gene_stat_table[gene_stat_table$GENE == gene, "BAND_COLOR"]
     ChromPos[i] <- gene_stat_table[gene_stat_table$GENE == gene, "CHROM_POS"]
 }
-# clean up variables
+
+# Reformat p-values if they are too low
+# Set any p = 0 to p = P_MIN
+p_value_mod <- rep("", nrow(x_expr))
+p_mod_flag <- rep("",nrow(x_expr))
+for (i in 1:nrow(x_expr)){
+    p_value_mod <- ifelse(x_expr$p_value == 0, P_MIN, p_value)
+    p_mod_flag <- ifelse(x_expr$p_value == 0, TRUE, FALSE)
+}
+
+# Add new elements to x_expr_mod
+x_expr_mod <- data.frame()
+x_expr_mod <- cbind(x_expr, BandColor, ChromPos, p_value_mod, p_mod_flag)
+
+
+# clean up variables 
 rm(i) 
-# Add BandColor vector to x_expr matrix 
-x_expr_mod <- cbind(x_expr, BandColor, ChromPos)
-
-# Format p-values if too low
-
-# clean up variables
+rm(gene)
 rm(BandColor)
 rm(ChromPos)
-rm(gene)
+rm(p_value_mod)
+rm(p_mod_flag)
