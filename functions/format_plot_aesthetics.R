@@ -27,5 +27,12 @@ centre_boundaries <- c("MAGED2","RRAGB")
 # Tab 1 Xchrom Map
 xchrom_png <- readPNG('images/xchrom-850bp-annotated.png')
 
+# Tab 1 Create Shape Vector depending on whether 
+# the -log10(p-value) is actually higher than shown
+# If the p value is actually lower than represented, 
+# change the shape to a triangle (17). Otherwise keep the 
+# shape as a circle (16)
+shape_vector <- ifelse(x_expr_mod$p_mod_flag == TRUE, 17, 16)
+
 # clean up variables
 rm(i)

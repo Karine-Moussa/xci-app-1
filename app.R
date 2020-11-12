@@ -1,5 +1,5 @@
 # Karine Moussa
-
+# XCI-app 
 # App Settings
 palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
           "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
@@ -16,6 +16,7 @@ library(png, warn.conflicts = FALSE)
 source("functions/format_input_data.R", local = TRUE)
 source("functions/create_gene_objects.R", local = TRUE)
 source("functions/x_expr_mods.R", local = TRUE)
+source("functions/create_global_variables.R", local = TRUE)
 source("functions/format_plot_aesthetics.R", local = TRUE)
 
 ### Load files and pre-processed data
@@ -50,7 +51,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_pvalue", height = "400px"),
+                                plotlyOutput(outputId = "gene_pvalue", height = "420px"),
                                 img(src = "xchrom-850bp-annotated.png", height = "200px")
                             )
                         )
@@ -113,6 +114,7 @@ server <- function(input, output, session) {
                         ifelse(GENE!=geneofinterest,"grey",
                             "black"))
         genepvalue_color = gene_color
+        # Create theme for plot
         mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.0), 
                          legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
                          legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
@@ -121,23 +123,23 @@ server <- function(input, output, session) {
                          axis.text.x = element_text(family = "Helvetica", colour = "black", size = (6), face = "bold", angle=60, hjust=1),
                          panel.grid.major = element_blank(),
                          panel.background = element_rect(fill = "white"))
-        genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value))) + 
+        genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value_mod))) + 
             mytheme + 
-            ylim(0, 15) + 
+            ylim(0, 330) + 
             ggtitle("X-Chromosome Escape Calls") + 
             xlab("X-Chromosome Region") +  
-            geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=15), 
-                      fill="lightblue", alpha=0.25) + 
-            geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=15), 
-                      fill="lightblue", alpha=0.25) + 
-            geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=15), 
-                      fill="pink", alpha=0.25) + 
-            geom_point(colour = x_expr_mod$BandColor, size = 1) + 
+            geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330), 
+                fill="lightblue", alpha=0.25) + 
+            geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330), 
+                fill="lightblue", alpha=0.25) + 
+            geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
+                fill="pink", alpha=0.25) + 
+            geom_point(shape = shape_vector, colour = x_expr_mod$BandColor, size = 2) + 
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = "ZNF75D", y = -log10(P_SIG)+0.5, 
-                     label = paste0("p = ", P_SIG), size = (4)) + 
-            #annotate("text", x="PIR", y=16, label="PAR1", size=4) + 
-            coord_cartesian(ylim = c(0, 15), clip = "off") +
+            annotate("text", x = "ZNF75D", y = -log10(P_SIG)+1.0, 
+                label = paste0("p = ", format(-log10(P_SIG))), size = (4)) + 
+            annotate("text", x="PIR", y=320, label="PAR1", size=4, color = "steelblue") + 
+            annotate("text", x="FLNA", y=320, label="PAR2", size=4, color = "steelblue") + 
             scale_x_discrete(breaks=x_labels_genes,labels=x_labels_pos,
                              guide = guide_axis(check.overlap = T))
         genepvalue

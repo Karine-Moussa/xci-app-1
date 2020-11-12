@@ -14,17 +14,13 @@ for (gene in x_expr$GENE){
 
 # Reformat p-values if they are too low
 # Set any p = 0 to p = P_MIN
-p_value_mod <- rep("", nrow(x_expr))
-p_mod_flag <- rep("",nrow(x_expr))
-for (i in 1:nrow(x_expr)){
-    p_value_mod <- ifelse(x_expr$p_value == 0, P_MIN, p_value)
-    p_mod_flag <- ifelse(x_expr$p_value == 0, TRUE, FALSE)
-}
+# Create a flag if this occurs
+p_value_mod <- ifelse(x_expr$p_value == 0, P_MIN, p_value)
+p_mod_flag <- ifelse(x_expr$p_value == 0, TRUE, FALSE)
 
 # Add new elements to x_expr_mod
 x_expr_mod <- data.frame()
 x_expr_mod <- cbind(x_expr, BandColor, ChromPos, p_value_mod, p_mod_flag)
-
 
 # clean up variables 
 rm(i) 
