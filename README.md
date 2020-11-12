@@ -2,4 +2,4 @@
 
 *Latest Update*
 
-![image](https://user-images.githubusercontent.com/71516524/98706259-a654e400-234c-11eb-9a79-7f99cc45292d.png)
+<img width="1419" alt="image" src="https://user-images.githubusercontent.com/71516524/98731146-49b4f180-236b-11eb-8dfc-609dc0aa9b64.png">
