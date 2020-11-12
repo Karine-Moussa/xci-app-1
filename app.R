@@ -4,24 +4,19 @@
 palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
           "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
 
-# Packages
-library(shiny)
-library(dqshiny)
-library(ggplot2)
-library(plotly)
-library(dplyr)
+# Libraries
+library(shiny, warn.conflicts = FALSE)
+library(dqshiny, warn.conflicts = FALSE)
+library(ggplot2, warn.conflicts = FALSE)
+library(plotly, warn.conflicts = FALSE)
+library(dplyr, warn.conflicts = FALSE)
+library(png, warn.conflicts = FALSE)
 
-### Set Working Directory ###
-# For now, just setting it to where this script is saved
-current_path = rstudioapi::getActiveDocumentContext()$path 
-setwd(dirname(current_path ))
-rm(current_path)
-
-### Source Functions and Data Tables ###
-source("functions/format_input_data.R")
-source("functions/create_gene_objects.R")
-source("functions/x_expr_mods.R")
-source("functions/format_plot_aesthetics.R")
+### Source Data and Functions ###
+source("functions/format_input_data.R", local = TRUE)
+source("functions/create_gene_objects.R", local = TRUE)
+source("functions/x_expr_mods.R", local = TRUE)
+source("functions/format_plot_aesthetics.R", local = TRUE)
 
 ### Load files and pre-processed data
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")

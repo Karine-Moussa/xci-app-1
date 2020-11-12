@@ -17,6 +17,9 @@ for (gene in x_expr$GENE){
 rm(i) 
 # Add BandColor vector to x_expr matrix 
 x_expr_mod <- cbind(x_expr, BandColor, ChromPos)
+
+# Format p-values if too low
+
 # clean up variables
 rm(BandColor)
 rm(ChromPos)

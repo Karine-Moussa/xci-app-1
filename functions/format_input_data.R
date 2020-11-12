@@ -4,9 +4,8 @@ xchrom_map_colored <- read.delim("data_intermediate/xchrom_map_colored",header=T
 gene_stat_table <- read.csv("data_intermediate/gene_stat_table.csv",header=T)
 
 # Format x_expr
-attach(x_expr)
-STATUS <- as.factor(status)
-GENE <- as.factor(GENE)
+STATUS <- as.factor(x_expr$status)
+GENE <- as.factor(x_expr$GENE)
 
 # List of samples
 SAMPLE_NAMES <- c(unique(x_expr[,"sample"]))

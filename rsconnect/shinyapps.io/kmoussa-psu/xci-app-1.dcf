@@ -1,0 +1,13 @@
+name: xci-app-1
+title: xci-app-1
+username:
+account: kmoussa-psu
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3220450
+bundleId: 3853622
+url: https://kmoussa-psu.shinyapps.io/xci-app-1/
+when: 1605211380.64885
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: images/Human_chromosome_X_-_400_550_850_bphs.png|images/xchrom-850bp.png
