@@ -15,7 +15,7 @@ for (gene in x_expr$GENE){
 # Reformat p-values if they are too low
 # Set any p = 0 to p = P_MIN
 # Create a flag if this occurs
-p_value_mod <- ifelse(x_expr$p_value == 0, P_MIN, p_value)
+p_value_mod <- ifelse(x_expr$p_value == 0, P_MIN, x_expr$p_value)
 p_mod_flag <- ifelse(x_expr$p_value == 0, TRUE, FALSE)
 
 # Add new elements to x_expr_mod

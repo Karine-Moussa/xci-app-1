@@ -13,7 +13,7 @@ create_single_gene_stats <- function(gene)
         arm_tmp <- ifelse(in_region==T, xchrom_map_colored[row_num,"arm"],"")
         band_tmp <- ifelse(in_region==T, xchrom_map_colored[row_num,"band"],"")
         # Break out of this loop once we find a stain color
-        if(gene_stain != ""){break}
+        if(isTruthy(gene_stain != "")){break}
         }
 # Then, assign attributes to gene
     assign(paste0(gene, "_stats"),

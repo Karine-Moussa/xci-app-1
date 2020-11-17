@@ -14,9 +14,9 @@ library(png, warn.conflicts = FALSE)
 
 ### Source Data and Functions ###
 source("functions/format_input_data.R", local = TRUE)
-source("functions/create_gene_objects.R", local = TRUE)
-source("functions/x_expr_mods.R", local = TRUE)
 source("functions/create_global_variables.R", local = TRUE)
+source("functions/x_expr_mods.R", local = TRUE)
+source("functions/create_gene_objects.R", local = TRUE)
 source("functions/format_plot_aesthetics.R", local = TRUE)
 
 ### Load files and pre-processed data
@@ -125,7 +125,6 @@ server <- function(input, output, session) {
                          panel.background = element_rect(fill = "white"))
         genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value_mod))) + 
             mytheme + 
-            ylim(0, 330) + 
             ggtitle("X-Chromosome Escape Calls") + 
             xlab("X-Chromosome Region") +  
             geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330), 
@@ -137,11 +136,12 @@ server <- function(input, output, session) {
             geom_point(shape = shape_vector, colour = x_expr_mod$BandColor, size = 2) + 
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x = "ZNF75D", y = -log10(P_SIG)+1.0, 
-                label = paste0("p = ", format(-log10(P_SIG))), size = (4)) + 
+                label = paste0("p = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             annotate("text", x="PIR", y=320, label="PAR1", size=4, color = "steelblue") + 
             annotate("text", x="FLNA", y=320, label="PAR2", size=4, color = "steelblue") + 
             scale_x_discrete(breaks=x_labels_genes,labels=x_labels_pos,
-                             guide = guide_axis(check.overlap = T))
+                             guide = guide_axis(check.overlap = T)) + 
+            scale_y_continuous(limits = c(0,330))
         genepvalue
         ggplotly(genepvalue)
     })
@@ -154,7 +154,7 @@ server <- function(input, output, session) {
             need(input$geneofinterest2 !="", "Please input a gene of interest")
         )
         geneofinterest <- rv$geneofinterest2
-        
+        #geneofinterest <- "XIST" # For testing
         assign("geneofinterest_stats", create_single_gene_stats(geneofinterest))
         avg_p_value <- geneofinterest_stats$avg_p_value
         min_p_value <- geneofinterest_stats$min_p_value
