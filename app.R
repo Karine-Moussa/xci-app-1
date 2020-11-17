@@ -123,27 +123,28 @@ server <- function(input, output, session) {
                          axis.text.x = element_text(family = "Helvetica", colour = "black", size = (6), face = "bold", angle=60, hjust=1),
                          panel.grid.major = element_blank(),
                          panel.background = element_rect(fill = "white"))
-        genepvalue <- ggplot(data = x_expr_mod, aes(x = reorder(GENE, start), y = -log10(p_value_mod))) + 
+        genepvalue <- ggplot(data = x_expr_mod, aes(x = start, y = -log10(p_value_mod),
+                label=GENE, label2=start, label3=end, label4=ChromPos, group=1)) + 
             mytheme + 
             ggtitle("X-Chromosome Escape Calls") + 
             xlab("X-Chromosome Region") +  
             geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330), 
-                fill="lightblue", alpha=0.25) + 
+                      fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330), 
-                fill="lightblue", alpha=0.25) + 
+                      fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
-                fill="pink", alpha=0.25) + 
+                      fill="pink", alpha=0.25) + 
             geom_point(shape = shape_vector, colour = x_expr_mod$BandColor, size = 2) + 
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = "ZNF75D", y = -log10(P_SIG)+1.0, 
-                label = paste0("p = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
-            annotate("text", x="PIR", y=320, label="PAR1", size=4, color = "steelblue") + 
-            annotate("text", x="FLNA", y=320, label="PAR2", size=4, color = "steelblue") + 
+            annotate("text", x = 135285791, y = -log10(P_SIG)+4.0, 
+                     label = paste0("p = ", format(-log10(P_SIG), digits = 3)), size = (3)) + 
+            annotate("text", x=15384799, y=320, label="PAR1", size=4, color = "steelblue") + 
+            annotate("text", x=151396566, y=320, label="PAR2", size=4, color = "steelblue") + 
             scale_x_discrete(breaks=x_labels_genes,labels=x_labels_pos,
                              guide = guide_axis(check.overlap = T)) + 
             scale_y_continuous(limits = c(0,330))
         genepvalue
-        ggplotly(genepvalue)
+        ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))
     })
     
     ##################

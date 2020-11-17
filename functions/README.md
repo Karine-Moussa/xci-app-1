@@ -21,4 +21,5 @@ Outputs summary chart to data_intermediate/gene_stat_table.csv
 
 **format_plot_aesthetics.R**\
 *initializatoin*\
-Formats axis/labels/other essential features for plots.
+Formats axis/labels/other essential features for plots.\
+BP positions for PAR regoins obtained from [GRCh38.13](https://www.ncbi.nlm.nih.gov/grc/human)

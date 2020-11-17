@@ -19,10 +19,10 @@ for (i in 1:length(x_labels_genes)){
     x_labels_pos[i] = unique(x_expr_mod[x_expr_mod$GENE==x_labels_genes[i],"ChromPos"])
 }
 
-# Tab 1 Par Region Shading
-par1_boundaries <- c("PLCXD1","TBCAP1")
-par2_boundaries <- c("IDS","TMLHE")
-centre_boundaries <- c("MAGED2","RRAGB")
+# Tab 1 Par Region Shading (in bp)
+par1_boundaries <- c(100001,2781479)
+par2_boundaries <- c(155701383,156030895)
+centre_boundaries <- c(58100001,63800000)
 
 # Tab 1 Xchrom Map
 xchrom_png <- readPNG('images/xchrom-850bp-annotated.png')
