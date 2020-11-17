@@ -18,9 +18,12 @@ for (gene in x_expr$GENE){
 p_value_mod <- ifelse(x_expr$p_value == 0, P_MIN, x_expr$p_value)
 p_mod_flag <- ifelse(x_expr$p_value == 0, TRUE, FALSE)
 
-# Add new elements to x_expr_mod
+# Reformat skew values to be characters
+skew <- format(x_expr$f, digits = 3)
+
+# Add the new elements to x_expr_mod
 x_expr_mod <- data.frame()
-x_expr_mod <- cbind(x_expr, BandColor, ChromPos, p_value_mod, p_mod_flag)
+x_expr_mod <- cbind(x_expr, BandColor, ChromPos, p_value_mod, p_mod_flag, skew)
 
 # clean up variables 
 rm(i) 
@@ -29,3 +32,4 @@ rm(BandColor)
 rm(ChromPos)
 rm(p_value_mod)
 rm(p_mod_flag)
+rm(skew)

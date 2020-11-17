@@ -51,8 +51,8 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_pvalue", height = "420px"),
-                                img(src = "xchrom-850bp-annotated.png", height = "200px")
+                                plotlyOutput(outputId = "gene_pvalue", height = "500px"),
+                                img(src = "xchrom-850bp.png", width = "900px")
                             )
                         )
                     ),
@@ -120,14 +120,14 @@ server <- function(input, output, session) {
                          legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
-                         axis.text.x = element_text(family = "Helvetica", colour = "black", size = (6), face = "bold", angle=60, hjust=1),
+                         axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), face = "bold", angle=45, hjust=1),
                          panel.grid.major = element_blank(),
                          panel.background = element_rect(fill = "white"))
         genepvalue <- ggplot(data = x_expr_mod, aes(x = start, y = -log10(p_value_mod),
-                label=GENE, label2=start, label3=end, label4=ChromPos, group=1)) + 
+              label=GENE, label2=start, label3=end, label4=ChromPos, group=1)) + 
             mytheme + 
             ggtitle("X-Chromosome Escape Calls") + 
-            xlab("X-Chromosome Region") +  
+            xlab("X-Chromosome Position (bp)") + ylab("-log10(p)") + 
             geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330), 
                       fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330), 
@@ -136,12 +136,11 @@ server <- function(input, output, session) {
                       fill="pink", alpha=0.25) + 
             geom_point(shape = shape_vector, colour = x_expr_mod$BandColor, size = 2) + 
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = 135285791, y = -log10(P_SIG)+4.0, 
+            annotate("text", x = 135285791, y = -log10(P_SIG)+4.0,  
                      label = paste0("p = ", format(-log10(P_SIG), digits = 3)), size = (3)) + 
-            annotate("text", x=15384799, y=320, label="PAR1", size=4, color = "steelblue") + 
+            annotate("text", x=7147291, y=320, label="PAR1", size=4, color = "steelblue") + 
             annotate("text", x=151396566, y=320, label="PAR2", size=4, color = "steelblue") + 
-            scale_x_discrete(breaks=x_labels_genes,labels=x_labels_pos,
-                             guide = guide_axis(check.overlap = T)) + 
+            scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
             scale_y_continuous(limits = c(0,330))
         genepvalue
         ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))

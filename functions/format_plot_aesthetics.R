@@ -12,12 +12,14 @@ x_labels_genes_mid <- c("P2RY8", "PIGA", "PHKA2", "MAP7D2", "EIF2S3", "CYBB", "M
                         "ELF4", "MBNL3", "SLC9A6", "ATP11C", "IRAK1")
 # choose either x..mid or x..start to use as breakpoints for the plot
 x_labels_genes <- x_labels_genes_mid
-#x_labels_bp <- sort(unique(x_expr[which(x_expr[,"GENE"] %in% x_labels_genes),"start"]))
-# Create a vector of chromosomal positions for each gene in the list
-x_labels_pos <- rep("",length(x_labels_genes))
-for (i in 1:length(x_labels_genes)){
-    x_labels_pos[i] = unique(x_expr_mod[x_expr_mod$GENE==x_labels_genes[i],"ChromPos"])
-}
+
+x_labels_pos <- unique(x_expr_mod[,"ChromPos"])
+x_labels_bp <- rep("",length(x_labels_pos))
+i = 0
+for (pos in x_labels_pos){
+    i = i + 1
+    x_labels_bp[i] <- sort(decreasing = T, x_expr_mod[x_expr_mod$ChromPos==pos,"start"])[1]
+    }
 
 # Tab 1 Par Region Shading (in bp)
 par1_boundaries <- c(100001,2781479)
