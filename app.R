@@ -52,8 +52,8 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotlyOutput(outputId = "gene_pvalue", height = "500px"),
-                                img(src = "images/figure1_legend.png")
+                                plotOutput(outputId = "gene_pvalue", height = "400px"),
+                                img(src = "xchrom-850bp-annotated.png", width="600px")
                             )
                         )
                     ),
@@ -105,7 +105,7 @@ server <- function(input, output, session) {
     ##################
     ## TAB 1 OUTPUT
     ##################
-    output$gene_pvalue <- renderPlotly({
+    output$gene_pvalue <- renderPlot({
         # This is the interactive plot which covers the default plot
         #validate(
         #    need(input$geneofinterest !="", "Please input a gene of interest")
@@ -115,37 +115,44 @@ server <- function(input, output, session) {
                         ifelse(GENE!=geneofinterest,"grey",
                             "black"))
         genepvalue_color = gene_color
+        # Seperate types of data points based on -log10(p)
+        p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
+        p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
         # Create theme for plot
         mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.0), 
-                         legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (14)), 
-                         legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (14)), 
+                         legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (8)), 
+                         legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (6)),
+                         legend.position = "right",
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
                          axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), face = "bold", angle=45, hjust=1),
-                         panel.grid.major = element_blank(),
                          panel.background = element_rect(fill = "white"))
-        genepvalue <- ggplot(data = x_expr_mod, aes(x = start, y = -log10(p_value_mod),
-              label=GENE, label2=start, label3=end, label4=ChromPos, group=1)) + 
-            mytheme + 
-            ggtitle("X-Chromosome Escape Calls") + 
+        genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
+                                                    shape=p_mod_flag,  label=GENE, label2=end, label3=ChromPos, group=1)) +
+            mytheme + ggtitle("X-Chromosome Escape Calls") + 
             xlab("X-Chromosome Position (bp)") + ylab("-log10(p)") + 
-            geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330), 
+            geom_rect(data=NULL, xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330, 
                       fill="lightblue", alpha=0.25) + 
-            geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330), 
+            geom_rect(data=NULL, xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330, 
                       fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                       fill="pink", alpha=0.25) + 
-            geom_point(shape = shape_vector, colour = x_expr_mod$BandColor, size = 2) + 
+            # Data Points
+            geom_point(colour = p_less_300$BandColor, size = 3) + 
+            geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                       colour=p_more_300$BandColor, size=3, group=2) + 
+            # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = 135285791, y = -log10(P_SIG)+4.0,  
-                     label = paste0("p = ", format(-log10(P_SIG), digits = 3)), size = (3)) + 
+            annotate("text", x = 135285791, y = -log10(P_SIG)+8.0,  
+                     label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (5)) + 
             annotate("text", x=7147291, y=320, label="PAR1", size=4, color = "steelblue") + 
-            annotate("text", x=151396566, y=320, label="PAR2", size=4, color = "steelblue") + 
+            annotate("text", x=151396566, y=320, label="PAR2", size=4, color = "steelblue") +
+            # Scaling and Legends
             scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
-            scale_y_continuous(limits = c(0,330))
+            scale_y_continuous(limits=c(0,330)) +
+            scale_shape_manual("-log10(p)", values=c(16,17), labels=c("< 300", ">= 300"))
         genepvalue
-        ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))
-        img(src = "xchrom-850bp.png", width = "900px")
+        #ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))
     })
     
     ##################
