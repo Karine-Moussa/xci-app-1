@@ -35,7 +35,7 @@ ui <- fluidPage(title = "XCI Data",
                             # Create a sidebar panel containing input controls ----
                             sidebarPanel(
                                 h3("Observing XCI escape calls from 102 samples"),
-                                autocomplete_input("geneofinterest1", "Gene of Interest (this search is currently unoperational):", c(unique(x_expr_mod[,"GENE"])), value = ""),
+                                autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -52,7 +52,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotOutput(outputId = "gene_pvalue", height = "400px"),
+                                plotOutput(outputId = "gene_pvalue", height = "300px"),
                                 img(src = "xchrom-850bp-annotated.png", width="600px")
                             )
                         )
@@ -106,16 +106,9 @@ server <- function(input, output, session) {
     ## TAB 1 OUTPUT
     ##################
     output$gene_pvalue <- renderPlot({
-        # This is the interactive plot which covers the default plot
-        #validate(
-        #    need(input$geneofinterest !="", "Please input a gene of interest")
-        #)
+        # Save geneofinterest
         geneofinterest <- rv$geneofinterest1
-        gene_color <- ifelse(GENE==geneofinterest,"blue",
-                        ifelse(GENE!=geneofinterest,"grey",
-                            "black"))
-        genepvalue_color = gene_color
-        # Seperate types of data points based on -log10(p)
+        # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
         # Create theme for plot
@@ -128,7 +121,8 @@ server <- function(input, output, session) {
                          axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), face = "bold", angle=45, hjust=1),
                          panel.background = element_rect(fill = "white"))
         genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
-                                                    shape=p_mod_flag,  label=GENE, label2=end, label3=ChromPos, group=1)) +
+                                                    shape=p_mod_flag,  label=GENE, label2=end, 
+                                                    label3=ChromPos, group=1)) +
             mytheme + ggtitle("X-Chromosome Escape Calls") + 
             xlab("X-Chromosome Position (bp)") + ylab("-log10(p)") + 
             geom_rect(data=NULL, xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330, 
@@ -138,20 +132,26 @@ server <- function(input, output, session) {
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                       fill="pink", alpha=0.25) + 
             # Data Points
-            geom_point(colour = p_less_300$BandColor, size = 3) + 
+            geom_point(colour = p_less_300$BandColor, size = 2) + 
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                       colour=p_more_300$BandColor, size=3, group=2) + 
+                       colour=p_more_300$BandColor, size=2, group=2) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = 135285791, y = -log10(P_SIG)+8.0,  
-                     label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (5)) + 
+            annotate("text", x = 135285791, y = -log10(P_SIG)+9,  
+                     label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             annotate("text", x=7147291, y=320, label="PAR1", size=4, color = "steelblue") + 
             annotate("text", x=151396566, y=320, label="PAR2", size=4, color = "steelblue") +
             # Scaling and Legends
             scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
-            scale_y_continuous(limits=c(0,330)) +
+            scale_y_continuous(limits=c(0,330)) + 
+            # Add reactive values
+            geom_point(p_less_300[p_less_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                         colour='red', size=2, group=2) +
+            geom_point(p_more_300[p_more_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                       colour='red', size=2, group=2) + 
+            # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(16,17), labels=c("< 300", ">= 300"))
-        genepvalue
+        genepvalue 
         #ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))
     })
     
