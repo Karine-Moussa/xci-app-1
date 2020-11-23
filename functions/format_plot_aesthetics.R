@@ -35,6 +35,7 @@ xchrom_png <- readPNG('images/xchrom-850bp-annotated.png')
 # change the shape to a triangle (17). Otherwise keep the 
 # shape as a circle (16)
 shape_vector <- ifelse(x_expr_mod$p_mod_flag == TRUE, 17, 16)
+shape_vector <- as.factor(shape_vector)
 
 # clean up variables
 rm(i)

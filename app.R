@@ -11,6 +11,7 @@ library(ggplot2, warn.conflicts = FALSE)
 library(plotly, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 library(png, warn.conflicts = FALSE)
+library(gridExtra, warn.conflicts = FALSE)
 
 ### Source Data and Functions ###
 source("functions/format_input_data.R", local = TRUE)
@@ -34,7 +35,7 @@ ui <- fluidPage(title = "XCI Data",
                             # Create a sidebar panel containing input controls ----
                             sidebarPanel(
                                 h3("Observing XCI escape calls from 102 samples"),
-                                autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
+                                autocomplete_input("geneofinterest1", "Gene of Interest (this search is currently unoperational):", c(unique(x_expr_mod[,"GENE"])), value = ""),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -52,7 +53,7 @@ ui <- fluidPage(title = "XCI Data",
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
                                 plotlyOutput(outputId = "gene_pvalue", height = "500px"),
-                                img(src = "xchrom-850bp.png", width = "900px")
+                                img(src = "images/figure1_legend.png")
                             )
                         )
                     ),
@@ -84,7 +85,7 @@ ui <- fluidPage(title = "XCI Data",
                         )
                     ),
                     # TAB 3
-                    tabPanel(title = "scratch",
+                    tabPanel(title = "scratch work",
                              plotOutput("tau_hist"),
                     )
                 )
@@ -144,6 +145,7 @@ server <- function(input, output, session) {
             scale_y_continuous(limits = c(0,330))
         genepvalue
         ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))
+        img(src = "xchrom-850bp.png", width = "900px")
     })
     
     ##################
