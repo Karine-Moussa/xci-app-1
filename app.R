@@ -52,8 +52,8 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotOutput(outputId = "gene_pvalue", height = "300px"),
-                                img(src = "xchrom-850bp-annotated.png", width="600px")
+                                plotOutput(outputId = "gene_pvalue", height = "350px"),
+                                img(src = "xchrom-850bp-margin.png", width="600px")
                             )
                         )
                     ),
@@ -113,8 +113,8 @@ server <- function(input, output, session) {
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
         # Create theme for plot
         mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.0), 
-                         legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (8)), 
-                         legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (6)),
+                         legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
+                         legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
                          legend.position = "right",
                          axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
@@ -123,7 +123,7 @@ server <- function(input, output, session) {
         genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
                                                     shape=p_mod_flag,  label=GENE, label2=end, 
                                                     label3=ChromPos, group=1)) +
-            mytheme + ggtitle("X-Chromosome Escape Calls") + 
+            mytheme + ggtitle("X-Chromosome Escape Profile") + 
             xlab("X-Chromosome Position (bp)") + ylab("-log10(p)") + 
             geom_rect(data=NULL, xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330, 
                       fill="lightblue", alpha=0.25) + 
