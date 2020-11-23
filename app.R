@@ -120,7 +120,7 @@ server <- function(input, output, session) {
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
                          axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), face = "bold", angle=45, hjust=1),
                          panel.background = element_rect(fill = "white"))
-        genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
+        genepvalue <- ggplot(data = p_less_300, aes(x=start, y=p_value_mod_neglog10,
                                                     shape=p_mod_flag,  label=GENE, label2=end, 
                                                     label3=ChromPos, group=1)) +
             mytheme + ggtitle("X-Chromosome Escape Profile") + 
@@ -133,21 +133,21 @@ server <- function(input, output, session) {
                       fill="pink", alpha=0.25) + 
             # Data Points
             geom_point(colour = p_less_300$BandColor, size = 2) + 
-            geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+            geom_point(p_more_300, mapping=aes(x=start, y=p_value_mod_neglog10, shape=p_mod_flag), 
                        colour=p_more_300$BandColor, size=2, group=2) + 
-            # Annotations
-            geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = 135285791, y = -log10(P_SIG)+9,  
-                     label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
-            annotate("text", x=7147291, y=320, label="PAR1", size=4, color = "steelblue") + 
-            annotate("text", x=151396566, y=320, label="PAR2", size=4, color = "steelblue") +
             # Scaling and Legends
             scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
-            scale_y_continuous(limits=c(0,330)) + 
+            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300)) + 
+            # Annotations
+            geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
+            annotate("text", x=par1_boundaries[2]+1e6, y=400, label="PAR1", size=4, color = "steelblue", hjust=0) + 
+            annotate("text", x=par2_boundaries[1]-1e6, y=400, label="PAR2", size=4, color = "steelblue", hjust=1) +
+            annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
+                     label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             # Add reactive values
-            geom_point(p_less_300[p_less_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                         colour='red', size=2, group=2) +
-            geom_point(p_more_300[p_more_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+            geom_point(p_less_300[p_less_300$GENE==geneofinterest,], mapping=aes(x=start, y=p_value_mod_neglog10, shape=p_mod_flag), 
+                       colour='red', size=2, group=2) +
+            geom_point(p_more_300[p_more_300$GENE==geneofinterest,], mapping=aes(x=start, y=p_value_mod_neglog10, shape=p_mod_flag), 
                        colour='red', size=2, group=2) + 
             # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(16,17), labels=c("< 300", ">= 300"))
