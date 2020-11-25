@@ -135,6 +135,12 @@ server <- function(input, output, session) {
             geom_point(fill = p_less_300$BandColor, size = 2) + 
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill=p_more_300$BandColor, size=2, group=2) + 
+            geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,], mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'], 
+                                               y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']), 
+                                               shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']), 
+                       fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
+                       color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
+                       size=2, group=3) + 
             # Scaling and Legends
             scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
             scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300)) + 
@@ -152,7 +158,6 @@ server <- function(input, output, session) {
             # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
         genepvalue 
-        #ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))
     })
     
     ##################
