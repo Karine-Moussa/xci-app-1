@@ -151,9 +151,7 @@ server <- function(input, output, session) {
             annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
                      label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             # Add reactive values
-            geom_point(p_less_300[p_less_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                       fill='red', size=2, group=2) +
-            geom_point(p_more_300[p_more_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+            geom_point(x_expr_mod[x_expr_mod$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=2, group=2) + 
             # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
