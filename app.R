@@ -108,6 +108,8 @@ server <- function(input, output, session) {
     output$gene_pvalue <- renderPlot({
         # Save geneofinterest
         geneofinterest <- rv$geneofinterest1
+        geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
+        geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
@@ -134,10 +136,12 @@ server <- function(input, output, session) {
             # Data Points
             geom_point(fill = p_less_300$BandColor, size = 2) + 
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                       fill=p_more_300$BandColor, size=2, group=2) + 
-            geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,], mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'], 
-                                               y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']), 
-                                               shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']), 
+                       fill=p_more_300$BandColor, size=2, group=2) +
+            # Data points below signifance
+            geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,], 
+                       mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'], 
+                                   y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']), 
+                                   shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']), 
                        fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
                        color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
                        size=2, group=3) + 
@@ -150,12 +154,14 @@ server <- function(input, output, session) {
             annotate("text", x=par2_boundaries[1]-1e6, y=400, label="PAR2", size=4, color = "steelblue", hjust=1) +
             annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
                      label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
-            # Add reactive values
-            geom_point(x_expr_mod[x_expr_mod$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+            # Data points added by user reactive values
+            geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=2, group=2) + 
+            geom_text(data = geneofinterest_df[geneofinterest_df$p_value_mod_neglog10==geneofinterest_max_point,],
+                      mapping=aes(x=start,y=-log10(p_value_mod)), colour='red',vjust=-1, group=4) + 
             # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
-        genepvalue 
+        genepvalue  
     })
     
     ##################
