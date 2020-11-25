@@ -120,8 +120,8 @@ server <- function(input, output, session) {
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
                          axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), face = "bold", angle=45, hjust=1),
                          panel.background = element_rect(fill = "white"))
-        genepvalue <- ggplot(data = p_less_300, aes(x=start, y=p_value_mod_neglog10,
-                                                    shape=p_mod_flag,  label=GENE, label2=end, 
+        genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
+                                                    shape=p_mod_flag, label=GENE, label2=end, 
                                                     label3=ChromPos, group=1)) +
             mytheme + ggtitle("X-Chromosome Escape Profile") + 
             xlab("X-Chromosome Position (bp)") + ylab("-log10(p)") + 
@@ -132,9 +132,9 @@ server <- function(input, output, session) {
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                       fill="pink", alpha=0.25) + 
             # Data Points
-            geom_point(colour = p_less_300$BandColor, size = 2) + 
-            geom_point(p_more_300, mapping=aes(x=start, y=p_value_mod_neglog10, shape=p_mod_flag), 
-                       colour=p_more_300$BandColor, size=2, group=2) + 
+            geom_point(fill = p_less_300$BandColor, size = 2) + 
+            geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                       fill=p_more_300$BandColor, size=2, group=2) + 
             # Scaling and Legends
             scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
             scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300)) + 
@@ -145,12 +145,12 @@ server <- function(input, output, session) {
             annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
                      label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             # Add reactive values
-            geom_point(p_less_300[p_less_300$GENE==geneofinterest,], mapping=aes(x=start, y=p_value_mod_neglog10, shape=p_mod_flag), 
-                       colour='red', size=2, group=2) +
-            geom_point(p_more_300[p_more_300$GENE==geneofinterest,], mapping=aes(x=start, y=p_value_mod_neglog10, shape=p_mod_flag), 
-                       colour='red', size=2, group=2) + 
+            geom_point(p_less_300[p_less_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                       fill='red', size=2, group=2) +
+            geom_point(p_more_300[p_more_300$GENE==geneofinterest,], mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                       fill='red', size=2, group=2) + 
             # Scale shape manual
-            scale_shape_manual("-log10(p)", values=c(16,17), labels=c("< 300", ">= 300"))
+            scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
         genepvalue 
         #ggplotly(genepvalue, tooltip = c("label", "label2", "label3","label4"))
     })
