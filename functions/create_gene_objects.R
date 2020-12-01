@@ -47,6 +47,8 @@ create_single_gene_stats <- function(gene)
             avg_skew = mean(c(skew=x_expr[x_expr$GENE==gene,"f"])),
             min_skew = min(c(skew=x_expr[x_expr$GENE==gene,"f"])),
             max_skew = max(c(skew=x_expr[x_expr$GENE==gene,"f"])),
+            # Skew > %25
+            skew_values_plus = c(skew=x_expr[x_expr$GENE==gene & x_expr$f > 0.25,"f"]),
             # Escape state (based on Vector of escape calls) (single)
             escape_category = ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "S"), "SUPPRESS",
                            ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "E"),"ESCAPE",
