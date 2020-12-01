@@ -174,49 +174,58 @@ server <- function(input, output, session) {
         geneofinterest <- rv$geneofinterest2
         #geneofinterest <- "XIST" # For testing
         assign("geneofinterest_stats", create_single_gene_stats(geneofinterest))
+        # Assign object attributes to variables
         avg_p_value <- geneofinterest_stats$avg_p_value
         min_p_value <- geneofinterest_stats$min_p_value
         max_p_value <- geneofinterest_stats$max_p_value
         avg_tau_value <- geneofinterest_stats$avg_tau_value
         min_tau_value <- geneofinterest_stats$min_tau_value
         max_tau_value <- geneofinterest_stats$max_tau_value
+        skew_values <- geneofinterest_stats$skew_values
+        avg_skew_value <- geneofinterest_stats$avg_skew
+        min_skew_value <- geneofinterest_stats$min_skew
+        max_skew_value <- geneofinterest_stats$max_skew
         perc_samples_esc <- geneofinterest_stats$perc_samples_esc
-        tautable <- data.frame("gene" = rep(geneofinterest_stats$gene_name,length(geneofinterest_stats$tau)),
-                               "tau" = geneofinterest_stats$tau,
-                               "p_value" = geneofinterest_stats$p_value)
+        tautable <- data.frame("tau__skew" = c(rep("TAU",length(geneofinterest_stats$tau)),
+                                               rep("SAMPLE SKEW",length(geneofinterest_stats$skew_values))),
+                               "tauvalues__skewvalues" = c(geneofinterest_stats$tau,geneofinterest_stats$skew_values),
+                               "p_value" = c(geneofinterest_stats$p_value,geneofinterest_stats$p_value))
         
+        # My Theme
         mytheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (22), hjust = 0.5), 
-                        legend.title = element_text(colour = "steelblue",  face = "bold.italic", family = "Helvetica", size = (16)), 
-                        legend.text = element_text(face = "italic", colour="steelblue4",family = "Helvetica", size = (16)), 
-                        axis.title = element_text(family = "Helvetica", size = (16), colour = "steelblue4", face = "bold"),
-                        axis.text.x = element_text(family = "Courier", colour = "cornflowerblue", size = (22), face = "bold"),
-                        axis.text.y = element_text(family = "Courier", colour = "cornflowerblue", size = (14), face = "bold"))
+                         legend.position = "none",
+                         axis.title = element_text(family = "Courier", size = (22), colour = "steelblue4", face = "bold"),
+                         axis.text.x = element_text(family = "Helvetica", colour = "black", size = (18), face = "bold"),
+                         axis.title.y = element_blank())
+        # Locations for annotations
         labelx = 1.5
-        labely = 0.25
-        
-        geneofinterest_tauplot <- ggplot(tautable, aes(x = gene, y = tau)) +
+        labely_tau = ifelse(avg_tau_value < 0.25, 0.48, 0.1)
+        labely_skew = ifelse(avg_skew_value < 0.25, 0.48, 0.1)
+        # Create Plot
+        geneofinterest_tauplot <- ggplot(tautable, 
+               aes(x = tau__skew, y = tauvalues__skewvalues, fill = tau__skew)) +
+            geom_violin(alpha = 0.5) + 
+            mytheme + 
             ylim(-0.05,.5) + 
-            geom_violin(fill = "cornflowerblue", alpha = 0.5) + 
-            ggtitle("Tau Distribution") + 
-            xlab("Gene") + 
-            ylab("Tau") + mytheme
-        geneofinterest_tauplot <- geneofinterest_tauplot + 
+            xlab(geneofinterest) + 
             # Add boxplots
             geom_boxplot(width = 0.03, fill = "white") + 
             # Annotate with tau values and p-values
-            annotate("text", x=labelx-1.0, y=c(labely,labely-0.05,labely-0.1), 
-                     label=c(paste0('avg tau: ', sprintf("%1.3f", avg_tau_value)), 
-                            paste0('min tau: ', sprintf("%1.3f", min_tau_value)),
-                            paste0('max tau: ', sprintf("%1.3f", max_tau_value))),
+            annotate("text", x=0.45, y=c(labely_tau,labely_tau-0.025,labely_tau-0.05), 
+                     label=c(paste0('avg tau: ', sprintf("%1.2f", avg_tau_value)), 
+                             paste0('min tau: ', sprintf("%1.2f", min_tau_value)),
+                             paste0('max tau: ', sprintf("%1.2f", max_tau_value))),
                      family = 'Courier', color = "steelblue", size = 6, hjust = 0) + 
-            annotate("text", x=1,y=-.03,
+            annotate("text", x=2.55, y=c(labely_skew,labely_skew-0.025,labely_skew-0.05), 
+                     label=c(paste0('avg skew: ', sprintf("%1.2f", avg_skew_value)), 
+                             paste0('min skew: ', sprintf("%1.2f", min_skew_value)),
+                             paste0('max skew: ', sprintf("%1.2f", max_skew_value))),
+                     family = 'Courier', color = "purple", size = 6, hjust = 1) + 
+            annotate("text", x=1.5,y=-.03,
                      label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc*100),'% of samples'),
-                     family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) +
-            annotate("text", x=labelx, y=c(labely,labely-0.05,labely-0.1), 
-                     label=c(paste0('avg p-value: ', sprintf("%1.3f", avg_p_value)), 
-                             paste0('min p-value: ', sprintf("%1.3f", min_p_value)),
-                             paste0('max p-value: ', sprintf("%1.3f", max_p_value))),
-                     family = 'Courier', color = "black", size = 6, hjust = 1)
+                     family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
+            scale_fill_manual(values = c("purple","cornflowerblue")) + 
+            scale_x_discrete(limits = c("TAU","SAMPLE SKEW"))
         geneofinterest_tauplot
     })
     output$individual_gene_pvalue_plot <- renderPlot({plot(iris)})
