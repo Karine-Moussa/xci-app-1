@@ -70,6 +70,12 @@ ui <- fluidPage(title = "XCI Data",
                                 em("---Examples: XIST, ZBED1, ASMTL", style = "font-size:12px"),br(),
                                 em("---Hover over data points for more information", style = "font-size:12px"),br(),
                                 br(),
+                                strong("TAU and TAU+", style = "font-size:12px"),br(),
+                                em("---All genes  are included in TAU", style = "font-size:12px"),br(),
+                                em("---A subset of genes  were collected from samples with skew > 25% ", style = "font-size:12px"),br(),
+                                em("---Those genes from sample skew > 25% are represented in TAU+", style = "font-size:12px"),br(),
+                                em("---Examples of genes with TAU+ representation: DHRSX, STS, TRAPPC2", style = "font-size:12px"),br(),
+                                br(),
                                 strong("Parameters"),
                                 p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
@@ -237,8 +243,12 @@ server <- function(input, output, session) {
             annotate("text", x=x_center,y=-.03,
                      label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc*100),'% of samples'),
                      family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
-            scale_fill_manual("", values = c("cornflowerblue","purple"), 
-                              labels=c("For all skew values", "Skew > 25%")) 
+            scale_fill_manual("", values = c("cornflowerblue","purple"))
+        # Remove legend if only one violin plot will be displayed
+        if(sum(tautable$tau__tauplus == "TAU+") < 2){
+            geneofinterest_tauplot <- geneofinterest_tauplot +
+                theme(legend.position = "none")
+        }
         # If there is enough information to display tau+ data,
         # display it. Criteria: TAU+ needs at least 2 entries.
         if(sum(tautable$tau__tauplus == "TAU+") >= 2){
