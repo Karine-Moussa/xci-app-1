@@ -195,11 +195,15 @@ server <- function(input, output, session) {
         avg_tau_skewvalues25 <- mean(tau_skewvalues25)
         min_tau_skewvalues25 <- ifelse(is.na(tau_skewvalues25)[1], 0, min(tau_skewvalues25))
         max_tau_skewvalues25 <- ifelse(is.na(tau_skewvalues25)[1], 0, max(tau_skewvalues25))
-        
+        # Create tautable
         tautable <- data.frame("tau__tauplus" = c(rep("TAU",length(geneofinterest_stats$tau)),
-                                                  rep("TAU+",length(skew_skewvalues25))),
+                                    rep("TAU+",length(skew_skewvalues25))),
                                "tau__tauskewvalues25" = c(geneofinterest_stats$tau,tau_skewvalues25))
         
+        # If there are two or less entries for tau+, remove the
+        # tau+ entries from the table (it's not enough info to display)
+        if(sum(tautable$tau__tauplus == "TAU+") <= 2) 
+        {tautable <- tautable[tautable$tau__tauplus == "TAU",]}
         # My Theme
         mytheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (22), hjust = 0.5), 
                          legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
@@ -208,13 +212,16 @@ server <- function(input, output, session) {
                          axis.title = element_text(family = "Courier", size = (22), colour = "steelblue4", face = "bold"),
                          axis.text.x = element_text(family = "Helvetica", colour = "black", size = (18), face = "bold"),
                          axis.title.y = element_blank())
-        # Locations for annotations
+        # Locations for annotations. Some locations will vary depending on:
+        # ---if we display the TAU+ violin plot
+        # ---if the violin plot is top-heavy or bottom-heavy
+        x_center = ifelse(sum(tautable$tau__tauplus == "TAU+") >= 3, 1.5, 1)
         labelx = 1.5
         labely_tau = ifelse(avg_tau_value < 0.25, 0.48, 0.1)
         labely_tauplus = ifelse(avg_tau_skewvalues25 < 0.25, 0.48, 0.1)
         # Create Plot
         geneofinterest_tauplot <- ggplot(tautable, 
-                                         aes(x = tau__tauplus, y = tau__tauskewvalues25, fill = tau__tauplus)) +
+                aes(x = tau__tauplus, y = tau__tauskewvalues25, fill = tau__tauplus)) +
             geom_violin(alpha = 0.5) + 
             mytheme + 
             ylim(-0.05,.5) + 
@@ -227,16 +234,24 @@ server <- function(input, output, session) {
                              paste0('min tau: ', sprintf("%1.2f", min_tau_value)),
                              paste0('max tau: ', sprintf("%1.2f", max_tau_value))),
                      family = 'Courier', color = "steelblue", size = 6, hjust = 0) + 
-            annotate("text", x=2.55, y=c(labely_tauplus,labely_tauplus-0.025,labely_tauplus-0.05), 
-                     label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tau_skewvalues25)), 
-                             paste0('min tau+: ', sprintf("%1.2f", min_tau_skewvalues25)),
-                             paste0('max tau+: ', sprintf("%1.2f", max_tau_skewvalues25))),
-                     family = 'Courier', color = "purple", size = 6, hjust = 1) + 
-            annotate("text", x=1.5,y=-.03,
+            annotate("text", x=x_center,y=-.03,
                      label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc*100),'% of samples'),
                      family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
-            scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue","purple"), labels=c("For all skew values", "Skew > 25%")) + 
-            scale_x_discrete(limits = c("TAU","TAU+"))
+            scale_fill_manual("", values = c("cornflowerblue","purple"), 
+                              labels=c("For all skew values", "Skew > 25%")) 
+        # If there is enough information to display tau+ data,
+        # display it. Criteria: TAU+ needs at least 2 entries.
+        if(sum(tautable$tau__tauplus == "TAU+") >= 2){
+            geneofinterest_tauplot <- geneofinterest_tauplot + 
+                annotate("text", x=2.55, y=c(labely_tauplus,labely_tauplus-0.025,labely_tauplus-0.05), 
+                         label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tau_skewvalues25)), 
+                                 paste0('min tau+: ', sprintf("%1.2f", min_tau_skewvalues25)),
+                                 paste0('max tau+: ', sprintf("%1.2f", max_tau_skewvalues25))),
+                         family = 'Courier', color = "purple", size = 6, hjust = 1) + 
+                scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue","purple"), 
+                                  labels=c("For all skew values", "Skew > 25%")) + 
+                scale_x_discrete(limits = c("TAU","TAU+"))
+        }
         geneofinterest_tauplot
     })
     output$individual_gene_pvalue_plot <- renderPlot({plot(iris)})
