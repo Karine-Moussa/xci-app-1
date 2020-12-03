@@ -5,9 +5,9 @@ account: kmoussa-psu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3220450
-bundleId: 3935387
+bundleId: 3938498
 url: https://kmoussa-psu.shinyapps.io/xci-app-1/
-when: 1606950381.7091
+when: 1607008122.37512
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: images/Human_chromosome_X_-_400_550_850_bphs.png

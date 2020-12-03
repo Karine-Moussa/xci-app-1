@@ -71,10 +71,8 @@ ui <- fluidPage(title = "XCI Data",
                                 em("---Hover over data points for more information", style = "font-size:12px"),br(),
                                 br(),
                                 strong("TAU and TAU+", style = "font-size:12px"),br(),
-                                em("---All genes  are included in TAU", style = "font-size:12px"),br(),
-                                em("---A subset of genes  were collected from samples with skew > 25% ", style = "font-size:12px"),br(),
-                                em("---Those genes from sample skew > 25% are represented in TAU+", style = "font-size:12px"),br(),
-                                em("---Examples of genes with TAU+ representation: DHRSX, STS, TRAPPC2", style = "font-size:12px"),br(),
+                                em("---All samples  are included in TAU", style = "font-size:12px"),br(),
+                                em("---Those samples from skew data < 25% are represented in TAU+", style = "font-size:12px"),br(),
                                 br(),
                                 strong("Parameters"),
                                 p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
@@ -192,12 +190,12 @@ server <- function(input, output, session) {
         min_skew_value <- geneofinterest_stats$min_skew
         max_skew_value <- geneofinterest_stats$max_skew
         perc_samples_esc <- geneofinterest_stats$perc_samples_esc
-        # Collect data for skew values > 25%
-        skew_skewvalues25 <- (x_expr[x_expr$GENE==geneofinterest & x_expr$f > 0.25,"f"])
+        # Collect data for skew values < 25%
+        skew_skewvalues25 <- (x_expr[x_expr$GENE==geneofinterest & x_expr$f < 0.25,"f"])
         avg_skew_skewvalues25 <- mean(skew_skewvalues25)
         min_skew_skewvalues25 <- ifelse(is.na(skew_skewvalues25), 0, min(skew_skewvalues25))
         max_skew_skewvalues25 <- ifelse(is.na(skew_skewvalues25), 0, max(skew_skewvalues25))
-        tau_skewvalues25 <- (x_expr[x_expr$GENE==geneofinterest & x_expr$f > 0.25,"tau"])
+        tau_skewvalues25 <- (x_expr[x_expr$GENE==geneofinterest & x_expr$f < 0.25,"tau"])
         avg_tau_skewvalues25 <- mean(tau_skewvalues25)
         min_tau_skewvalues25 <- ifelse(is.na(tau_skewvalues25)[1], 0, min(tau_skewvalues25))
         max_tau_skewvalues25 <- ifelse(is.na(tau_skewvalues25)[1], 0, max(tau_skewvalues25))
@@ -239,7 +237,7 @@ server <- function(input, output, session) {
                      label=c(paste0('avg tau: ', sprintf("%1.2f", avg_tau_value)), 
                              paste0('min tau: ', sprintf("%1.2f", min_tau_value)),
                              paste0('max tau: ', sprintf("%1.2f", max_tau_value))),
-                     family = 'Courier', color = "steelblue", size = 6, hjust = 0) + 
+                     family = 'Courier', color = "steelblue", size = 4, hjust = 0) + 
             annotate("text", x=x_center,y=-.03,
                      label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc*100),'% of samples'),
                      family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
@@ -257,9 +255,9 @@ server <- function(input, output, session) {
                          label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tau_skewvalues25)), 
                                  paste0('min tau+: ', sprintf("%1.2f", min_tau_skewvalues25)),
                                  paste0('max tau+: ', sprintf("%1.2f", max_tau_skewvalues25))),
-                         family = 'Courier', color = "purple", size = 6, hjust = 1) + 
+                         family = 'Courier', color = "purple", size = 4, hjust = 1) + 
                 scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue","purple"), 
-                                  labels=c("For all skew values", "Skew > 25%")) + 
+                                  labels=c("For all skew values", "Skew < 25%")) + 
                 scale_x_discrete(limits = c("TAU","TAU+"))
         }
         geneofinterest_tauplot
