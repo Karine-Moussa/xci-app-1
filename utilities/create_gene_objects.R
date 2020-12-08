@@ -1,6 +1,6 @@
 #### Create gene class: attributes for each gene ######
-create_single_gene_stats <- function(gene)
-    ### User passes in a gene name from the x_expr list
+create_single_gene_stats <- function(gene, ref_table)
+    ### User passes in a gene name from the ref_table list
     ### Function returns the object "<gene>_stats" with attributes of gene
     ### Usage: assign((paste0(gene, "_stats")), create_single_gene_stats(gene))
 # First, set up function for finding gene color stain and region
@@ -14,7 +14,7 @@ create_single_gene_stats <- function(gene)
         band_tmp <- ifelse(in_region==T, xchrom_map_colored[row_num,"band"],"")
         # Break out of this loop once we find a stain color
         if(isTruthy(gene_stain != "")){break}
-        }
+    }
 # Then, assign attributes to gene
     assign(paste0(gene, "_stats"),
         # Add any attributes of interest to this list
@@ -22,12 +22,12 @@ create_single_gene_stats <- function(gene)
             # Gene name (single)
             gene_name = gene,
             # Gene ID (single)
-            gene_id = c(id=x_expr[x_expr$GENE==gene,"gene_id"])[1],
+            gene_id = c(id=ref_table[ref_table$GENE==gene,"gene_id"])[1],
             # Sample where the gene came from (vector)
-            parent_sample = c(ps=x_expr[x_expr$GENE==gene,"sample"]),
+            parent_sample = c(ps=ref_table[ref_table$GENE==gene,"sample"]),
             # Start and end bp (single)
-            start = c(start=x_expr[x_expr$GENE==gene,"start"])[1],
-            end = c(end=x_expr[x_expr$GENE==gene,"end"])[1],
+            start = c(start=ref_table[ref_table$GENE==gene,"start"])[1],
+            end = c(end=ref_table[ref_table$GENE==gene,"end"])[1],
             # Stain color (single)
             band_color = gene_stain,
             # Chromosomal location 
@@ -35,36 +35,36 @@ create_single_gene_stats <- function(gene)
             arm = arm_tmp,
             band = band_tmp,
             # Escape status (vector)
-            status = c(stat=x_expr[x_expr$GENE==gene,"status"]),
+            status = c(stat=ref_table[ref_table$GENE==gene,"status"]),
             # P_value (vector)
-            p_values = c(p=x_expr[x_expr$GENE==gene,"p_value"]),
+            p_values = c(p=ref_table[ref_table$GENE==gene,"p_value"]),
             # Average, min, and max p_value (single)
-            avg_p_value = mean(c(x_expr[x_expr$GENE==gene,"p_value"])),
-            min_p_value = min(c(x_expr[x_expr$GENE==gene,"p_value"])),
-            max_p_value = max(c(x_expr[x_expr$GENE==gene,"p_value"])),
+            avg_p_value = mean(c(ref_table[ref_table$GENE==gene,"p_value"])),
+            min_p_value = min(c(ref_table[ref_table$GENE==gene,"p_value"])),
+            max_p_value = max(c(ref_table[ref_table$GENE==gene,"p_value"])),
             # Skew
-            skew_values = c(skew=x_expr[x_expr$GENE==gene,"f"]),
-            avg_skew = mean(c(skew=x_expr[x_expr$GENE==gene,"f"])),
-            min_skew = min(c(skew=x_expr[x_expr$GENE==gene,"f"])),
-            max_skew = max(c(skew=x_expr[x_expr$GENE==gene,"f"])),
+            skew_values = c(skew=ref_table[ref_table$GENE==gene,"f"]),
+            avg_skew = mean(c(skew=ref_table[ref_table$GENE==gene,"f"])),
+            min_skew = min(c(skew=ref_table[ref_table$GENE==gene,"f"])),
+            max_skew = max(c(skew=ref_table[ref_table$GENE==gene,"f"])),
             # Skew > %25
-            skew_values_plus = c(skew=x_expr[x_expr$GENE==gene & x_expr$f > 0.25,"f"]),
+            skew_values_plus = c(skew=ref_table[ref_table$GENE==gene & ref_table$f > 0.25,"f"]),
             # Escape state (based on Vector of escape calls) (single)
-            escape_category = ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "S"), "SUPPRESS",
-                           ifelse(all(c(esc_cat=x_expr[x_expr$GENE==gene,"status"]) == "E"),"ESCAPE",
+            escape_category = ifelse(all(c(esc_cat=ref_table[ref_table$GENE==gene,"status"]) == "S"), "SUPPRESS",
+                           ifelse(all(c(esc_cat=ref_table[ref_table$GENE==gene,"status"]) == "E"),"ESCAPE",
                                   "VARIABLE")),
             # Percentage of samples for which gene escaped (single)
-            perc_samples_esc = sum(c(x_expr[x_expr$GENE==gene,"status"]) == "E")/length(c(x_expr[x_expr$GENE==gene,"status"])),
+            perc_samples_esc = sum(c(ref_table[ref_table$GENE==gene,"status"]) == "E")/length(c(ref_table[ref_table$GENE==gene,"status"])),
             # Tau (vector)
-            tau = c(tau=x_expr[x_expr$GENE==gene,"tau"]),
+            tau = c(tau=ref_table[ref_table$GENE==gene,"tau"]),
             # Average, min, and max tau_value (single)
-            avg_tau_value = mean(c(x_expr[x_expr$GENE==gene,"tau"])),
-            min_tau_value = min(c(x_expr[x_expr$GENE==gene,"tau"])),
-            max_tau_value = max(c(x_expr[x_expr$GENE==gene,"tau"])),
+            avg_tau_value = mean(c(ref_table[ref_table$GENE==gene,"tau"])),
+            min_tau_value = min(c(ref_table[ref_table$GENE==gene,"tau"])),
+            max_tau_value = max(c(ref_table[ref_table$GENE==gene,"tau"])),
             # Stain color
             #stain_color = BandColor[xchrom_map$density == "NA"] = xcolors[1],
             # Cell Type (vector)
-            cell_type = c(ctype=rep("lymphoblast",length(x_expr[x_expr$GENE==gene,"status"])))
+            cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"])))
         )
         )
 )
@@ -82,14 +82,14 @@ create_multiple_gene_stats <- function(gene_list){
 }
 
 # Create a table summarizing genes and escape states
-create_table_with_multiple_gene_stats <- function(gene_list){
+create_table_with_multiple_gene_stats <- function(gene_list, ref_table){
     ### User passes a list of genes
     ### Function returns a table with gene statistics based on 
     ###   the attributes in the "<gene>_stats" object
     df <- data.frame(matrix(vector(), 0, 2))
     for (gene in gene_list){
         # Create gene stat df
-        gene_stat <- create_single_gene_stats(gene)
+        gene_stat <- create_single_gene_stats(gene, ref_table)
         # Collect parameters of interest and add to gene_stat_table
         gene_category_vector <- c(gene_stat$gene_name, 
                                   gene_stat$escape_category,
@@ -112,7 +112,7 @@ create_table_with_multiple_gene_stats <- function(gene_list){
 # Create csv file with summary information for each gene
 # Save gene list to csv file in data_intermediate
 gene_list_all <- c(unique(x_expr[,"GENE"]))
-gene_stat_table <- create_table_with_multiple_gene_stats(gene_list_all)
+gene_stat_table <- create_table_with_multiple_gene_stats(gene_list_all, x_expr)
 write.csv(gene_stat_table, "data_intermediate/gene_stat_table.csv")
 
 # clean up variables

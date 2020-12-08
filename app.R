@@ -84,7 +84,20 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             mainPanel(
                                 (plotOutput(outputId = "individual_gene_tau_plot")),
-                                (dataTableOutput(outputId = "gene_detail_table"))
+                                fluidRow(
+                                    column(12, "",
+                                           fixedRow(
+                                            column(3,
+                                                (htmlOutput("table1_label")),
+                                                (dataTableOutput(outputId = "gene_detail_table"))
+                                            ),
+                                            column(3, offset = 6,
+                                                (htmlOutput("table2_label")),
+                                                (dataTableOutput(outputId = "gene_detail_table_tauplus"))     
+                                            )
+                                           )
+                                        )
+                                )
                             )
                         )
                     ),
@@ -177,7 +190,7 @@ server <- function(input, output, session) {
         )
         geneofinterest <- rv$geneofinterest2
         #geneofinterest <- "XIST" # For testing
-        assign("geneofinterest_stats", create_single_gene_stats(geneofinterest))
+        assign("geneofinterest_stats", create_single_gene_stats(geneofinterest, x_expr))
         # Assign object attributes to variables
         avg_p_value <- geneofinterest_stats$avg_p_value
         min_p_value <- geneofinterest_stats$min_p_value
@@ -190,20 +203,20 @@ server <- function(input, output, session) {
         min_skew_value <- geneofinterest_stats$min_skew
         max_skew_value <- geneofinterest_stats$max_skew
         perc_samples_esc <- geneofinterest_stats$perc_samples_esc
-        # Collect data for skew values < 25%
-        skew_skewvalues25 <- (x_expr[x_expr$GENE==geneofinterest & x_expr$f < 0.25,"f"])
-        avg_skew_skewvalues25 <- mean(skew_skewvalues25)
-        min_skew_skewvalues25 <- ifelse(is.na(skew_skewvalues25), 0, min(skew_skewvalues25))
-        max_skew_skewvalues25 <- ifelse(is.na(skew_skewvalues25), 0, max(skew_skewvalues25))
-        tau_skewvalues25 <- (x_expr[x_expr$GENE==geneofinterest & x_expr$f < 0.25,"tau"])
-        avg_tau_skewvalues25 <- mean(tau_skewvalues25)
-        min_tau_skewvalues25 <- ifelse(is.na(tau_skewvalues25)[1], 0, min(tau_skewvalues25))
-        max_tau_skewvalues25 <- ifelse(is.na(tau_skewvalues25)[1], 0, max(tau_skewvalues25))
+        # Assign object attributes to variables with skew < 25%
+        assign("geneofinterest_tauplus_stats", create_single_gene_stats(geneofinterest, x_expr_tauplus))
+        skew_tauplus <- geneofinterest_tauplus_stats$skew_values
+        avg_skew_tauplus <- geneofinterest_tauplus_stats$avg_skew
+        min_skew_tauplus <- geneofinterest_tauplus_stats$min_skew
+        max_skew_tauplus <- geneofinterest_tauplus_stats$max_skew
+        tau_tauplus <- geneofinterest_tauplus_stats$tau
+        avg_tauplus <- geneofinterest_tauplus_stats$avg_tau_value
+        min_tauplus <- geneofinterest_tauplus_stats$min_tau_value
+        max_tauplus <- geneofinterest_tauplus_stats$max_tau_value
         # Create tautable
         tautable <- data.frame("tau__tauplus" = c(rep("TAU",length(geneofinterest_stats$tau)),
-                                    rep("TAU+",length(skew_skewvalues25))),
-                               "tau__tauskewvalues25" = c(geneofinterest_stats$tau,tau_skewvalues25))
-        
+                                                  rep("TAU+",length(skew_tauplus))),
+                               "tau__tauskewvalues25" = c(geneofinterest_stats$tau,tau_tauplus))
         # If there are two or less entries for tau+, remove the
         # tau+ entries from the table (it's not enough info to display)
         if(sum(tautable$tau__tauplus == "TAU+") <= 2) 
@@ -222,10 +235,10 @@ server <- function(input, output, session) {
         x_center = ifelse(sum(tautable$tau__tauplus == "TAU+") >= 3, 1.5, 1)
         labelx = 1.5
         labely_tau = ifelse(avg_tau_value < 0.25, 0.48, 0.1)
-        labely_tauplus = ifelse(avg_tau_skewvalues25 < 0.25, 0.48, 0.1)
+        labely_tauplus = ifelse(avg_tauplus < 0.25, 0.48, 0.1)
         # Create Plot
         geneofinterest_tauplot <- ggplot(tautable, 
-                aes(x = tau__tauplus, y = tau__tauskewvalues25, fill = tau__tauplus)) +
+              aes(x = tau__tauplus, y = tau__tauskewvalues25, fill = tau__tauplus)) +
             geom_violin(alpha = 0.5) + 
             mytheme + 
             ylim(-0.05,.5) + 
@@ -252,26 +265,60 @@ server <- function(input, output, session) {
         if(sum(tautable$tau__tauplus == "TAU+") >= 2){
             geneofinterest_tauplot <- geneofinterest_tauplot + 
                 annotate("text", x=2.55, y=c(labely_tauplus,labely_tauplus-0.025,labely_tauplus-0.05), 
-                         label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tau_skewvalues25)), 
-                                 paste0('min tau+: ', sprintf("%1.2f", min_tau_skewvalues25)),
-                                 paste0('max tau+: ', sprintf("%1.2f", max_tau_skewvalues25))),
+                         label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tauplus)), 
+                                 paste0('min tau+: ', sprintf("%1.2f", min_tauplus)),
+                                 paste0('max tau+: ', sprintf("%1.2f", max_tauplus))),
                          family = 'Courier', color = "purple", size = 4, hjust = 1) + 
                 scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue","purple"), 
                                   labels=c("For all skew values", "Skew < 25%")) + 
                 scale_x_discrete(limits = c("TAU","TAU+"))
         }
         geneofinterest_tauplot
+        
     })
-    output$individual_gene_pvalue_plot <- renderPlot({plot(iris)})
+    # Label for first table
+    output$table1_label <- renderText({
+        validate(need(input$geneofinterest2,""))
+        # Create html
+        formatedFont1 <- sprintf('<font color="%s">%s</font>',"black","TAU Data")
+        # Append to text to show
+        outTxt <- paste(formatedFont1, collapse=' ')
+        outTxt
+        })
+    # Table for geneofinterest tau and p_vales
     output$gene_detail_table <- renderDataTable({
         validate(need(input$geneofinterest2,""))
+        textOutput("please work")
         geneofinterest <- rv$geneofinterest2
-        assign(("gene_stats"), create_single_gene_stats(geneofinterest))
+        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
+        assign(("gene_stats_tauplus"), create_single_gene_stats(geneofinterest, x_expr_tauplus))
         genestatdf <- data.frame(sample = gene_stats$parent_sample,
-                                 cell_type = gene_stats$cell_type,
-                                 status = gene_stats$status,
+                                 cell = gene_stats$cell_type,
+                                 state = gene_stats$status,
                                  tau = gene_stats$tau,
-                                 p_value = gene_stats$p_values)
+                                 skew = gene_stats$skew_values,
+                                 p = gene_stats$p_values)
+    })
+    # Label for second table
+    output$table2_label <- renderText({
+        validate(need(input$geneofinterest2,""))
+        # Create html
+        formatedFont1 <- sprintf('<font color="%s">%s</font>',"black","TAU+ Data")
+        # Append to text to show
+        outTxt <- paste(formatedFont1, collapse=' ')
+        outTxt
+    })
+    # Table for TAU+ geneofinterest tau and p_values
+    output$gene_detail_table_tauplus <- renderDataTable({
+        validate(need(input$geneofinterest2,""))
+        geneofinterest <- rv$geneofinterest2
+        assign(("gene_stats_tauplus"), create_single_gene_stats(geneofinterest, x_expr_tauplus))
+        genestatdf <- data.frame(sample = gene_stats_tauplus$parent_sample,
+                                 cell = gene_stats_tauplus$cell_type,
+                                 state = gene_stats_tauplus$status,
+                                 tau_plus = gene_stats_tauplus$tau,
+                                 skew = gene_stats_tauplus$skew_values,
+                                 p = gene_stats_tauplus$p_values)
     })
     
     ##################
