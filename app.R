@@ -87,11 +87,11 @@ ui <- fluidPage(title = "XCI Data",
                                 fluidRow(
                                     column(12, "",
                                            fixedRow(
-                                            column(3,
+                                            column(4,
                                                 (htmlOutput("table1_label")),
                                                 (dataTableOutput(outputId = "gene_detail_table"))
                                             ),
-                                            column(3, offset = 6,
+                                            column(4, offset = 4,
                                                 (htmlOutput("table2_label")),
                                                 (dataTableOutput(outputId = "gene_detail_table_tauplus"))     
                                             )
@@ -288,7 +288,6 @@ server <- function(input, output, session) {
     # Table for geneofinterest tau and p_vales
     output$gene_detail_table <- renderDataTable({
         validate(need(input$geneofinterest2,""))
-        textOutput("please work")
         geneofinterest <- rv$geneofinterest2
         assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
         assign(("gene_stats_tauplus"), create_single_gene_stats(geneofinterest, x_expr_tauplus))
