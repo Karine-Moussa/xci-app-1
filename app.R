@@ -14,11 +14,11 @@ library(png, warn.conflicts = FALSE)
 library(gridExtra, warn.conflicts = FALSE)
 
 ### Source Data and Functions ###
-source("functions/format_input_data.R", local = TRUE)
-source("functions/create_global_variables.R", local = TRUE)
-source("functions/x_expr_mods.R", local = TRUE)
-source("functions/create_gene_objects.R", local = TRUE)
-source("functions/format_plot_aesthetics.R", local = TRUE)
+source("utilities/format_input_data.R", local = TRUE)
+source("utilities/create_global_variables.R", local = TRUE)
+source("utilities/x_expr_mods.R", local = TRUE)
+source("utilities/create_gene_objects.R", local = TRUE)
+source("utilities/format_plot_aesthetics.R", local = TRUE)
 
 ### Load files and pre-processed data
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
