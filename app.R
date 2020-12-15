@@ -89,11 +89,12 @@ ui <- fluidPage(title = "XCI Data",
                                            fixedRow(
                                             column(4,
                                                 (htmlOutput("table1_label")),
+                                                (downloadButton("table1_download", "Download TAU Data")),
                                                 (dataTableOutput(outputId = "gene_detail_table"))
                                             ),
                                             column(4, offset = 4,
                                                 (htmlOutput("table2_label")),
-                                                (dataTableOutput(outputId = "gene_detail_table_tauplus"))     
+                                                (dataTableOutput(outputId = "gene_detail_table_tauplus")) 
                                             )
                                            )
                                         )
@@ -274,7 +275,6 @@ server <- function(input, output, session) {
                 scale_x_discrete(limits = c("TAU","TAU+"))
         }
         geneofinterest_tauplot
-        
     })
     # Label for first table
     output$table1_label <- renderText({
@@ -285,6 +285,19 @@ server <- function(input, output, session) {
         outTxt <- paste(formatedFont1, collapse=' ')
         outTxt
         })
+    # Download button for geneofinterest
+    output$table1_download <- downloadHandler(
+        filename = function(){
+            # Name of created file
+            gene <- rv$genofinterest2
+            paste0(gene, "_tau_table.csv")
+        },
+        content = function(file){
+            # Get the data source
+            mydata <- readRDS('data_output/geneofinterest_tau_table.rds')
+            write.csv(mydata, file)
+        }
+    )
     # Table for geneofinterest tau and p_vales
     output$gene_detail_table <- renderDataTable({
         validate(need(input$geneofinterest2,""))
@@ -297,6 +310,7 @@ server <- function(input, output, session) {
                                  tau = gene_stats$tau,
                                  skew = gene_stats$skew_values,
                                  p = gene_stats$p_values)
+        saveRDS(genestatdf, "data_output/geneofinterest_tau_table.rds")
     })
     # Label for second table
     output$table2_label <- renderText({
