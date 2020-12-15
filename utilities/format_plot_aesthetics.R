@@ -39,3 +39,20 @@ shape_vector <- as.factor(shape_vector)
 
 # clean up variables
 rm(i)
+
+# Create chromosome image
+# Create xchrom color map segments
+chrom_segments <- vector('list')
+chrom_segments$seg1 <- geom_segment(aes(x = colormap_df$bp_start[1], y = -0.6, xend = colormap_df$bp_stop[1], yend = -0.6),
+                                    size = 4, color = colormap_df$BandColor[1], lineend = "round")
+chrom_segments$seg40 <- geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = -0.6, 
+                                         xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = -0.6),
+                                     size = 4, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round")
+i = 1
+for(i in 2:dim(colormap_df)[1]-2){
+    i <- i + 1
+    segment_entry = paste0("chrom_segments$seg",i," <- geom_segment(aes(x = ",colormap_df$bp_start[i],", y = -0.6, xend = ",colormap_df$bp_stop[i],
+                           ", yend = -0.6), size = 4, color = '",colormap_df$BandColor[i],"')")
+    eval(parse(text = segment_entry))
+}
+rm(i)
