@@ -131,6 +131,8 @@ server <- function(input, output, session) {
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
+        # Create xchrom color map df
+        colormap_df <- data.frame(xchrom_map_colored[,c('bp_start','bp_stop','BandColor')])
         # Create theme for plot
         mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.0), 
                          legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
@@ -156,7 +158,7 @@ server <- function(input, output, session) {
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill=p_more_300$BandColor, size=2, group=2) +
             # Data points below signifance
-            geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,], 
+            geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],  
                        mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'], 
                                    y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']), 
                                    shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']), 
@@ -178,7 +180,51 @@ server <- function(input, output, session) {
             geom_text(data = geneofinterest_df[geneofinterest_df$p_value_mod_neglog10==geneofinterest_max_point,],
                       mapping=aes(x=start,y=-log10(p_value_mod)), colour='red',vjust=-1, group=4) + 
             # Scale shape manual
-            scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
+            scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) + 
+########## !! WILL DEFINITELY CHANGE THIS!!! ####################
+            geom_segment(aes(x = colormap_df$bp_start[1], y = -0.6, xend = colormap_df$bp_stop[1], yend = -0.6),
+                            size = 4, color = colormap_df$BandColor[1], lineend = "round") + 
+            geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = -0.6, 
+                             xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = -0.6),
+                         size = 4, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
+            geom_segment(aes(x = 4400001, y = -0.6, xend = 6100000, yend = -0.6), size = 4, color = 'gray40') + 
+            geom_segment(aes(x = 6100001, y = -0.6, xend = 9600000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 9600001, y = -0.6, xend = 17400000, yend = -0.6), size = 4, color = 'gray40') + 
+            geom_segment(aes(x = 17400001, y = -0.6, xend = 19200000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 19200001, y = -0.6, xend = 21900000, yend = -0.6), size = 4, color = 'gray40') + 
+            geom_segment(aes(x = 21900001, y = -0.6, xend = 24900000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 24900001, y = -0.6, xend = 29300000, yend = -0.6), size = 4, color = 'gray0') + 
+            geom_segment(aes(x = 29300001, y = -0.6, xend = 31500000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 31500001, y = -0.6, xend = 37800000, yend = -0.6), size = 4, color = 'gray0') + 
+            geom_segment(aes(x = 37800001, y = -0.6, xend = 42500000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 42500001, y = -0.6, xend = 47600000, yend = -0.6), size = 4, color = 'gray20') + 
+            geom_segment(aes(x = 47600001, y = -0.6, xend = 50100000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 50100001, y = -0.6, xend = 54800000, yend = -0.6), size = 4, color = 'gray60') + 
+            geom_segment(aes(x = 54800001, y = -0.6, xend = 58100000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 58100001, y = -0.6, xend = 61000000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 61000001, y = -0.6, xend = 63800000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 63800001, y = -0.6, xend = 65400000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 65400001, y = -0.6, xend = 68500000, yend = -0.6), size = 4, color = 'gray40') + 
+            geom_segment(aes(x = 68500001, y = -0.6, xend = 73000000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 73000001, y = -0.6, xend = 74700000, yend = -0.6), size = 4, color = 'gray40') + 
+            geom_segment(aes(x = 74700001, y = -0.6, xend = 76800000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 76800001, y = -0.6, xend = 85400000, yend = -0.6), size = 4, color = 'gray0') + 
+            geom_segment(aes(x = 85400001, y = -0.6, xend = 87000000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 87000001, y = -0.6, xend = 92700000, yend = -0.6), size = 4, color = 'gray0') + 
+            geom_segment(aes(x = 92700001, y = -0.6, xend = 94300000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 94300001, y = -0.6, xend = 99100000, yend = -0.6), size = 4, color = 'gray20') + 
+            geom_segment(aes(x = 99100001, y = -0.6, xend = 103300000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 103300001, y = -0.6, xend = 104500000, yend = -0.6), size = 4, color = 'gray40') + 
+            geom_segment(aes(x = 104500001, y = -0.6, xend = 109400000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 109400001, y = -0.6, xend = 117400000, yend = -0.6), size = 4, color = 'gray20') + 
+            geom_segment(aes(x = 117400001, y = -0.6, xend = 121800000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 121800001, y = -0.6, xend = 129500000, yend = -0.6), size = 4, color = 'gray0') + 
+            geom_segment(aes(x = 129500001, y = -0.6, xend = 131300000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 131300001, y = -0.6, xend = 134500000, yend = -0.6), size = 4, color = 'gray60') + 
+            geom_segment(aes(x = 134500001, y = -0.6, xend = 138900000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 138900001, y = -0.6, xend = 141200000, yend = -0.6), size = 4, color = 'gray20') + 
+            geom_segment(aes(x = 141200001, y = -0.6, xend = 143000000, yend = -0.6), size = 4, color = 'gray80') + 
+            geom_segment(aes(x = 143000001, y = -0.6, xend = 148000000, yend = -0.6), size = 4, color = 'gray0')
         genepvalue  
     })
     
