@@ -47,15 +47,14 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                (htmlOutput("gene_gwas_table_label")),
-                                (dataTableOutput(outputId = "gene_gwas_data")),
-                                br(),
                                 em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotOutput(outputId = "gene_pvalue", height = "450px")
+                                plotOutput(outputId = "gene_pvalue", height = "450px"),
                                 #,img(src = "xchrom-850bp-margin.png", width="600px")
+                                (htmlOutput("gene_gwas_table_label")),
+                                (dataTableOutput(outputId = "gene_gwas_data"))
                             )
                         )
                     ),
