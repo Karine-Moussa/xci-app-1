@@ -47,8 +47,10 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey"),
-                                br()
+                                (htmlOutput("gene_gwas_table_label")),
+                                (dataTableOutput(outputId = "gene_gwas_data")),
+                                br(),
+                                em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
@@ -79,8 +81,6 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                (htmlOutput("gene_gwas_table_label")),
-                                (dataTableOutput(outputId = "gene_gwas_data")),
                                 em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
                             ),
                             mainPanel(
@@ -288,7 +288,7 @@ server <- function(input, output, session) {
     ############# GWAS TABLE ##################
     # Label for GWAS table
     output$gene_gwas_table_label <- renderText({
-        validate(need(input$geneofinterest2,""))
+        validate(need(input$geneofinterest1,""))
         # Create html
         formatedFont1 <- sprintf('<font color="%s">%s</font>',"black","GWAS Catalog Associations:")
         # Append to text to show
@@ -297,8 +297,8 @@ server <- function(input, output, session) {
     })
     # Gwas table
     output$gene_gwas_data <- renderDataTable({
-        validate(need(input$geneofinterest2,""))
-        geneofinterest <- rv$geneofinterest2
+        validate(need(input$geneofinterest1,""))
+        geneofinterest <- rv$geneofinterest1
         assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
         df <- gene_stats$gwas_df
         df},
