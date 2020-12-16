@@ -53,8 +53,13 @@ ui <- fluidPage(title = "XCI Data",
                             mainPanel(
                                 plotOutput(outputId = "gene_pvalue", height = "450px"),
                                 #,img(src = "xchrom-850bp-margin.png", width="600px")
-                                (htmlOutput("gene_gwas_table_label")),
-                                (dataTableOutput(outputId = "gene_gwas_data"))
+                                # Only show this panel if the plot type is a histogram
+                                conditionalPanel(
+                                    condition = "input.geneofinterest1 != ''",
+                                    p("GWAS Catalog Search:", style = "font-size:16px"),
+                                    p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                    (dataTableOutput(outputId = "gene_gwas_data"))
+                                )
                             )
                         )
                     ),

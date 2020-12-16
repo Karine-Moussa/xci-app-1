@@ -67,6 +67,7 @@ create_single_gene_stats <- function(gene, ref_table)
             cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"]))),
             # Add GWAS association info
             gwas_df = data.frame(Date = gwas_associations_v1_xonly[grepl(gene, gwas_associations_v1_xonly$MAPPED_GENE),"DATE.ADDED.TO.CATALOG"],
+                                 "Mapped.Gene" = gwas_associations_v1_xonly[grepl(gene, gwas_associations_v1_xonly$MAPPED_GENE),"MAPPED_GENE"],
                                  "Disease/Trait" = gwas_associations_v1_xonly[grepl(gene, gwas_associations_v1_xonly$MAPPED_GENE),"DISEASE.TRAIT"],
                                  Link = gwas_associations_v1_xonly[grepl(gene, gwas_associations_v1_xonly$MAPPED_GENE),"LINK"])
         )
