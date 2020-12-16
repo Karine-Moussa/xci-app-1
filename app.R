@@ -47,8 +47,8 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                em("Data was produced by ", span(a("XCIR Package", href="https://www.bioconductor.org/packages/release/bioc/html/XCIR.html", target="_blank")), style = "font-size:12px"),
-                                br(),
+                                em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey"),
+                                br()
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
@@ -78,11 +78,10 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
-                                em("Data was produced by ", span(a("XCIR Package", href="https://www.bioconductor.org/packages/release/bioc/html/XCIR.html", target="_blank")), style = "font-size:12px"),
-                                br(),
                                 br(),
                                 (htmlOutput("gene_gwas_table_label")),
-                                (dataTableOutput(outputId = "gene_gwas_data"))
+                                (dataTableOutput(outputId = "gene_gwas_data")),
+                                em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
                             ),
                             mainPanel(
                                 (plotOutput(outputId = "individual_gene_tau_plot")),
@@ -106,8 +105,8 @@ ui <- fluidPage(title = "XCI Data",
                         )
                     ),
                     # TAB 3
-                    tabPanel(title = "scratch work",
-                             plotOutput("tau_hist"),
+                    tabPanel(title = "Publication History",
+                    em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
                     )
                 )
 )
@@ -386,13 +385,6 @@ server <- function(input, output, session) {
     ##################
     ## TAB 3 OUTPUT
     ##################
-    output$tau_hist <- renderPlot({
-
-        hist(rv$tau_data, breaks = 30, col = "grey", border = "white",
-             xlab = "Xi/TotalExpression",
-             main = "TAU")
-        # next step ^ ggplot this
-    })
 }
 
 #This lets script know its a shiny app
