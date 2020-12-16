@@ -3,17 +3,13 @@
 
 *Latest Update*
 
-Moved GWAS search to first tab. Added link to data source.
+Moved gene annotations to botton of plot (better fit)
 
-<img width="1086" alt="image" src="https://user-images.githubusercontent.com/71516524/102397349-c4e17700-3fab-11eb-9f55-8102bcbf5d5e.png">
+<img width="1402" alt="image" src="https://user-images.githubusercontent.com/71516524/102405575-5efaec80-3fb7-11eb-841e-51cbc44a5293.png">
 
 
 *Previous Update*
 
-Created virtual chromosome. Still need to add labels (tab 1)
+Moved GWAS search to first tab. Added link to data source.
 
-<img width="960" alt="image" src="https://user-images.githubusercontent.com/71516524/102273830-ed586b00-3ef0-11eb-8e20-85aa1c88c8e1.png">
-
-Added GWAS hits to individual gene search (tab 2)
-
-<img width="598" alt="image" src="https://user-images.githubusercontent.com/71516524/102273645-a5394880-3ef0-11eb-8e78-581095f005f3.png">
+<img width="1086" alt="image" src="https://user-images.githubusercontent.com/71516524/102397349-c4e17700-3fab-11eb-9f55-8102bcbf5d5e.png">

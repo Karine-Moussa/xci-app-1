@@ -34,8 +34,14 @@ ui <- fluidPage(title = "XCI Data",
                         sidebarLayout(
                             # Create a sidebar panel containing input controls ----
                             sidebarPanel(
-                                h3("Observing XCI escape calls from 102 samples"),
-                                autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
+                                h3("Observing XCI Escape Calls"),
+                                selectInput("searchType", "Search Type",
+                                            c(Gene = "gene", Disease = "disease")
+                                ),
+                                conditionalPanel(
+                                    condition = "input.searchType == 'gene'",
+                                    autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
+                                ),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -214,8 +220,8 @@ server <- function(input, output, session) {
             # Data points added by user reactive values
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=2, group=2) + 
-            geom_text(data = geneofinterest_df[geneofinterest_df$p_value_mod_neglog10==geneofinterest_max_point,],
-                      mapping=aes(x=start,y=-log10(p_value_mod)), colour='red',vjust=-1, group=4) + 
+            annotate("text", label = geneofinterest, x = geneofinterest_df$start, y = 0, 
+                     color = "red", vjust = 2, group = 4) + 
             # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) + 
             # Add chromosome map

@@ -45,7 +45,7 @@ rm(i)
 colormap_df <- xchrom_map_colored[,c('bp_start','bp_stop','BandColor')]
 chrom_segments <- vector('list')
 chrom_size <- 8
-y_place <- -0.8
+y_place <- -1.5
 #chrom_segments$seg1 <- geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
 #                                    size = chrom_size, color = colormap_df$BandColor[1], lineend = "round")
 #chrom_segments$seg40 <- geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
