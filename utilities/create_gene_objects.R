@@ -2,7 +2,7 @@
 create_single_gene_stats <- function(gene, ref_table)
     ### User passes in a gene name from the ref_table list
     ### Function returns the object "<gene>_stats" with attributes of gene
-    ### Usage: assign((paste0(gene, "_stats")), create_single_gene_stats(gene))
+    ### Usage:  assign("geneofinterest_stats", create_single_gene_stats(gene, x_expr))
 # First, set up function for finding gene color stain and region
 {
     gene_start <- gene_stat_table[gene_stat_table$GENE==gene,"START"]
@@ -64,7 +64,11 @@ create_single_gene_stats <- function(gene, ref_table)
             # Stain color
             #stain_color = BandColor[xchrom_map$density == "NA"] = xcolors[1],
             # Cell Type (vector)
-            cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"])))
+            cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"]))),
+            # Add GWAS association info
+            gwas_df = data.frame(Date = gwas_associations_v1_xonly[grepl(gene, gwas_associations_v1_xonly$REPORTED.GENE.S.),"DATE.ADDED.TO.CATALOG"],
+                                 "Disease/Trait" = gwas_associations_v1_xonly[grepl(gene, gwas_associations_v1_xonly$REPORTED.GENE.S.),"DISEASE.TRAIT"],
+                                 Link = gwas_associations_v1_xonly[grepl(gene, gwas_associations_v1_xonly$REPORTED.GENE.S.),"LINK"])
         )
         )
 )

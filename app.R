@@ -52,8 +52,8 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotOutput(outputId = "gene_pvalue", height = "350px"),
-                                img(src = "xchrom-850bp-margin.png", width="600px")
+                                plotOutput(outputId = "gene_pvalue", height = "450px")
+                                #,img(src = "xchrom-850bp-margin.png", width="600px")
                             )
                         )
                     ),
@@ -78,9 +78,11 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
-                                br(),
                                 em("Data was produced by ", span(a("XCIR Package", href="https://www.bioconductor.org/packages/release/bioc/html/XCIR.html", target="_blank")), style = "font-size:12px"),
                                 br(),
+                                br(),
+                                (htmlOutput("gene_gwas_table_label")),
+                                (dataTableOutput(outputId = "gene_gwas_data"))
                             ),
                             mainPanel(
                                 (plotOutput(outputId = "individual_gene_tau_plot")),
@@ -94,6 +96,7 @@ ui <- fluidPage(title = "XCI Data",
                                             ),
                                             column(4, offset = 4,
                                                 (htmlOutput("table2_label")),
+                                                (downloadButton("table2_download", "Download TAU+ Data")),
                                                 (dataTableOutput(outputId = "gene_detail_table_tauplus")) 
                                             )
                                            )
@@ -165,7 +168,7 @@ server <- function(input, output, session) {
                        size=2, group=3) + 
             # Scaling and Legends
             scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
-            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(-1,400)) + 
+            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(-1.5,400)) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x=par1_boundaries[2]+1e6, y=400, label="PAR1", size=4, color = "steelblue", hjust=0) + 
@@ -180,11 +183,11 @@ server <- function(input, output, session) {
             # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) + 
             # Add chromosome map
-            geom_segment(aes(x = colormap_df$bp_start[1], y = -0.6, xend = colormap_df$bp_stop[1], yend = -0.6),
-                                                size = 4, color = colormap_df$BandColor[1], lineend = "round") + 
-            geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = -0.6, 
-                                                 xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = -0.6),
-                                             size = 4, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
+            geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
+                                                size = chrom_size, color = colormap_df$BandColor[1], lineend = "round") + 
+            geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
+                                                 xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
+                                             size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
             chrom_segments[2:40]
         genepvalue  
     })
@@ -283,6 +286,29 @@ server <- function(input, output, session) {
         }
         geneofinterest_tauplot
     })
+    ############# GWAS TABLE ##################
+    # Label for GWAS table
+    output$gene_gwas_table_label <- renderText({
+        validate(need(input$geneofinterest2,""))
+        # Create html
+        formatedFont1 <- sprintf('<font color="%s">%s</font>',"black","GWAS Catalog Associations:")
+        # Append to text to show
+        outTxt <- paste(formatedFont1, collapse=' ')
+        outTxt
+    })
+    # Gwas table
+    output$gene_gwas_data <- renderDataTable({
+        validate(need(input$geneofinterest2,""))
+        geneofinterest <- rv$geneofinterest2
+        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
+        df <- gene_stats$gwas_df
+        df},
+        options = list(
+            autoWidth = TRUE,
+            columnDefs = list(list(width='20px',targets=2))
+        )
+    )
+    ############# TAU TABLE ##################
     # Label for first table
     output$table1_label <- renderText({
         validate(need(input$geneofinterest2,""))
@@ -292,7 +318,7 @@ server <- function(input, output, session) {
         outTxt <- paste(formatedFont1, collapse=' ')
         outTxt
         })
-    # Download button for geneofinterest
+    # Tau Download button for geneofinterest
     output$table1_download <- downloadHandler(
         filename = function(){
             # Name of created file
@@ -310,15 +336,16 @@ server <- function(input, output, session) {
         validate(need(input$geneofinterest2,""))
         geneofinterest <- rv$geneofinterest2
         assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-        assign(("gene_stats_tauplus"), create_single_gene_stats(geneofinterest, x_expr_tauplus))
         genestatdf <- data.frame(sample = gene_stats$parent_sample,
                                  cell = gene_stats$cell_type,
                                  state = gene_stats$status,
                                  tau = gene_stats$tau,
                                  skew = gene_stats$skew_values,
                                  p = gene_stats$p_values)
-        saveRDS(genestatdf, "data_output/geneofinterest_tau_table.rds")
+        saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
+        genestatdf
     })
+    ############# TAU PLUS TABLE ##################
     # Label for second table
     output$table2_label <- renderText({
         validate(need(input$geneofinterest2,""))
@@ -328,6 +355,19 @@ server <- function(input, output, session) {
         outTxt <- paste(formatedFont1, collapse=' ')
         outTxt
     })
+    # Tau Plus Download button for geneofinterest
+    output$table1_download <- downloadHandler(
+        filename = function(){
+            # Name of created file
+            gene <- rv$genofinterest2
+            paste0(gene, "_tauplus_table.csv")
+        },
+        content = function(file){
+            # Get the data source
+            mydata <- readRDS('data_output/geneofinterest_tau_plus_table.rds')
+            write.csv(mydata, file)
+        }
+    )
     # Table for TAU+ geneofinterest tau and p_values
     output$gene_detail_table_tauplus <- renderDataTable({
         validate(need(input$geneofinterest2,""))
@@ -339,6 +379,8 @@ server <- function(input, output, session) {
                                  tau_plus = gene_stats_tauplus$tau,
                                  skew = gene_stats_tauplus$skew_values,
                                  p = gene_stats_tauplus$p_values)
+        saveRDS(genestatdf,'data_output/geneofinterest_tau_plus_table.rds')
+        genestatdf
     })
     
     ##################

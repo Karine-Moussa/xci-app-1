@@ -42,17 +42,20 @@ rm(i)
 
 # Create chromosome image
 # Create xchrom color map segments
+colormap_df <- xchrom_map_colored[,c('bp_start','bp_stop','BandColor')]
 chrom_segments <- vector('list')
-chrom_segments$seg1 <- geom_segment(aes(x = colormap_df$bp_start[1], y = -0.6, xend = colormap_df$bp_stop[1], yend = -0.6),
-                                    size = 4, color = colormap_df$BandColor[1], lineend = "round")
-chrom_segments$seg40 <- geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = -0.6, 
-                                         xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = -0.6),
-                                     size = 4, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round")
+chrom_size <- 8
+y_place <- -0.8
+#chrom_segments$seg1 <- geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
+#                                    size = chrom_size, color = colormap_df$BandColor[1], lineend = "round")
+#chrom_segments$seg40 <- geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
+#                                         xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
+#                                     size = chrom_size , color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round")
 i = 1
 for(i in 2:dim(colormap_df)[1]-2){
     i <- i + 1
-    segment_entry = paste0("chrom_segments$seg",i," <- geom_segment(aes(x = ",colormap_df$bp_start[i],", y = -0.6, xend = ",colormap_df$bp_stop[i],
-                           ", yend = -0.6), size = 4, color = '",colormap_df$BandColor[i],"')")
+    segment_entry = paste0("chrom_segments$seg",i," <- geom_segment(aes(x = ",colormap_df$bp_start[i],", y = ",y_place,", xend = ",colormap_df$bp_stop[i],
+                           ", yend = ",y_place,"), size = ",chrom_size,", color = '",colormap_df$BandColor[i],"')")
     eval(parse(text = segment_entry))
 }
 rm(i)
