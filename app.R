@@ -89,20 +89,27 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             mainPanel(
                                 (plotOutput(outputId = "individual_gene_tau_plot")),
-                                fluidRow(
-                                    column(12, "",
-                                           fixedRow(
-                                            column(4,
-                                                (htmlOutput("table1_label")),
-                                                (downloadButton("table1_download", "Download TAU Data")),
-                                                (dataTableOutput(outputId = "gene_detail_table"))
-                                            ),
-                                            column(4, offset = 4,
-                                                (htmlOutput("table2_label")),
-                                                (downloadButton("table2_download", "Download TAU+ Data")),
-                                                (dataTableOutput(outputId = "gene_detail_table_tauplus")) 
-                                            )
-                                           )
+                                conditionalPanel(
+                                    condition = "input.geneofinterest2 != ''",
+                                        fluidRow(
+                                            column(12, "",
+                                                   fixedRow(
+                                                    column(4,
+                                                           p("TAU Data", style = "font-size:16px"),
+                                                           (downloadButton("table1_download", "Download TAU Data")),
+                                                           br(),
+                                                           br(),
+                                                           (dataTableOutput(outputId = "gene_detail_table"))
+                                                    ),
+                                                    column(4, offset = 4,
+                                                           p("TAU+ Data", style = "font-size:16px"),
+                                                           (downloadButton("table2_download", "Download TAU+ Data")),
+                                                           br(),
+                                                           br(),
+                                                           (dataTableOutput(outputId = "gene_detail_table_tauplus")) 
+                                                    )
+                                                   )
+                                                )
                                         )
                                 )
                             )
@@ -119,13 +126,39 @@ server <- function(input, output, session) {
     
     # Reactive values
     rv <- reactiveValues(
-        tau_data = x_expr_mod$tau,
         geneofinterest1 = "",
         geneofinterest2 = ""
     )
     observeEvent(input$geneofinterest1, { rv$geneofinterest1 <- input$geneofinterest1 })
     observeEvent(input$geneofinterest2, { rv$geneofinterest2 <- input$geneofinterest2 })
-
+    
+    ##############################
+    ## DOWNLOAD HANDLERS #########
+    ##############################
+    # Tau Download button for geneofinterest
+    output$table1_download <- downloadHandler(
+        filename =  function(){
+            # Name of created file
+            paste(rv$geneofinterest1, "_tau_table.csv", sep = "")
+        },
+        content = function(file){
+            # Get the data source
+            mydata <- readRDS('data_output/geneofinterest_tau_table.rds')
+            write.csv(mydata, file)
+        }
+    )
+    # Tau Plus Download button for geneofinterest
+    output$table2_download <- downloadHandler(
+        filename = function(){
+            # Name of created file
+            paste(input$genofinterest2, "_tauplus_table.csv", sep = "")
+        },
+        content = function(file){
+            # Get the data source
+            mydata <- readRDS('data_output/geneofinterest_tau_plus_table.rds')
+            write.csv(mydata, file)
+        }
+    )
     ##################
     ## TAB 1 OUTPUT
     ##################
@@ -194,7 +227,18 @@ server <- function(input, output, session) {
             chrom_segments[2:40]
         genepvalue  
     })
-    
+    ############ GWAS table ############
+    output$gene_gwas_data <- renderDataTable({
+        validate(need(input$geneofinterest1,""))
+        geneofinterest <- rv$geneofinterest1
+        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
+        df <- gene_stats$gwas_df
+        df},
+        options = list(
+            autoWidth = TRUE,
+            columnDefs = list(list(width='20px',targets=2))
+        )
+    )
     ##################
     ## TAB 2 OUTPUT
     ##################
@@ -289,51 +333,7 @@ server <- function(input, output, session) {
         }
         geneofinterest_tauplot
     })
-    ############# GWAS TABLE ##################
-    # Label for GWAS table
-    output$gene_gwas_table_label <- renderText({
-        validate(need(input$geneofinterest1,""))
-        # Create html
-        formatedFont1 <- sprintf('<font color="%s">%s</font>',"black","GWAS Catalog Associations:")
-        # Append to text to show
-        outTxt <- paste(formatedFont1, collapse=' ')
-        outTxt
-    })
-    # Gwas table
-    output$gene_gwas_data <- renderDataTable({
-        validate(need(input$geneofinterest1,""))
-        geneofinterest <- rv$geneofinterest1
-        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-        df <- gene_stats$gwas_df
-        df},
-        options = list(
-            autoWidth = TRUE,
-            columnDefs = list(list(width='20px',targets=2))
-        )
-    )
     ############# TAU TABLE ##################
-    # Label for first table
-    output$table1_label <- renderText({
-        validate(need(input$geneofinterest2,""))
-        # Create html
-        formatedFont1 <- sprintf('<font color="%s">%s</font>',"black","TAU Data")
-        # Append to text to show
-        outTxt <- paste(formatedFont1, collapse=' ')
-        outTxt
-        })
-    # Tau Download button for geneofinterest
-    output$table1_download <- downloadHandler(
-        filename = function(){
-            # Name of created file
-            gene <- rv$genofinterest2
-            paste0(gene, "_tau_table.csv")
-        },
-        content = function(file){
-            # Get the data source
-            mydata <- readRDS('data_output/geneofinterest_tau_table.rds')
-            write.csv(mydata, file)
-        }
-    )
     # Table for geneofinterest tau and p_vales
     output$gene_detail_table <- renderDataTable({
         validate(need(input$geneofinterest2,""))
@@ -349,28 +349,6 @@ server <- function(input, output, session) {
         genestatdf
     })
     ############# TAU PLUS TABLE ##################
-    # Label for second table
-    output$table2_label <- renderText({
-        validate(need(input$geneofinterest2,""))
-        # Create html
-        formatedFont1 <- sprintf('<font color="%s">%s</font>',"black","TAU+ Data")
-        # Append to text to show
-        outTxt <- paste(formatedFont1, collapse=' ')
-        outTxt
-    })
-    # Tau Plus Download button for geneofinterest
-    output$table1_download <- downloadHandler(
-        filename = function(){
-            # Name of created file
-            gene <- rv$genofinterest2
-            paste0(gene, "_tauplus_table.csv")
-        },
-        content = function(file){
-            # Get the data source
-            mydata <- readRDS('data_output/geneofinterest_tau_plus_table.rds')
-            write.csv(mydata, file)
-        }
-    )
     # Table for TAU+ geneofinterest tau and p_values
     output$gene_detail_table_tauplus <- renderDataTable({
         validate(need(input$geneofinterest2,""))
@@ -385,7 +363,6 @@ server <- function(input, output, session) {
         saveRDS(genestatdf,'data_output/geneofinterest_tau_plus_table.rds')
         genestatdf
     })
-    
     ##################
     ## TAB 3 OUTPUT
     ##################
