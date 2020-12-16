@@ -42,11 +42,17 @@ ui <- fluidPage(title = "XCI Data",
                                     condition = "input.searchType == 'gene'",
                                     autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
                                 ),
+                                conditionalPanel(
+                                    condition = "input.searchType == 'disease'",
+                                    selectizeInput("diseaseofinterest", "Disease of Interest:",
+                                                list_of_diseases,
+                                    )
+                                ),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
-                                em("---Input an X-gene of interest", style = "font-size:12px"),br(),
-                                em("---Examples: XIST, ZBED1, ASMTL", style = "font-size:12px"),br(),
-                                em("---Hover over data points for more information", style = "font-size:12px"),br(),
+                                em("---<update directions>", style = "font-size:12px"),br(),
+                                em("---<update directions>", style = "font-size:12px"),br(),
+                                em("---<update directions>", style = "font-size:12px"),br(),
                                 br(),
                                 strong("Parameters"),
                                 p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
@@ -65,7 +71,13 @@ ui <- fluidPage(title = "XCI Data",
                                     p("GWAS Catalog Search:", style = "font-size:16px"),
                                     p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_gwas_data"))
-                                )
+                                ),
+                                #conditionalPanel(
+                                #    condition = "input.diseaseofinterest != ''",
+                                #    p("GWAS Disease Catalog Search:", style = "font-size:16px"),
+                                #    p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                #    (dataTableOutput(outputId = "gene_disease_data"))
+                                #)
                             )
                         )
                     ),
@@ -133,10 +145,14 @@ server <- function(input, output, session) {
     # Reactive values
     rv <- reactiveValues(
         geneofinterest1 = "",
-        geneofinterest2 = ""
+        geneofinterest2 = "",
+        diseaseofinterest = "",
+        disease_df = ""
     )
     observeEvent(input$geneofinterest1, { rv$geneofinterest1 <- input$geneofinterest1 })
     observeEvent(input$geneofinterest2, { rv$geneofinterest2 <- input$geneofinterest2 })
+    observeEvent(input$diseaseofinterest, { rv$diseaseofinterest <- input$diseaseofinterest })
+    observeEvent(input$diseaseofinterest, { rv$disease_df <- "doggo" })
     
     ##############################
     ## DOWNLOAD HANDLERS #########
@@ -173,6 +189,15 @@ server <- function(input, output, session) {
         geneofinterest <- rv$geneofinterest1
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
         geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
+        # Save diseaseofinterest
+        #diseaseofinterest <- rv$diseaseofinterest
+        diseaseofinterest <- rv$diseaseofinterest
+        mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
+        returned_genes_list = c()
+        returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+            ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+        }
+        disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE == returned_genes_list,]
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
@@ -222,6 +247,8 @@ server <- function(input, output, session) {
                        fill='red', size=2, group=2) + 
             annotate("text", label = geneofinterest, x = geneofinterest_df$start, y = 0, 
                      color = "red", vjust = 2, group = 4) + 
+            geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                       fill='red', size=2, group=2) + 
             # Scale shape manual
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) + 
             # Add chromosome map
@@ -239,6 +266,17 @@ server <- function(input, output, session) {
         geneofinterest <- rv$geneofinterest1
         assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
         df <- gene_stats$gwas_df
+        df},
+        options = list(
+            autoWidth = TRUE,
+            columnDefs = list(list(width='20px',targets=2))
+        )
+    )
+    ############ Returned DISEASE Genes ############
+    output$gene_disease_data <- renderDataTable({
+        df <- data.frame("this" = "this", 
+                        "goes" = "goes", 
+                        "here" = "here")
         df},
         options = list(
             autoWidth = TRUE,
