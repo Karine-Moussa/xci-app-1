@@ -24,7 +24,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2020-12-17 11:22:26 EST"
+publication_date <- "2020-12-17 13:32:43 EST"
 
 ### Default values #####
 
@@ -58,7 +58,6 @@ ui <- fluidPage(title = "XCI Data",
                                 em("---<update directions>", style = "font-size:12px"),br(),
                                 br(),
                                 strong("Parameters"),
-                                p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
@@ -66,7 +65,8 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotOutput(outputId = "gene_pvalue", height = "600px"),
+                                plotOutput(outputId = "gene_pvalue", height = "500px"),
+                                plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
                                 #,img(src = "xchrom-850bp-margin.png", width="600px")
                                 # Only show this panel if the plot type is a histogram
                                 conditionalPanel(
@@ -74,7 +74,7 @@ ui <- fluidPage(title = "XCI Data",
                                     p("GWAS Catalog Search:", style = "font-size:16px"),
                                     p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_gwas_data"))
-                                ),
+                                )
                                 #conditionalPanel(
                                 #    condition = "input.diseaseofinterest != ''",
                                 #    p("GWAS Disease Catalog Search:", style = "font-size:16px"),
@@ -137,8 +137,8 @@ ui <- fluidPage(title = "XCI Data",
                         )
                     ),
                     # TAB 3
-                    tabPanel(title = "Publication History",
-                    em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
+                    tabPanel(title = "Terminology",
+                        p("Will update...")
                     )
                 )
 )
@@ -193,7 +193,6 @@ server <- function(input, output, session) {
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
         geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
         # Save diseaseofinterest
-        #diseaseofinterest <- rv$diseaseofinterest
         diseaseofinterest <- rv$diseaseofinterest
         mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
         returned_genes_list = c()
@@ -214,11 +213,14 @@ server <- function(input, output, session) {
         mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0), 
                          legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
                          legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
-                         legend.position = "right",
+                         #legend.position = "right", # removing legend
+                         legend.position = "none",
                          axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
-                         axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
+                         #axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
+                         axis.title.x = element_blank(), # Removing X-title
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
-                         axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), face = "bold", angle=45, hjust=1),
+                         axis.text.x = element_text(family = "Helvetica", 
+                                                    colour = "steelblue4", size = (10), face = "bold", angle=0, hjust=0.5),
                          panel.background = element_rect(fill = "white"))
         genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
                                                     shape=p_mod_flag, label=GENE, label2=end, 
@@ -246,7 +248,7 @@ server <- function(input, output, session) {
                        size=2, group=3) + 
             # Scaling and Legends
             scale_x_continuous(breaks=x_breaks, labels = x_labels) + 
-            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(-1.5,400)) + 
+            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(0,400)) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x=par1_boundaries[2]+1e6, y=400, label="PAR1", size=4, color = "steelblue", hjust=0) + 
@@ -263,15 +265,44 @@ server <- function(input, output, session) {
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=2, group=2) + 
             # Scale shape manual
-            scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) + 
+            scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) # + 
+            # Add chromosome map
+            #geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
+            #                                    size = chrom_size, color = colormap_df$BandColor[1], lineend = "round") + 
+            #geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
+            #                                     xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
+            #                                 size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
+            # chrom_segments[2:40]
+        genepvalue  
+    })
+    output$gene_pvalue_xchromosome <- renderPlot({
+        # Create theme for plot
+        mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0), 
+                         legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                         legend.position = "none",
+                         axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                         axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                         axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
+                         axis.text.x = element_text(family = "Helvetica", 
+                                                    colour = "steelblue4", size = (10), face = "bold", angle=90, hjust=1, vjust = 1),
+                         axis.ticks.y = element_blank(),
+                         panel.background = element_rect(fill = "white"))
+        xchromosome_plot <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod),
+                                                    shape=p_mod_flag, label=GENE, label2=end, 
+                                                    label3=ChromPos, group=1)) +
+            mytheme + 
+            xlab("X-Chromosome Position") + ylab(" ") + 
+            # Scaling and Legends
+            scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels) + 
+            scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) + 
             # Add chromosome map
             geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
-                                                size = chrom_size, color = colormap_df$BandColor[1], lineend = "round") + 
+                         size = chrom_size, color = colormap_df$BandColor[1], lineend = "round") + 
             geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
-                                                 xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
-                                             size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
+                             xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
+                         size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
             chrom_segments[2:40]
-        genepvalue  
+        xchromosome_plot
     })
     ############ GWAS table ############
     output$gene_gwas_data <- renderDataTable({

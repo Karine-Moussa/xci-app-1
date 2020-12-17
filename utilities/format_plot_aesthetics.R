@@ -19,7 +19,18 @@ i = 0
 for (pos in x_labels_pos){
     i = i + 1
     x_labels_bp[i] <- sort(decreasing = T, x_expr_mod[x_expr_mod$ChromPos==pos,"start"])[1]
-    }
+}
+rm(i)
+
+x_region_breaks <- (xchrom_map_colored$bp_start)
+x_region_labels <- list()
+i = 0
+for (row in 1:nrow(xchrom_map_colored)){
+    i <- i + 1
+    s <- paste0(xchrom_map_colored$arm[i],xchrom_map_colored$band[i])
+    x_region_labels <- c(x_region_labels, s)
+}
+rm(i)
 
 # Tab 1 Par Region Shading (in bp)
 par1_boundaries <- c(100001,2781479)
@@ -36,9 +47,6 @@ xchrom_png <- readPNG('images/xchrom-850bp-annotated.png')
 # shape as a circle (16)
 shape_vector <- ifelse(x_expr_mod$p_mod_flag == TRUE, 17, 16)
 shape_vector <- as.factor(shape_vector)
-
-# clean up variables
-rm(i)
 
 # Create chromosome image
 # Create xchrom color map segments
