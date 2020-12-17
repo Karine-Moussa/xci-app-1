@@ -307,13 +307,24 @@ server <- function(input, output, session) {
             columnDefs = list(list(width='20px',targets=2))
         )
     )
-    ############ Returned DISEASE Genes ############
+    ############  DISEASE table ############
     output$gene_disease_data <- renderDataTable({
+        validate(need(input$diseaseofinterest1,""))
         diseaseofinterest <- rv$diseaseofinterest1
-        df <- data.frame("disease" = paste("disease: ", diseaseofinterest), 
-                        "goes" = "goes", 
-                        "here" = "here")
-        df},
+        # Get list of matching genes
+        mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
+        returned_genes_list <- c()
+        returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+            ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+        }
+        df <- data.frame()
+        for(gene in returned_genes_list){
+            assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
+            df <- rbind(df, gene_stats$gwas_df[gene_stats$gwas_df$Disease.Trait == diseaseofinterest,])
+            # ^subsets the GWAS table only for the disease of interest
+            }
+        df
+        },
         options = list(
             autoWidth = TRUE,
             columnDefs = list(list(width='20px',targets=2))

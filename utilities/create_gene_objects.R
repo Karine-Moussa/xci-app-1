@@ -76,12 +76,12 @@ create_single_gene_stats <- function(gene, ref_table)
 }
 
 # Create gene class object for multiple genes at once
-create_multiple_gene_stats <- function(gene_list){
+create_multiple_gene_stats <- function(gene_list, ref_table){
     ### User passes a list of genes 
     ### Function returns a list of "<gene>_stats" for each passed argument
     ### Usage 
     for(gene in gene_list) {
-        assign((paste0(gene, "_stats")), create_single_gene_stats(gene),
+        assign((paste0(gene, "_stats")), create_single_gene_stats(gene, ref_table),
                env = globalenv())
     }
 }
