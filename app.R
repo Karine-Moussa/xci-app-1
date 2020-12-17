@@ -23,6 +23,9 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 ### Load files and pre-processed data
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
+### Save publication date
+publication_date <- "2020-12-17 11:22:26 EST"
+
 ### Default values #####
 
 # shinyapp
@@ -59,11 +62,11 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
+                                em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotOutput(outputId = "gene_pvalue", height = "450px"),
+                                plotOutput(outputId = "gene_pvalue", height = "600px"),
                                 #,img(src = "xchrom-850bp-margin.png", width="600px")
                                 # Only show this panel if the plot type is a histogram
                                 conditionalPanel(
@@ -103,7 +106,7 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
+                                em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                             ),
                             mainPanel(
                                 (plotOutput(outputId = "individual_gene_tau_plot")),
@@ -135,7 +138,7 @@ ui <- fluidPage(title = "XCI Data",
                     ),
                     # TAB 3
                     tabPanel(title = "Publication History",
-                    em(paste("Last published:",Sys.time()), style = "font-size:12px;color:grey")
+                    em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                     )
                 )
 )
@@ -201,12 +204,19 @@ server <- function(input, output, session) {
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
+        # Get axis breaks
+        x_breaks <- seq(0, max(x_expr$start), 10000000)
+        first_label <- x_breaks[1]
+        rest_of_labels <- x_breaks[2:length(x_breaks)]
+        x_labels <- c(paste(first_label, "bp"),
+                      paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
         # Create theme for plot
-        mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (18), hjust = 0.0), 
+        mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0), 
                          legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
                          legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
                          legend.position = "right",
-                         axis.title = element_text(family = "Helvetica", size = (10), colour = "steelblue4", face = "bold"),
+                         axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                         axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
                          axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), face = "bold", angle=45, hjust=1),
                          panel.background = element_rect(fill = "white"))
@@ -214,10 +224,11 @@ server <- function(input, output, session) {
                                                     shape=p_mod_flag, label=GENE, label2=end, 
                                                     label3=ChromPos, group=1)) +
             mytheme + ggtitle("X-Chromosome Escape Profile") + 
-            xlab("X-Chromosome Position (bp)") + ylab("-log10(p)") + 
-            geom_rect(data=NULL, xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330, 
+            xlab("X-Chromosome Position") + ylab("-log10(p)") + 
+            # Add PAR and CENTROMERE shading
+            geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330), 
                       fill="lightblue", alpha=0.25) + 
-            geom_rect(data=NULL, xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330, 
+            geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330), 
                       fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                       fill="pink", alpha=0.25) + 
@@ -225,7 +236,7 @@ server <- function(input, output, session) {
             geom_point(fill = p_less_300$BandColor, size = 2) + 
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill=p_more_300$BandColor, size=2, group=2) +
-            # Data points below signifance
+            # Data points below significance
             geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],  
                        mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'], 
                                    y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']), 
@@ -234,12 +245,14 @@ server <- function(input, output, session) {
                        color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
                        size=2, group=3) + 
             # Scaling and Legends
-            scale_x_continuous(breaks=seq(1, max(x_expr$start), 10000000)) + 
+            scale_x_continuous(breaks=x_breaks, labels = x_labels) + 
             scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(-1.5,400)) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x=par1_boundaries[2]+1e6, y=400, label="PAR1", size=4, color = "steelblue", hjust=0) + 
             annotate("text", x=par2_boundaries[1]-1e6, y=400, label="PAR2", size=4, color = "steelblue", hjust=1) +
+            annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=400, 
+                     label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
             annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
                      label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             # Data points added by user reactive values
