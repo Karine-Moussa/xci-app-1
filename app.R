@@ -47,9 +47,7 @@ ui <- fluidPage(title = "XCI Data",
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
-                                    selectizeInput("diseaseofinterest", "Disease of Interest:",
-                                                list_of_diseases,
-                                    )
+                                    selectizeInput("diseaseofinterest1", "Disease of Interest:", c("",list_of_diseases))
                                 ),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
@@ -67,20 +65,19 @@ ui <- fluidPage(title = "XCI Data",
                             mainPanel(
                                 plotOutput(outputId = "gene_pvalue", height = "500px"),
                                 plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
-                                #,img(src = "xchrom-850bp-margin.png", width="600px")
-                                # Only show this panel if the plot type is a histogram
+                               # Only show this panel if the plot type is a histogram
                                 conditionalPanel(
                                     condition = "input.geneofinterest1 != ''",
                                     p("GWAS Catalog Search:", style = "font-size:16px"),
                                     p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_gwas_data"))
+                                ),
+                                conditionalPanel(
+                                    condition = "input.diseaseofinterest1 != ''",
+                                    p("GWAS Disease Catalog Search:", style = "font-size:16px"),
+                                    p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                    (dataTableOutput(outputId = "gene_disease_data"))
                                 )
-                                #conditionalPanel(
-                                #    condition = "input.diseaseofinterest != ''",
-                                #    p("GWAS Disease Catalog Search:", style = "font-size:16px"),
-                                #    p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                #    (dataTableOutput(outputId = "gene_disease_data"))
-                                #)
                             )
                         )
                     ),
@@ -149,14 +146,12 @@ server <- function(input, output, session) {
     rv <- reactiveValues(
         geneofinterest1 = "",
         geneofinterest2 = "",
-        diseaseofinterest = "",
+        diseaseofinterest1 = "",
         disease_df = ""
     )
     observeEvent(input$geneofinterest1, { rv$geneofinterest1 <- input$geneofinterest1 })
     observeEvent(input$geneofinterest2, { rv$geneofinterest2 <- input$geneofinterest2 })
-    observeEvent(input$diseaseofinterest, { rv$diseaseofinterest <- input$diseaseofinterest })
-    observeEvent(input$diseaseofinterest, { rv$disease_df <- "doggo" })
-    
+    observeEvent(input$diseaseofinterest1, { rv$diseaseofinterest1 <- input$diseaseofinterest1 })
     ##############################
     ## DOWNLOAD HANDLERS #########
     ##############################
@@ -193,7 +188,7 @@ server <- function(input, output, session) {
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
         geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
         # Save diseaseofinterest
-        diseaseofinterest <- rv$diseaseofinterest
+        diseaseofinterest <- rv$diseaseofinterest1
         mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
         returned_genes_list = c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
@@ -264,15 +259,8 @@ server <- function(input, output, session) {
                      color = "red", vjust = 2, group = 4) + 
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=2, group=2) + 
-            # Scale shape manual
-            scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) # + 
-            # Add chromosome map
-            #geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
-            #                                    size = chrom_size, color = colormap_df$BandColor[1], lineend = "round") + 
-            #geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
-            #                                     xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
-            #                                 size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
-            # chrom_segments[2:40]
+            # Scale shape manual (though right now this is disabled)
+            scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
         genepvalue  
     })
     output$gene_pvalue_xchromosome <- renderPlot({
@@ -318,7 +306,8 @@ server <- function(input, output, session) {
     )
     ############ Returned DISEASE Genes ############
     output$gene_disease_data <- renderDataTable({
-        df <- data.frame("this" = "this", 
+        diseaseofinterest <- rv$diseaseofinterest1
+        df <- data.frame("disease" = paste("disease: ", diseaseofinterest), 
                         "goes" = "goes", 
                         "here" = "here")
         df},
