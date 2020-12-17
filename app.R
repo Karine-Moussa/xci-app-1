@@ -187,14 +187,14 @@ server <- function(input, output, session) {
         geneofinterest <- rv$geneofinterest1
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
         geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
-        # Save diseaseofinterest
+        # Save disease of interest datapoints
         diseaseofinterest <- rv$diseaseofinterest1
         mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
-        returned_genes_list = c()
+        returned_genes_list <- c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
         }
-        disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE == returned_genes_list,]
+        disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% returned_genes_list,]
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
@@ -243,7 +243,7 @@ server <- function(input, output, session) {
                        size=2, group=3) + 
             # Scaling and Legends
             scale_x_continuous(breaks=x_breaks, labels = x_labels) + 
-            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(0,400)) + 
+            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(-0.5,400)) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x=par1_boundaries[2]+1e6, y=400, label="PAR1", size=4, color = "steelblue", hjust=0) + 
@@ -252,13 +252,16 @@ server <- function(input, output, session) {
                      label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
             annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
                      label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
-            # Data points added by user reactive values
+            # Data points added by user reactive values: Gene of Interest
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                       fill='red', size=2, group=2) + 
+                       fill='red', size=3, group=2) + 
             annotate("text", label = geneofinterest, x = geneofinterest_df$start, y = 0, 
-                     color = "red", vjust = 2, group = 4) + 
-            geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                       fill='red', size=2, group=2) + 
+                     color = "red", vjust = 2, group = 4) +
+            # Data points added by user reactive values: Disease of Interest
+            geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                       fill='green', size=3, group=2) + 
+            annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = -0.25, 
+                     color = "forestgreen", vjust = 2, group = 4) +
             # Scale shape manual (though right now this is disabled)
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
         genepvalue  
