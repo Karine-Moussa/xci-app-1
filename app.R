@@ -12,6 +12,7 @@ library(plotly, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 library(png, warn.conflicts = FALSE)
 library(gridExtra, warn.conflicts = FALSE)
+library(shinycssloaders, warn.conflicts = FALSE)
 
 ### Source Data and Functions ###
 source("utilities/format_input_data.R", local = TRUE)
@@ -24,9 +25,10 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2020-12-17 13:32:43 EST"
+publication_date <- "2020-12-17 16:27:21 EST"
 
-### Default values #####
+### Options for Loading Spinner #####
+options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
 
 # shinyapp
 ui <- fluidPage(title = "XCI Data",
@@ -63,7 +65,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                plotOutput(outputId = "gene_pvalue", height = "500px"),
+                                withSpinner(plotOutput(outputId = "gene_pvalue", height = "500px"), type = 2),
                                 plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
                                # Only show this panel if the plot type is a histogram
                                 conditionalPanel(
