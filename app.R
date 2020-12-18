@@ -33,7 +33,7 @@ options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.siz
 # shinyapp
 ui <- fluidPage(title = "XCI Data",
                 tabsetPanel(
-                    # TAB 1
+                    ## TAB 1
                     tabPanel(title = "All Escape Expressions",
                         # Create a layout with a sidebar and main area ----
                         sidebarLayout(
@@ -70,21 +70,21 @@ ui <- fluidPage(title = "XCI Data",
                                # Only show this panel if the plot type is a histogram
                                 conditionalPanel(
                                     condition = "input.geneofinterest1 != ''",
-                                    p("GWAS Catalog Search:", style = "font-size:16px"),
-                                    p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                    strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
+                                    p(span(a("Searching \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_gwas_data"))
                                 ),
                                 conditionalPanel(
                                     condition = "input.diseaseofinterest1 != ''",
-                                    p("GWAS Disease Catalog Search:", style = "font-size:16px"),
-                                    p(span(a("Searches \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                    p("GWAS Catalog Search (Disease)", style = "font-size:16px"),
+                                    p(span(a("Searching \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_disease_data"))
                                 )
                             )
                         )
                     ),
-                    # TAB 2
-                    tabPanel(title = "Individual Gene Frequencies",
+                    ## TAB 2
+                    tabPanel(title = "Individual Gene Search",
                         # Create a layout with a sidebar and main area
                         sidebarLayout(
                             sidebarPanel(
@@ -135,9 +135,12 @@ ui <- fluidPage(title = "XCI Data",
                             )
                         )
                     ),
-                    # TAB 3
+                    ## TAB 3
                     tabPanel(title = "Terminology",
-                        p("Will update...")
+                        p("Will update..."),
+                        p("XCI:"),
+                        p("Tau:"),
+                        p("Skew:"),
                     )
                 )
 )
@@ -154,9 +157,11 @@ server <- function(input, output, session) {
     observeEvent(input$geneofinterest1, { rv$geneofinterest1 <- input$geneofinterest1 })
     observeEvent(input$geneofinterest2, { rv$geneofinterest2 <- input$geneofinterest2 })
     observeEvent(input$diseaseofinterest1, { rv$diseaseofinterest1 <- input$diseaseofinterest1 })
+    
     ##############################
     ## DOWNLOAD HANDLERS #########
     ##############################
+    ### TAB 2
     # Tau Download button for geneofinterest
     output$table1_download <- downloadHandler(
         filename =  function(){
@@ -181,9 +186,75 @@ server <- function(input, output, session) {
             write.csv(mydata, file)
         }
     )
-    ##################
-    ## TAB 1 OUTPUT
-    ##################
+    ##############################
+    ## DATA TABLES ###############
+    ##############################
+    ### TAB 1
+    # Gene GWAS table 
+    output$gene_gwas_data <- renderDataTable({
+        validate(need(input$geneofinterest1,""))
+        geneofinterest <- rv$geneofinterest1
+        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
+        df <- gene_stats$gwas_df
+        df},
+        options = list(
+            autoWidth = TRUE,
+            columnDefs = list(list(width='20px',targets=2))
+        )
+    )
+    # Disease GWAS table
+    output$gene_disease_data <- renderDataTable({
+        validate(need(input$diseaseofinterest1,""))
+        diseaseofinterest <- rv$diseaseofinterest1
+        # Get list of matching genes
+        mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
+        returned_genes_list <- c()
+        returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+            ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+        }
+        df <- data.frame()
+        for(gene in returned_genes_list){
+            assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
+            df <- rbind(df, gene_stats$gwas_df[gene_stats$gwas_df$Disease.Trait == diseaseofinterest,])
+            # ^subsets the GWAS table only for the disease of interest
+        }
+        df
+    })
+    ### TAB 2
+    # TAU Table
+    output$gene_detail_table <- renderDataTable({
+        validate(need(input$geneofinterest2,""))
+        geneofinterest <- rv$geneofinterest2
+        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
+        genestatdf <- data.frame(sample = gene_stats$parent_sample,
+                                 cell = gene_stats$cell_type,
+                                 state = gene_stats$status,
+                                 tau = gene_stats$tau,
+                                 skew = gene_stats$skew_values,
+                                 p = gene_stats$p_values)
+        saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
+        genestatdf
+    })
+    # TAU PLUS Table
+    # Table for TAU+ geneofinterest tau and p_values
+    output$gene_detail_table_tauplus <- renderDataTable({
+        validate(need(input$geneofinterest2,""))
+        geneofinterest <- rv$geneofinterest2
+        assign(("gene_stats_tauplus"), create_single_gene_stats(geneofinterest, x_expr_tauplus))
+        genestatdf <- data.frame(sample = gene_stats_tauplus$parent_sample,
+                                 cell = gene_stats_tauplus$cell_type,
+                                 state = gene_stats_tauplus$status,
+                                 tau_plus = gene_stats_tauplus$tau,
+                                 skew = gene_stats_tauplus$skew_values,
+                                 p = gene_stats_tauplus$p_values)
+        saveRDS(genestatdf,'data_output/geneofinterest_tau_plus_table.rds')
+        genestatdf
+    })
+    ##############################
+    ## PLOTS/IMAGES ##############
+    ##############################
+    ### TAB 1
+    ## Main Plot
     output$gene_pvalue <- renderPlot({
         # Save geneofinterest
         geneofinterest <- rv$geneofinterest1
@@ -268,6 +339,7 @@ server <- function(input, output, session) {
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
         genepvalue  
     })
+    ## X chromosome "image"
     output$gene_pvalue_xchromosome <- renderPlot({
         # Create theme for plot
         mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0), 
@@ -297,44 +369,8 @@ server <- function(input, output, session) {
             chrom_segments[2:40]
         xchromosome_plot
     })
-    ############ GWAS table ############
-    output$gene_gwas_data <- renderDataTable({
-        validate(need(input$geneofinterest1,""))
-        geneofinterest <- rv$geneofinterest1
-        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-        df <- gene_stats$gwas_df
-        df},
-        options = list(
-            autoWidth = TRUE,
-            columnDefs = list(list(width='20px',targets=2))
-        )
-    )
-    ############  DISEASE table ############
-    output$gene_disease_data <- renderDataTable({
-        validate(need(input$diseaseofinterest1,""))
-        diseaseofinterest <- rv$diseaseofinterest1
-        # Get list of matching genes
-        mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
-        returned_genes_list <- c()
-        returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
-            ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
-        }
-        df <- data.frame()
-        for(gene in returned_genes_list){
-            assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
-            df <- rbind(df, gene_stats$gwas_df[gene_stats$gwas_df$Disease.Trait == diseaseofinterest,])
-            # ^subsets the GWAS table only for the disease of interest
-            }
-        df
-        },
-        options = list(
-            autoWidth = TRUE,
-            columnDefs = list(list(width='20px',targets=2))
-        )
-    )
-    ##################
-    ## TAB 2 OUTPUT
-    ##################
+    ### TAB 2 OUTPUT
+    ## Violin Plots - Gene of Interest
     output$individual_gene_tau_plot <- renderPlot({
         validate(
             need(input$geneofinterest2 !="", "Please input a gene of interest")
@@ -425,36 +461,6 @@ server <- function(input, output, session) {
                 scale_x_discrete(limits = c("TAU","TAU+"))
         }
         geneofinterest_tauplot
-    })
-    ############# TAU TABLE ##################
-    # Table for geneofinterest tau and p_vales
-    output$gene_detail_table <- renderDataTable({
-        validate(need(input$geneofinterest2,""))
-        geneofinterest <- rv$geneofinterest2
-        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-        genestatdf <- data.frame(sample = gene_stats$parent_sample,
-                                 cell = gene_stats$cell_type,
-                                 state = gene_stats$status,
-                                 tau = gene_stats$tau,
-                                 skew = gene_stats$skew_values,
-                                 p = gene_stats$p_values)
-        saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
-        genestatdf
-    })
-    ############# TAU PLUS TABLE ##################
-    # Table for TAU+ geneofinterest tau and p_values
-    output$gene_detail_table_tauplus <- renderDataTable({
-        validate(need(input$geneofinterest2,""))
-        geneofinterest <- rv$geneofinterest2
-        assign(("gene_stats_tauplus"), create_single_gene_stats(geneofinterest, x_expr_tauplus))
-        genestatdf <- data.frame(sample = gene_stats_tauplus$parent_sample,
-                                 cell = gene_stats_tauplus$cell_type,
-                                 state = gene_stats_tauplus$status,
-                                 tau_plus = gene_stats_tauplus$tau,
-                                 skew = gene_stats_tauplus$skew_values,
-                                 p = gene_stats_tauplus$p_values)
-        saveRDS(genestatdf,'data_output/geneofinterest_tau_plus_table.rds')
-        genestatdf
     })
     ##################
     ## TAB 3 OUTPUT
