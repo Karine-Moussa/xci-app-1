@@ -319,10 +319,6 @@ server <- function(input, output, session) {
             scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(-0.5,400)) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x=par1_boundaries[2]+1e6, y=400, label="PAR1", size=4, color = "steelblue", hjust=0) + 
-            annotate("text", x=par2_boundaries[1]-1e6, y=400, label="PAR2", size=4, color = "steelblue", hjust=1) +
-            annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=400, 
-                     label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
             annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
                      label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             # Data points added by user reactive values: Gene of Interest
@@ -352,24 +348,26 @@ server <- function(input, output, session) {
                                                     colour = "steelblue4", size = (10), face = "bold", angle=90, hjust=1, vjust = 1),
                          axis.ticks.y = element_blank(),
                          panel.background = element_rect(fill = "white"))
-        xchromosome_plot <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod),
-                                                    shape=p_mod_flag, label=GENE, label2=end, 
-                                                    label3=ChromPos, group=1)) +
+        xchromosome_plot <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod), group=1)) +
             mytheme + 
             xlab("X-Chromosome Position") + ylab(" ") + 
             # Scaling and Legends
             scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels) + 
             scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) + 
-            # Add chromosome map
-            geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
-                         size = chrom_size, color = colormap_df$BandColor[1], lineend = "round") + 
-            geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
-                             xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
-                         size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round") + 
-            chrom_segments[2:40]
+            # Add annotions
+            annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) + 
+            annotate("text", x=par2_boundaries[1]-1e6, y=-0.5, label="PAR2", size=4, color = "steelblue") +
+            annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5, 
+                     label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
+            # Add chromosome map (yes the ordering is important)
+            chrom_segments_colored[c('start','end')] + 
+            chrom_segments + 
+            chrom_segments_colored[c('par1','par2','centre')]
+            # ^these objects contains geom_segment() layers for each band.
+            #  Created in utilities/format_plot_aesthetics.R
         xchromosome_plot
     })
-    ### TAB 2 OUTPUT
+    ### TAB 2 
     ## Violin Plots - Gene of Interest
     output$individual_gene_tau_plot <- renderPlot({
         validate(

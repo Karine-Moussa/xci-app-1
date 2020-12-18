@@ -48,17 +48,20 @@ xchrom_png <- readPNG('images/xchrom-850bp-annotated.png')
 shape_vector <- ifelse(x_expr_mod$p_mod_flag == TRUE, 17, 16)
 shape_vector <- as.factor(shape_vector)
 
-# Create chromosome image
-# Create xchrom color map segments
+## Create chromosome image
 colormap_df <- xchrom_map_colored[,c('bp_start','bp_stop','BandColor')]
 chrom_segments <- vector('list')
+chrom_segments_colored <- vector('list')
 chrom_size <- 8
 y_place <- -1.5
-#chrom_segments$seg1 <- geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
-#                                    size = chrom_size, color = colormap_df$BandColor[1], lineend = "round")
-#chrom_segments$seg40 <- geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
-#                                         xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
-#                                     size = chrom_size , color = colormap_df$BandColor[length(colormap_df$BandColor)], lineend = "round")
+# Create start and end segments
+chrom_segments$start <- geom_segment(aes(x = colormap_df$bp_start[1], y = y_place, xend = colormap_df$bp_stop[1], yend = y_place),
+                                  size = chrom_size, color = colormap_df$BandColor[1])
+chrom_segments$end <- geom_segment(aes(x = colormap_df$bp_start[length(colormap_df$bp_start)], y = y_place, 
+                                         xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
+                                     size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)])
+
+# Create middle segements
 i = 1
 for(i in 2:dim(colormap_df)[1]-2){
     i <- i + 1
@@ -67,3 +70,17 @@ for(i in 2:dim(colormap_df)[1]-2){
     eval(parse(text = segment_entry))
 }
 rm(i)
+# Now overlay with PAR and CENTROMERE shading
+# First shade ends, then overlay rounded areas
+chrom_segments_colored$start <- geom_segment(aes(x = 0, y = y_place, xend = par1_boundaries[2], yend = y_place),
+                                            size = chrom_size, color = "lightblue", alpha=0.25, lineend = "round")
+chrom_segments_colored$end <- geom_segment(aes(x = par2_boundaries[1], y = y_place, xend = max(colormap_df$bp_stop), yend = y_place),
+                                            size = chrom_size, color = "lightblue", alpha=0.25, lineend = "round")
+
+# Regularly shade
+chrom_segments_colored$par1 <- geom_segment(aes(x = 0, y = y_place, xend = par1_boundaries[2], yend = y_place),
+                                    size = chrom_size, color = "lightblue", alpha=0.25)
+chrom_segments_colored$par2 <- geom_segment(aes(x = par2_boundaries[1], y = y_place, xend = max(colormap_df$bp_stop), yend = y_place),
+                                     size = chrom_size, color = "lightblue", alpha=0.25)
+chrom_segments_colored$centre <- geom_segment(aes(x = centre_boundaries[1], y = y_place, xend = centre_boundaries[2], yend = y_place),
+                                     size = chrom_size, color = "pink", alpha=0.25)
