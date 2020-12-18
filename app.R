@@ -30,6 +30,10 @@ publication_date <- "2020-12-18 13:21:24 EST"
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
 
+### Global variables ####
+plot1_xmin = 0
+plot1_xmax = max(x_expr$start) + 1e7
+
 # shinyapp
 ui <- fluidPage(title = "XCI Data",
                 tabsetPanel(
@@ -289,7 +293,7 @@ server <- function(input, output, session) {
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
         # Range of plot
-        ymin = 0.0
+        ymin = 0
         ymax = 330
         # Get axis breaks
         x_breaks <- seq(0, max(x_expr$start), 10000000)
@@ -298,7 +302,7 @@ server <- function(input, output, session) {
         x_labels <- c(paste(first_label, "bp"),
                       paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
         # Create theme for plot
-        mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0), 
+        mytheme <- theme(plot.title = element_text(family = "Times New Roman", face = "bold", size = (20), hjust = 0, vjust = -1), 
                          legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
                          legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
                          #legend.position = "right", # removing legend
@@ -307,8 +311,8 @@ server <- function(input, output, session) {
                          #axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
                          axis.title.x = element_blank(), # Removing X-title
                          axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
-                         axis.text.x = element_text(family = "Helvetica", 
-                                                    colour = "steelblue4", size = (10), face = "bold", angle=0, hjust=0.5),
+                         axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), 
+                                                    face = "bold", angle=0, hjust=0.5),
                          panel.background = element_rect(fill = "white"))
         # Create plot
         genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
@@ -336,11 +340,11 @@ server <- function(input, output, session) {
                        color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
                        size=2, group=3) + 
             # Scaling and Legends
-            scale_x_continuous(breaks=x_breaks, labels = x_labels) + 
+            scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) + 
             scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
-            annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
+            annotate("text", x = max(x_expr$start), y = -log10(P_SIG)+.40, hjust=-0.1, family = "Times New Roman",
                      label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
             # Data points added by user reactive values: Gene of Interest
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
@@ -362,9 +366,10 @@ server <- function(input, output, session) {
         mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0), 
                          legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
                          legend.position = "none",
-                         axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
                          axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
-                         axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
+                         axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                         axis.title.x = element_text(family = "Helvetica", size = (18), 
+                                                     colour = "steelblue4", face = "bold", hjust = .45, vjust = -1),
                          axis.text.x = element_text(family = "Helvetica", 
                                                     colour = "steelblue4", size = (10), face = "bold", angle=90, hjust=1, vjust = 1),
                          axis.ticks.y = element_blank(),
@@ -373,7 +378,7 @@ server <- function(input, output, session) {
             mytheme + 
             xlab("X-Chromosome Position") + ylab(" ") + 
             # Scaling and Legends
-            scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels) + 
+            scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(plot1_xmin, plot1_xmax)) + 
             scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) + 
             # Add annotions
             annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) + 
