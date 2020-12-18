@@ -25,7 +25,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2020-12-17 16:27:21 EST"
+publication_date <- "2020-12-18 13:21:24 EST"
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -45,7 +45,8 @@ ui <- fluidPage(title = "XCI Data",
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'gene'",
-                                    autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
+                                    selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"]))),
+                                    #autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
@@ -69,14 +70,14 @@ ui <- fluidPage(title = "XCI Data",
                                 plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
                                # Only show this panel if the plot type is a histogram
                                 conditionalPanel(
-                                    condition = "input.geneofinterest1 != ''",
+                                    condition = "input.searchType == 'gene' && input.geneofinterest1 != ''",
                                     strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
                                     p(span(a("Searching \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_gwas_data"))
                                 ),
                                 conditionalPanel(
-                                    condition = "input.diseaseofinterest1 != ''",
-                                    p("GWAS Catalog Search (Disease)", style = "font-size:16px"),
+                                    condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
+                                    strong("GWAS Catalog Search (Disease)", style = "font-size:16px"),
                                     p(span(a("Searching \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_disease_data"))
                                 )
@@ -152,12 +153,21 @@ server <- function(input, output, session) {
         geneofinterest1 = "",
         geneofinterest2 = "",
         diseaseofinterest1 = "",
-        disease_df = ""
+        searchType = ""
     )
-    observeEvent(input$geneofinterest1, { rv$geneofinterest1 <- input$geneofinterest1 })
-    observeEvent(input$geneofinterest2, { rv$geneofinterest2 <- input$geneofinterest2 })
-    observeEvent(input$diseaseofinterest1, { rv$diseaseofinterest1 <- input$diseaseofinterest1 })
-    
+    # ObsereEvents Tab 1 
+    observeEvent(input$geneofinterest1, { 
+        rv$geneofinterest1 <- input$geneofinterest1
+        rv$searchType <- input$searchType
+        })
+    observeEvent(input$geneofinterest2, { 
+        rv$geneofinterest2 <- input$geneofinterest2 
+        })
+    # ObserveEvents Tab2
+    observeEvent(input$diseaseofinterest1, { 
+        rv$diseaseofinterest1 <- input$diseaseofinterest1
+        rv$searchType <- input$searchType
+    })
     ##############################
     ## DOWNLOAD HANDLERS #########
     ##############################
@@ -258,10 +268,16 @@ server <- function(input, output, session) {
     output$gene_pvalue <- renderPlot({
         # Save geneofinterest
         geneofinterest <- rv$geneofinterest1
-        geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
-        geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
         # Save disease of interest datapoints
         diseaseofinterest <- rv$diseaseofinterest1
+        # Erase either geneofinterest or diseaseofinterest depending on the search engine
+        searchType <- rv$searchType
+        ifelse(searchType == 'gene', diseaseofinterest <- "", "")
+        ifelse(searchType == 'disease', geneofinterest <- "", "")
+        # Create gene of interest data frame
+        geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
+        geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
+        # Create disease of interest data frame
         mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
         returned_genes_list <- c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
@@ -271,6 +287,9 @@ server <- function(input, output, session) {
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
+        # Range of plot
+        ymin = 0.0
+        ymax = 330
         # Get axis breaks
         x_breaks <- seq(0, max(x_expr$start), 10000000)
         first_label <- x_breaks[1]
@@ -290,6 +309,7 @@ server <- function(input, output, session) {
                          axis.text.x = element_text(family = "Helvetica", 
                                                     colour = "steelblue4", size = (10), face = "bold", angle=0, hjust=0.5),
                          panel.background = element_rect(fill = "white"))
+        # Create plot
         genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
                                                     shape=p_mod_flag, label=GENE, label2=end, 
                                                     label3=ChromPos, group=1)) +
@@ -316,7 +336,7 @@ server <- function(input, output, session) {
                        size=2, group=3) + 
             # Scaling and Legends
             scale_x_continuous(breaks=x_breaks, labels = x_labels) + 
-            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(-0.5,400)) + 
+            scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) + 
             # Annotations
             geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
             annotate("text", x = 130000000, y = -log10(P_SIG)+3, hjust=0.5, 
@@ -329,7 +349,7 @@ server <- function(input, output, session) {
             # Data points added by user reactive values: Disease of Interest
             geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='green', size=3, group=2) + 
-            annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = -0.25, 
+            annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = 0, 
                      color = "forestgreen", vjust = 2, group = 4) +
             # Scale shape manual (though right now this is disabled)
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
@@ -356,7 +376,7 @@ server <- function(input, output, session) {
             scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) + 
             # Add annotions
             annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) + 
-            annotate("text", x=par2_boundaries[1]-1e6, y=-0.5, label="PAR2", size=4, color = "steelblue") +
+            annotate("text", x=max(x_expr$start), y=-0.5, label="PAR2", size=4, color = "steelblue", hjust=.9) +
             annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5, 
                      label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
             # Add chromosome map (yes the ordering is important)
