@@ -25,7 +25,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2020-12-18 13:21:24 EST"
+publication_date <- "2021-01-04 12:10:06 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -45,7 +45,7 @@ ui <- fluidPage(title = "XCI Data",
                             sidebarPanel(
                                 h3("Observing XCI Escape Calls"),
                                 selectInput("searchType", "Search Type",
-                                            c(Gene = "gene", Disease = "disease")
+                                            c(Gene = "gene", "Disease/Trait" = "disease")
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'gene'",
@@ -54,7 +54,7 @@ ui <- fluidPage(title = "XCI Data",
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
-                                    selectizeInput("diseaseofinterest1", "Disease of Interest:", c("",list_of_diseases))
+                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",list_of_diseases))
                                 ),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
@@ -288,12 +288,36 @@ server <- function(input, output, session) {
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
         }
+        returned_genes_list_length <- (length(returned_genes_list)) # use this to set up graph dimensions
         disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% returned_genes_list,]
+        disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+             # Create the y-positions for the disease gene annotations:
+        unique_disease_x_positions <- unique(disease_geneofinterest_df$start)
+            # First get a vector of single unique positions
+       y_disease_annot_unique <- c(rep(0,returned_genes_list_length))
+        for(i in 2:(length(unique_disease_x_positions))){
+            current_pos <- (unique_disease_x_positions[i])
+            previous_pos <- (unique_disease_x_positions[i-1])
+            ifelse(current_pos - previous_pos > 15*10^6, 
+                   y_disease_annot_unique[i] <- y_disease_annot_unique[i-1], 
+                   y_disease_annot_unique[i] <- y_disease_annot_unique[i-1]-1/2)
+        }
+            # Then map each position to its gene occurrence 
+        y_disease_annot <- c()
+        for(i in 1:length(y_disease_annot_unique)){
+            gene_var <- unique(disease_geneofinterest_df$GENE)[i]
+            rep_length <- sum(disease_geneofinterest_df$GENE == gene_var)
+            y_disease_annot <- c(y_disease_annot, rep(y_disease_annot_unique[i], rep_length))
+        }
+            # If there were no disease returns, then set y_disease_annot to 0
+        ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
+        ###
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
         # Range of plot
         ymin = 0
+        ifelse(returned_genes_list_length > 1, ymin <- min(y_disease_annot),'')
         ymax = 330
         # Get axis breaks
         x_breaks <- seq(0, max(x_expr$start), 10000000)
@@ -354,7 +378,7 @@ server <- function(input, output, session) {
             # Data points added by user reactive values: Disease of Interest
             geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='green', size=3, group=2) + 
-            annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = 0, 
+            annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = y_disease_annot, 
                      color = "forestgreen", vjust = 2, group = 4) +
             # Scale shape manual (though right now this is disabled)
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
