@@ -222,7 +222,7 @@ server <- function(input, output, session) {
         validate(need(input$diseaseofinterest1,""))
         diseaseofinterest <- rv$diseaseofinterest1
         # Get list of matching genes
-        mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
+        mapped_genes <- GWAS_ASSOCIATIONS[GWAS_ASSOCIATIONS$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
         returned_genes_list <- c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -283,7 +283,7 @@ server <- function(input, output, session) {
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
         geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
         # Create disease of interest data frame
-        mapped_genes <- gwas_associations_v1_xonly[gwas_associations_v1_xonly$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
+        mapped_genes <- GWAS_ASSOCIATIONS[GWAS_ASSOCIATIONS$DISEASE.TRAIT == diseaseofinterest,'MAPPED_GENE']
         returned_genes_list <- c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")

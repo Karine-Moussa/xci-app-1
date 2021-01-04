@@ -7,3 +7,6 @@
 - Supplementary table from Carrel et al. Nature 24265
 
 - [PAR1](https://www.genenames.org/data/genegroup/#!/group/715) and [PAR2](https://www.genenames.org/data/genegroup/#!/group/716) maps from [HUGO Gene Nomenclature Committee](https://www.genenames.org)
+
+- GWAS associations from [GWAS Catalog v1.02](https://www.ebi.ac.uk/gwas/docs/file-downloads)\
+The applications returns genes from the "MAPPED GENE" column of GWAS association data.
