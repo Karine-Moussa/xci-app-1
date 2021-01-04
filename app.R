@@ -32,7 +32,7 @@ options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.siz
 
 ### Global variables ####
 plot1_xmin = 0
-plot1_xmax = max(x_expr$start) + 1e7
+plot1_xmax = max(x_expr$start) + 1.3e7
 
 # shinyapp
 ui <- fluidPage(title = "XCI Data",
@@ -382,7 +382,12 @@ server <- function(input, output, session) {
                      color = "forestgreen", vjust = 2, group = 4) +
             # Scale shape manual (though right now this is disabled)
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
-        genepvalue  
+        ggdraw() + 
+            draw_plot(genepvalue) + 
+            draw_image("images/mainplot_legend.png", x = .44, y = 0.30, scale = 0.10)
+            # to shift x left, x -> -1
+            # to shift y up, y -> +1
+        #genepvalue  
     })
     ## X chromosome "image"
     output$gene_pvalue_xchromosome <- renderPlot({
