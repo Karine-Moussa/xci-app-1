@@ -73,7 +73,7 @@ ui <- fluidPage(title = "XCI Data",
                                                        target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                p("GEUVIDAS genome build: ___", style = "font-size:12px;color:grey"),
+                                p("GEUVIDAS genome build: hg38", style = "font-size:12px;color:grey"),
                                 em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                             ),
                             # Create plot and Action Buttons in Main Panel
@@ -117,7 +117,7 @@ ui <- fluidPage(title = "XCI Data",
                                 p("Gene =", span(a("268 X-Chromosome Genes (link currently not working)", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
-                                p("GEUVIDAS genome build: ___", style = "font-size:12px"),
+                                p("GEUVIDAS genome build: hg38", style = "font-size:12px"),
                                 em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                             ),
                             mainPanel(
