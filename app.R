@@ -69,10 +69,11 @@ ui <- fluidPage(title = "XCI Data",
                                 em("---<update directions>", style = "font-size:12px"),br(),
                                 br(),
                                 strong("Input Dataset"),
-                                p("GEUVIDAS: ", span(a("102 Samples, 268 Genes, Lymphoblast Cells", href="https://raw.githubusercontent.com/Karine-Moussa/xci-app-1/main/data_sources/x_expr.tsv?token=ARBUC3AOO3X6PWUK6HEGB6C73UATC", 
+                                p("GEUVIDAS: ", span(a("102 Samples, 268 Genes, Lymphoblast Cells (link currently not working)", href="https://raw.githubusercontent.com/Karine-Moussa/xci-app-1/main/data_sources/x_expr.tsv?token=ARBUC3AOO3X6PWUK6HEGB6C73UATC", 
                                                        target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
+                                p("GEUVIDAS genome build: ___", style = "font-size:12px;color:grey"),
                                 em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                             ),
                             # Create plot and Action Buttons in Main Panel
@@ -113,9 +114,10 @@ ui <- fluidPage(title = "XCI Data",
                                 br(),
                                 strong("Parameters"),
                                 p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
-                                p("Gene =", span(a("268 X-Chromosome Genes", href="null", target="_blank")), style = "font-size:12px"),
+                                p("Gene =", span(a("268 X-Chromosome Genes (link currently not working)", href="null", target="_blank")), style = "font-size:12px"),
                                 br(),
                                 br(),
+                                p("GEUVIDAS genome build: ___", style = "font-size:12px"),
                                 em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                             ),
                             mainPanel(
@@ -131,13 +133,6 @@ ui <- fluidPage(title = "XCI Data",
                                                            br(),
                                                            br(),
                                                            (dataTableOutput(outputId = "gene_detail_table"))
-                                                    ),
-                                                    column(4, offset = 4,
-                                                           p("TAU+ Data", style = "font-size:16px"),
-                                                           (downloadButton("table2_download", "Download TAU+ Data")),
-                                                           br(),
-                                                           br(),
-                                                           (dataTableOutput(outputId = "gene_detail_table_tauplus")) 
                                                     )
                                                    )
                                                 )
@@ -198,18 +193,6 @@ server <- function(input, output, session) {
             write.csv(mydata, file)
         }
     )
-    # Tau Plus Download button for geneofinterest
-    output$table2_download <- downloadHandler(
-        filename = function(){
-            # Name of created file
-            paste(input$genofinterest2, "_tauplus_table.csv", sep = "")
-        },
-        content = function(file){
-            # Get the data source
-            mydata <- readRDS('data_output/geneofinterest_tau_plus_table.rds')
-            write.csv(mydata, file)
-        }
-    )
     ##############################
     ## DATA TABLES ###############
     ##############################
@@ -255,23 +238,9 @@ server <- function(input, output, session) {
                                  state = gene_stats$status,
                                  tau = gene_stats$tau,
                                  skew = gene_stats$skew_values,
-                                 p = gene_stats$p_values)
+                                 p = gene_stats$p_values,
+                                 tau_plus = ifelse(gene_stats$skew_values < 0.25, "yes","no"))
         saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
-        genestatdf
-    })
-    # TAU PLUS Table
-    # Table for TAU+ geneofinterest tau and p_values
-    output$gene_detail_table_tauplus <- renderDataTable({
-        validate(need(input$geneofinterest2,""))
-        geneofinterest <- rv$geneofinterest2
-        assign(("gene_stats_tauplus"), create_single_gene_stats(geneofinterest, x_expr_tauplus))
-        genestatdf <- data.frame(sample = gene_stats_tauplus$parent_sample,
-                                 cell = gene_stats_tauplus$cell_type,
-                                 state = gene_stats_tauplus$status,
-                                 tau_plus = gene_stats_tauplus$tau,
-                                 skew = gene_stats_tauplus$skew_values,
-                                 p = gene_stats_tauplus$p_values)
-        saveRDS(genestatdf,'data_output/geneofinterest_tau_plus_table.rds')
         genestatdf
     })
     ##############################
