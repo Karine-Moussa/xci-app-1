@@ -77,13 +77,13 @@ ui <- fluidPage(title = "XCI Data",
                                 conditionalPanel(
                                     condition = "input.searchType == 'gene' && input.geneofinterest1 != ''",
                                     strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
-                                    p(span(a("Searching \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                    p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_gwas_data"))
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
                                     strong("GWAS Catalog Search (Disease)", style = "font-size:16px"),
-                                    p(span(a("Searching \"All Assocations v1.0\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                    p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_disease_data"))
                                 )
                             )
