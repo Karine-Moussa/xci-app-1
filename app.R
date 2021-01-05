@@ -25,7 +25,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-04 12:10:06 EST" # Sys.time()
+publication_date <- "2021-01-05 16:28:31 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -110,7 +110,7 @@ ui <- fluidPage(title = "XCI Data",
                                 br(),
                                 strong("TAU and TAU+", style = "font-size:12px"),br(),
                                 em("---All samples  are included in TAU", style = "font-size:12px"),br(),
-                                em("---Those samples from skew data < 25% are represented in TAU+", style = "font-size:12px"),br(),
+                                em("---Those samples from higher skew samples (skew < 25%)  are represented in TAU+", style = "font-size:12px"),br(),
                                 br(),
                                 strong("Parameters"),
                                 p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
@@ -429,6 +429,7 @@ server <- function(input, output, session) {
         min_skew_value <- geneofinterest_stats$min_skew
         max_skew_value <- geneofinterest_stats$max_skew
         perc_samples_esc <- geneofinterest_stats$perc_samples_esc
+        perc_samples_esc_tauplus <- geneofinterest_stats$perc_samples_esc_tauplus
         # Assign object attributes to variables with skew < 25%
         assign("geneofinterest_tauplus_stats", create_single_gene_stats(geneofinterest, x_expr_tauplus))
         skew_tauplus <- geneofinterest_tauplus_stats$skew_values
@@ -477,8 +478,11 @@ server <- function(input, output, session) {
                              paste0('min tau: ', sprintf("%1.2f", min_tau_value)),
                              paste0('max tau: ', sprintf("%1.2f", max_tau_value))),
                      family = 'Courier', color = "steelblue", size = 4, hjust = 0) + 
-            annotate("text", x=x_center,y=-.03,
+            annotate("text", x=1,y=-.03,
                      label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc*100),'% of samples'),
+                     family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
+            annotate("text", x=2,y=-.03,
+                     label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc_tauplus*100),'% of samples'),
                      family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
             scale_fill_manual("", values = c("cornflowerblue","purple"))
         # Remove legend if only one violin plot will be displayed
