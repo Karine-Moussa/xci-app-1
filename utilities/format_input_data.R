@@ -14,8 +14,12 @@ suppl_table_1 <- suppl_table_1[-1,] # remove "new top row"
 suppl_table_1 <- suppl_table_1[,-c(15:ncol(suppl_table_1))] # remove NA colums 
 
 suppl_table_1_combined <- suppl_table_1[,1:7]       # section suppl table
+suppl_table_1_combined <- suppl_table_1_combined[-which(suppl_table_1_combined == ""), ] # remove blank rows
 suppl_table_1_cottonetal <- suppl_table_1[,8:11]    # section suppl table
+suppl_table_1_cottonetal <- suppl_table_1_cottonetal[-which(suppl_table_1_cottonetal == ""), ] # remove blank rows
 suppl_table_1_carrwillard <- suppl_table_1[,12:14]  # section suppl table
+suppl_table_1_carrwillard <- suppl_table_1_carrwillard[-which(suppl_table_1_carrwillard == ""), ] # remove blank rows
+
 rm(suppl_table_1)   # remove full suppl_table_1
 
 ## GWAS assocations

@@ -57,6 +57,12 @@ ui <- fluidPage(title = "XCI Data",
                                     selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",list_of_diseases))
                                 ),
                                 br(),
+                                selectInput("addStudies", "View Additional Studies",
+                                            c(" " = "empty",
+                                            "Cotton et al. + Carrel/Willard" = "study1", 
+                                            "someotherstudy" = "study2")
+                                ),
+                                br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---<update directions>", style = "font-size:12px"),br(),
                                 em("---<update directions>", style = "font-size:12px"),br(),
@@ -100,7 +106,6 @@ ui <- fluidPage(title = "XCI Data",
                                 strong("Directions for Use", style = "font-size:12px"),br(),
                                 em("---Input an X-gene of interest", style = "font-size:12px"),br(),
                                 em("---Examples: XIST, ZBED1, ASMTL", style = "font-size:12px"),br(),
-                                em("---Hover over data points for more information", style = "font-size:12px"),br(),
                                 br(),
                                 strong("TAU and TAU+", style = "font-size:12px"),br(),
                                 em("---All samples  are included in TAU", style = "font-size:12px"),br(),
@@ -158,20 +163,24 @@ server <- function(input, output, session) {
         geneofinterest1 = "",
         geneofinterest2 = "",
         diseaseofinterest1 = "",
-        searchType = ""
-    )
-    # ObsereEvents Tab 1 
+        searchType = "",
+        addStudies = ""
+        )
+    # ObserveEvents Tab 1 
     observeEvent(input$geneofinterest1, { 
         rv$geneofinterest1 <- input$geneofinterest1
         rv$searchType <- input$searchType
         })
-    observeEvent(input$geneofinterest2, { 
-        rv$geneofinterest2 <- input$geneofinterest2 
-        })
-    # ObserveEvents Tab2
     observeEvent(input$diseaseofinterest1, { 
         rv$diseaseofinterest1 <- input$diseaseofinterest1
         rv$searchType <- input$searchType
+    })
+    observeEvent(input$addStudies, { 
+        rv$addStudies <- input$addStudies
+    })
+    # ObserveEvents Tab2
+    observeEvent(input$geneofinterest2, { 
+        rv$geneofinterest2 <- input$geneofinterest2 
     })
     ##############################
     ## DOWNLOAD HANDLERS #########
@@ -312,6 +321,9 @@ server <- function(input, output, session) {
             # If there were no disease returns, then set y_disease_annot to 0
         ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
         ###
+        # Include supplementary information if user specifies it
+        ifelse(rv$addStudies == 'study1', cott_carr_will_df <- cott_carr_will_df, cott_carr_will_df <- data.frame())
+        #cott_carr_will_df = data.frame()
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
         p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
@@ -351,6 +363,11 @@ server <- function(input, output, session) {
                       fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                       fill="pink", alpha=0.25) + 
+            # Add Supplementary study information
+            annotate("segment", x=cott_carr_will_df[cott_carr_will_df$status != "inactive", "start"], 
+                     xend=cott_carr_will_df[cott_carr_will_df$status != "inactive", "start"],
+                     y = 0, yend = ymax, size = 1,
+                     color = cott_carr_will_df[cott_carr_will_df$status != "inactive", "color"]) + 
             # Data Points
             geom_point(fill = p_less_300$BandColor, size = 2) + 
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 

@@ -86,4 +86,10 @@ chrom_segments_colored$centre <- geom_segment(aes(x = centre_boundaries[1], y = 
                                      size = chrom_size, color = "pink", alpha=0.25)
 
 # Incorporate other studies with annotations/shading
-
+cott_carr_will_df <- data.frame(gene = suppl_table_1_combined$`Gene name`,
+                                start = as.numeric(suppl_table_1_combined$`Start position`),
+                                end = as.numeric(suppl_table_1_combined$`End position`),
+                                status = suppl_table_1_combined$`Combined XCI status`,
+                                color = ifelse(suppl_table_1_combined$`Combined XCI status` == "escape", "purple", 
+                                               ifelse(suppl_table_1_combined$`Combined XCI status` == "variable", 
+                                                      "turquoise3","white")))
