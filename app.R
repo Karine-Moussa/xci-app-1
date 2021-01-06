@@ -91,7 +91,7 @@ ui <- fluidPage(title = "XCI Data",
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
-                                    strong("GWAS Catalog Search (Disease)", style = "font-size:16px"),
+                                    strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
                                     p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                     (dataTableOutput(outputId = "gene_disease_data"))
                                 )
@@ -370,12 +370,16 @@ server <- function(input, output, session) {
                      color = "forestgreen", vjust = 2, group = 4) +
             # Scale shape manual (though right now this is disabled)
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
-        ggdraw() + 
+        p <- ggdraw() + 
             draw_plot(genepvalue) + 
             draw_image("images/mainplot_legend.png", x = .44, y = 0.30, scale = 0.10)
             # to shift x left, x -> -1
             # to shift y up, y -> +1
-        #genepvalue  
+        # Add supplementary legend if user specified
+        ifelse(rv$addStudies == 'study1', 
+               (p <- p + draw_image("images/mainplot_additional_studies_legend.png", x = .43, y = 0.10, scale = 0.08)), 
+               "")
+        p
     })
     ## X chromosome "image"
     output$gene_pvalue_xchromosome <- renderPlot({
