@@ -20,6 +20,7 @@ library(cowplot, warn.conflicts = FALSE)
 source("utilities/format_input_data.R", local = TRUE)
 source("utilities/create_global_variables.R", local = TRUE)
 source("utilities/x_expr_mods.R", local = TRUE)
+source("utilities/create_association_df.R", local = TRUE)
 source("utilities/create_trait_objects.R", local = TRUE)
 source("utilities/create_gene_objects.R", local = TRUE)
 source("utilities/format_plot_aesthetics.R", local = TRUE)
@@ -205,7 +206,8 @@ server <- function(input, output, session) {
         validate(need(input$geneofinterest1,""))
         geneofinterest <- rv$geneofinterest1
         assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-        df <- gene_stats$gwas_df
+        #df <- gene_stats$gwas_df
+        df <- create_association_df(geneofinterest)
         df},
         options = list(
             autoWidth = TRUE,
@@ -224,8 +226,9 @@ server <- function(input, output, session) {
         }
         df <- data.frame()
         for(gene in returned_genes_list){
-            assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
-            df <- rbind(df, gene_stats$gwas_df[gene_stats$gwas_df$Disease.Trait == diseaseofinterest,])
+            assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
+            temp_df <- create_association_df(gene)
+            df <- rbind(df, temp_df[temp_df$Disease.Trait == diseaseofinterest,])
             # ^subsets the GWAS table only for the disease of interest
         }
         df
