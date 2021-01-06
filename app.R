@@ -13,6 +13,8 @@ library(dplyr, warn.conflicts = FALSE)
 library(png, warn.conflicts = FALSE)
 library(gridExtra, warn.conflicts = FALSE)
 library(shinycssloaders, warn.conflicts = FALSE)
+library(magick, warn.conflicts = FALSE)
+library(cowplot, warn.conflicts = FALSE)
 
 ### Source Data and Functions ###
 source("utilities/format_input_data.R", local = TRUE)

@@ -7,7 +7,7 @@ x_expr <- read.delim("data_sources/x_expr.tsv",header=T,sep="\t",na.strings="?")
 x_expr_tauplus <- x_expr[x_expr$f < 0.25,]  # only data with strong skew values
 
 ## supplementary tables
-suppl_table_1 <- read.csv("data_sources/Suppl.Table.1.csv", header=F,na.strings="?")
+suppl_table_1 <- read.csv("resources_studies/Tuketal2017/Suppl.Table.1.csv", header=F,na.strings="?")
 suppl_table_1 <- suppl_table_1[-1,]  # remove top row
 names(suppl_table_1) <- suppl_table_1[1,] # make "new top row" the headers
 suppl_table_1 <- suppl_table_1[-1,] # remove "new top row"
