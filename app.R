@@ -152,6 +152,17 @@ ui <- fluidPage(title = "XCI Data",
                         p("XCI:"),
                         p("Tau:"),
                         p("Skew:"),
+                    ),
+                    ## TAB 4 
+                    tabPanel(title = "How To",
+                        br(),
+                        em("This is a concept page, all footage will be redone when product is finalized", style = "font-size:14px"),
+                        br(),br(),
+                        strong("Search for genes:", style = "font-size:18px"),br(),
+                        tags$img(type="mp4",src="xcidemo1.mp4", height="400px"),br(),
+                        br(),br(),br(),
+                        strong("Search for diseases/traits:", style = "font-size:18px"),br(),
+                        tags$img(type="mp4",src="xcidemo2.mp4", height="400px")
                     )
                 )
 )
@@ -523,6 +534,11 @@ server <- function(input, output, session) {
     ##################
     ## TAB 3 OUTPUT
     ##################
+    
+    ##################
+    ## TAB 4 OUTPUT
+    ##################
+    
 }
 
 #This lets script know its a shiny app
