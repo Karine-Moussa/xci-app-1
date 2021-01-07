@@ -206,10 +206,9 @@ server <- function(input, output, session) {
     output$gene_gwas_data <- renderDataTable({
         validate(need(input$geneofinterest1,""))
         geneofinterest <- rv$geneofinterest1
-        assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-        #df <- gene_stats$gwas_df
         df <- create_association_df(geneofinterest)
-        df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>')
+        ifelse(nrow(df$Link) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
+            df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>'))
         df},
         options = list(
             autoWidth = TRUE,
