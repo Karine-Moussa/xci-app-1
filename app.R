@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-05 16:28:31 EST" # Sys.time()
+publication_date <- "2021-01-07 13:02:47 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -59,7 +59,7 @@ ui <- fluidPage(title = "XCI Data",
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
-                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS))
+                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME))
                                 ),
                                 br(),
                                 selectInput("addStudies", "View Additional Studies",
