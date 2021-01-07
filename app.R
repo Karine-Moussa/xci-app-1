@@ -20,6 +20,7 @@ library(cowplot, warn.conflicts = FALSE)
 source("utilities/format_input_data.R", local = TRUE)
 source("utilities/create_global_variables.R", local = TRUE)
 source("utilities/x_expr_mods.R", local = TRUE)
+source("utilities/format_additional_studies.R", local = TRUE)
 source("utilities/create_association_df.R", local = TRUE)
 source("utilities/create_trait_objects.R", local = TRUE)
 source("utilities/create_gene_objects.R", local = TRUE)
@@ -208,11 +209,13 @@ server <- function(input, output, session) {
         assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
         #df <- gene_stats$gwas_df
         df <- create_association_df(geneofinterest)
+        df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>')
         df},
         options = list(
             autoWidth = TRUE,
             columnDefs = list(list(width='20px',targets=2))
-        )
+        ),
+        escape = FALSE
     )
     # Disease GWAS table
     output$gene_disease_data <- renderDataTable({

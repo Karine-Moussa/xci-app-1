@@ -84,12 +84,3 @@ chrom_segments_colored$par2 <- geom_segment(aes(x = par2_boundaries[1], y = y_pl
                                      size = chrom_size, color = "lightblue", alpha=0.25)
 chrom_segments_colored$centre <- geom_segment(aes(x = centre_boundaries[1], y = y_place, xend = centre_boundaries[2], yend = y_place),
                                      size = chrom_size, color = "pink", alpha=0.25)
-
-# Incorporate other studies with annotations/shading
-cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name`,
-                                start = as.numeric(tuketal_suppl_table_1_combined$`Start position`),
-                                end = as.numeric(tuketal_suppl_table_1_combined$`End position`),
-                                status = tuketal_suppl_table_1_combined$`Combined XCI status`,
-                                color = ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "escape", "purple", 
-                                               ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "variable", 
-                                                      "turquoise3","white")))

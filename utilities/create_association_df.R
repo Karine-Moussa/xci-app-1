@@ -1,5 +1,6 @@
 create_association_df <- function(gene){
 # create base association data frame
+Link = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"LINK"]
 association_df <- data.frame(Date = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"DATE.ADDED.TO.CATALOG"],
                      "Mapped.Gene" = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"MAPPED_GENE"],
                      "Disease/Trait" = tolower(GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"DISEASE.TRAIT"]),

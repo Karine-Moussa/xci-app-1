@@ -4,6 +4,7 @@ GENE <- as.factor(x_expr$GENE)
 
 # List of samples
 SAMPLE_NAMES <- c(unique(x_expr[,"sample"]))
+LIST_OF_GENES <- c(unique(x_expr[,"GENE"]))
 
 # P-value significance
 P_SIG <- 0.05/(length(unique(GENE)))
