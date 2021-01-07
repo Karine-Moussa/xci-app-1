@@ -207,7 +207,7 @@ server <- function(input, output, session) {
         validate(need(input$geneofinterest1,""))
         geneofinterest <- rv$geneofinterest1
         df <- create_association_df(geneofinterest)
-        ifelse(nrow(df$Link) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
+        ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
             df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>'))
         df},
         options = list(
@@ -233,8 +233,11 @@ server <- function(input, output, session) {
             df <- rbind(df, temp_df[temp_df$Disease.Trait == diseaseofinterest,])
             # ^subsets the GWAS table only for the disease of interest
         }
-        df
-    })
+        ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
+               df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>'))
+        df},
+        escape = FALSE
+    )
     ### TAB 2
     # TAU Table
     output$gene_detail_table <- renderDataTable({
