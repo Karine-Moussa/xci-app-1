@@ -5,7 +5,7 @@ create_single_trait_stats <- function(trait)
     ### Usage:  assign("traitofinterest_stats", create_single_trait_stats(trait))
 {
     trait <- tolower(trait)
-    trait_no_parenthesis <- gsub('\\(|\\)',"",trait)
+    trait_no_parenthesis <- gsub('\\(|\\)',"",trait) # This is necessary to handle parenthesis in traits
     trait_gwas2ukbio = LIST_OF_TRAITS_GWAS[grepl(tolower(paste0("^",trait_no_parenthesis,"$")), 
                                                  gsub('\\(|\\)',"", tolower(LIST_OF_TRAITS_GWAS$GWAS_NAME))) & 
                                                !is.na(LIST_OF_TRAITS_GWAS$UKBIO_NAME), 'UKBIO_NAME']

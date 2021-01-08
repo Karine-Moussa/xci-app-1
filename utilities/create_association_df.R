@@ -7,10 +7,14 @@ association_df <- data.frame(Date = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATI
                      Link = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"LINK"])
 # collect sex bias information on disease/trait
 list_of_traits <- c(association_df$`Disease.Trait`)
+list_of_ukbionames <- c() # collect uk bio names
 list_of_ratios <- c()   # collect ratio
 list_of_bias <- c()     # collect bias
 for(trait in list_of_traits) {
     assign(("stats"), create_single_trait_stats(trait)) # create diseasetrait object
+    ukbioname <- "" # to build ukbioname vector
+    ifelse(is.na(stats$trait_gwas2ukbio), ukbioname <- "N/A", ukbioname <- stats$trait_gwas2ukbio)
+    list_of_ukbionames <- c(list_of_ukbionames, ukbioname)
     ratio <- "" # to build ratio vector
     ifelse(is.na(stats$ukbio_ratio), ratio <- "N/A", ratio <- stats$ukbio_ratio)
     list_of_ratios <- c(list_of_ratios, ratio)
@@ -20,7 +24,8 @@ for(trait in list_of_traits) {
 }
 # add to the base association df
 association_df <- cbind(association_df, 
-                        data.frame("Sex Ratio (f/m)" = list_of_ratios),
+                        data.frame("UK Bio Des" = list_of_ukbionames,
+                                   "Sex Ratio (f/m)" = list_of_ratios),
                                     "Bias" = list_of_bias)
 return(association_df)
 }
