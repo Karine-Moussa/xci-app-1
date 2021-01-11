@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-11 10:18:26 EST" # Sys.time()
+publication_date <- "2021-01-11 12:01:46 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -54,8 +54,7 @@ ui <- fluidPage(title = "XCI Data",
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'gene'",
-                                    selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"]))),
-                                    #autocomplete_input("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
+                                    selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
                                 ),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
@@ -217,7 +216,10 @@ server <- function(input, output, session) {
     output$gene_gwas_data <- renderDataTable({
         validate(need(input$geneofinterest1,""))
         geneofinterest <- rv$geneofinterest1
-        df <- create_association_df(geneofinterest)
+        df <- data.frame()
+        for(gene in geneofinterest){
+            df <- rbind(df, create_association_df(gene))
+        }
         ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
             df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>'))
         df},
@@ -280,8 +282,7 @@ server <- function(input, output, session) {
         ifelse(searchType == 'gene', diseaseofinterest <- "", "")
         ifelse(searchType == 'disease', geneofinterest <- "", "")
         # Create gene of interest data frame
-        geneofinterest_df <- x_expr_mod[x_expr_mod$GENE==geneofinterest,]
-        geneofinterest_max_point <- max(geneofinterest_df[,'p_value_mod_neglog10'])
+        geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% geneofinterest,]
         # Create disease of interest data frame
         mapped_genes <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
         returned_genes_list <- c()
@@ -381,7 +382,7 @@ server <- function(input, output, session) {
             # Data points added by user reactive values: Gene of Interest
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=3, group=2) + 
-            annotate("text", label = geneofinterest, x = geneofinterest_df$start, y = 0, 
+            annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = 0, 
                      color = "red", vjust = 2, group = 4) +
             # Data points added by user reactive values: Disease of Interest
             geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
