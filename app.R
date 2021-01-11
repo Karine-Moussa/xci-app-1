@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-11 12:01:46 EST" # Sys.time()
+publication_date <- "2021-01-11 12:55:17 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -283,6 +283,7 @@ server <- function(input, output, session) {
         ifelse(searchType == 'disease', geneofinterest <- "", "")
         # Create gene of interest data frame
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% geneofinterest,]
+        geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start),]
         # Create disease of interest data frame
         mapped_genes <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
         returned_genes_list <- c()
@@ -292,26 +293,42 @@ server <- function(input, output, session) {
         returned_genes_list_length <- (length(returned_genes_list)) # use this to set up graph dimensions
         disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% returned_genes_list,]
         disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
-             # Create the y-positions for the disease gene annotations:
+        ##### Create the y-positions for the disease/gene annotations:
         unique_disease_x_positions <- unique(disease_geneofinterest_df$start)
-            # First get a vector of single unique positions
+        unique_gene_x_positions <- unique(geneofinterest_df$start)
+        ##### First get a vector of single unique positions
        y_disease_annot_unique <- c(rep(0,returned_genes_list_length))
+       y_gene_annot_unique <- c(rep(0,length(geneofinterest)))
         for(i in 2:(length(unique_disease_x_positions))){
             current_pos <- (unique_disease_x_positions[i])
             previous_pos <- (unique_disease_x_positions[i-1])
             ifelse(current_pos - previous_pos > 15*10^6, 
-                   y_disease_annot_unique[i] <- y_disease_annot_unique[i-1], 
+                   y_disease_annot_unique[i] <- 0, 
                    y_disease_annot_unique[i] <- y_disease_annot_unique[i-1]-1/2)
         }
+       for(i in 2:(length(unique_gene_x_positions))){
+           current_pos <- (unique_gene_x_positions[i])
+           previous_pos <- (unique_gene_x_positions[i-1])
+           ifelse(current_pos - previous_pos > 15*10^6, 
+                  y_gene_annot_unique[i] <- 0, 
+                  y_gene_annot_unique[i] <- y_gene_annot_unique[i-1]-1/2)
+       }
             # Then map each position to its gene occurrence 
         y_disease_annot <- c()
+        y_gene_annot <- c()
         for(i in 1:length(y_disease_annot_unique)){
             gene_var <- unique(disease_geneofinterest_df$GENE)[i]
             rep_length <- sum(disease_geneofinterest_df$GENE == gene_var)
             y_disease_annot <- c(y_disease_annot, rep(y_disease_annot_unique[i], rep_length))
         }
+        for(i in 1:length(y_gene_annot_unique)){
+            gene_var <- unique(geneofinterest_df$GENE)[i]
+            rep_length <- sum(geneofinterest_df$GENE == gene_var)
+            y_gene_annot <- c(y_gene_annot, rep(y_gene_annot_unique[i], rep_length))
+        }
             # If there were no disease returns, then set y_disease_annot to 0
         ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
+        ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
         ###
         # Include supplementary information if user specifies it
         ifelse(rv$addStudies == 'study1', cott_carr_will_df <- cott_carr_will_df, cott_carr_will_df <- data.frame())
@@ -322,6 +339,7 @@ server <- function(input, output, session) {
         # Range of plot
         ymin = 0
         ifelse(returned_genes_list_length > 1, ymin <- min(y_disease_annot),'')
+        ifelse(length(geneofinterest) > 1, ymin <- min(y_gene_annot),'')
         ymax = 330
         # Get axis breaks
         x_breaks <- seq(0, max(x_expr$start), 10000000)
@@ -382,7 +400,7 @@ server <- function(input, output, session) {
             # Data points added by user reactive values: Gene of Interest
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=3, group=2) + 
-            annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = 0, 
+            annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = y_gene_annot, 
                      color = "red", vjust = 2, group = 4) +
             # Data points added by user reactive values: Disease of Interest
             geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
