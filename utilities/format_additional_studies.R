@@ -16,6 +16,10 @@ tuketal_suppl_table_1_cottonetal <- tuketal_suppl_table_1_cottonetal[-which(tuke
 tuketal_suppl_table_1_carrwillard <- tuketal_suppl_table_1[,12:14]  # section suppl table
 tuketal_suppl_table_1_carrwillard <- tuketal_suppl_table_1_carrwillard[-which(tuketal_suppl_table_1_carrwillard == ""), ] # remove blank rows
 rm(tuketal_suppl_table_1)   # remove full tuketal_suppl_table_1
+hg19_to_hg38 <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38.csv")
+#hg19_to_hg38 <- hg19_to_hg38[hg19_to_hg38$mapped_int != "NULL",] # remove NULL lines
+hg19_to_hg38 <- hg19_to_hg38[hg19_to_hg38$recip != "Second Pass",] # for now remove repeated mapping
+
 
 # MERIT ET AL 2020
 meritetal_suppl_table_3_path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
@@ -27,6 +31,7 @@ meritetal_suppl_table_3_top100 <- read_excel(meritetal_suppl_table_3_path, sheet
 ### PREPARE FILES FOR USE IN CODE
 ##################################
 # TUK ET AL 2017 (which combined cotton et al and carrel/willard)
+# first need to map the start positions from hg19 to hg38
 cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name`,
                                 start = as.numeric(tuketal_suppl_table_1_combined$`Start position`),
                                 end = as.numeric(tuketal_suppl_table_1_combined$`End position`),
@@ -34,6 +39,15 @@ cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name
                                 color = ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "escape", "purple", 
                                                ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "variable", 
                                                       "turquoise3","white")))
+#mapped_start <- c()
+#for(pos in cott_carr_will_df$start){
+#    mapped_pos <- ifelse(pos %in% hg19_to_hg38$source_start,
+#                         mapped_pos <- hg19_to_hg38[hg19_to_hg38$source_start == testpos & !is.na(hg19_to_hg38$source_start), "mapped_start"],
+#                         mapped_pos <- NA)
+#    mapped_start <- c(cbind(mapped_start, mapped_pos))
+#}
+#cott_carr_will_df <- cbind(cott_carr_will_df,
+         #                  data.frame("mapped_start" = mapped_start))
 
 # MERIT ET AL 2020
 merit_top30 <- unique(meritetal_suppl_table_3_top30$ENSEMBL_gene_id)

@@ -2,6 +2,10 @@
 *Landscape of X chromosome inactivation across human tissues*\
 [https://doi.org/10.1038/nature24265](https://www.nature.com/articles/nature24265#citeas)\
 -Suppl.Table.1.csv: combined cotton et al (2015) and carrel/willard (2005) escape calls
+--note: to convert suppl.table.1.csv to the proper genome build, the chromosome positions\
+were compiled, and uploaded to [NCBI Genome Remapping Service](https://www.ncbi.nlm.nih.gov/genome/tools/remap#)\
+The source genome was hg19, the converted genome was hg38.\
+The positions were then remapped to fit the GEUVIDAS escape calls.
 
 **Nelsonetal2015**\
 *The support of human genetic evidence for approved drug indications*\

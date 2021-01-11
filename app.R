@@ -56,6 +56,9 @@ ui <- fluidPage(title = "XCI Data",
                                     condition = "input.searchType == 'gene'",
                                     selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
                                 ),
+                                checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
+                                verbatimTextOutput("checkbox_text1"),
+                                verbatimTextOutput("test1"),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
                                     selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME))
@@ -174,7 +177,8 @@ server <- function(input, output, session) {
         geneofinterest2 = "",
         diseaseofinterest1 = "",
         searchType = "",
-        addStudies = ""
+        addStudies = "",
+        checkbox_input1 = ""
         )
     # ObserveEvents Tab 1 
     observeEvent(input$geneofinterest1, { 
@@ -185,6 +189,16 @@ server <- function(input, output, session) {
         rv$diseaseofinterest1 <- input$diseaseofinterest1
         rv$searchType <- input$searchType
     })
+    observeEvent(input$checkbox_input1, {
+        rv$checkbox_input1 <- input$checkbox_input1
+        ifelse(rv$checkbox_input1 == "TRUE", 
+               rv$test1 <- "PikaTRUE",
+               rv$test1 <- "LuFALSio")
+        ifelse(rv$checkbox_input1 == "TRUE", 
+              # rv$geneofinterest1 <- "MECP2",
+               rv$geneofinterest1 <- unique(x_expr_mod[x_expr_mod$status == "E","GENE"]),
+               rv$geneofinterest1 <- "")
+    })
     observeEvent(input$addStudies, { 
         rv$addStudies <- input$addStudies
     })
@@ -192,6 +206,11 @@ server <- function(input, output, session) {
     observeEvent(input$geneofinterest2, { 
         rv$geneofinterest2 <- input$geneofinterest2 
     })
+    ##############################
+    ## CHECKBOXES ################
+    ##############################
+    output$checkbox_text1 <- renderPrint({ rv$checkbox_input1 })
+    output$test1 <- renderPrint({ rv$test1 })
     ##############################
     ## DOWNLOAD HANDLERS #########
     ##############################
@@ -214,7 +233,7 @@ server <- function(input, output, session) {
     ### TAB 1
     # Gene GWAS table 
     output$gene_gwas_data <- renderDataTable({
-        validate(need(input$geneofinterest1,""))
+        validate(need(rv$geneofinterest1,""))
         geneofinterest <- rv$geneofinterest1
         df <- data.frame()
         for(gene in geneofinterest){
@@ -231,7 +250,7 @@ server <- function(input, output, session) {
     )
     # Disease GWAS table
     output$gene_disease_data <- renderDataTable({
-        validate(need(input$diseaseofinterest1,""))
+        validate(need(rv$diseaseofinterest1,""))
         diseaseofinterest <- rv$diseaseofinterest1
         # Get list of matching genes
         mapped_genes <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
