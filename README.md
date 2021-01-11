@@ -2,14 +2,14 @@
 
 *Latest Update*
 
-Added a How To page (will be updated when everything is finalized)
+Finished disease/trait conversion chart. Added sex bias information.
 
-<img width="920" alt="image" src="https://user-images.githubusercontent.com/71516524/103947448-104bf880-5106-11eb-8134-cc3b3740afb9.png">
+<img width="1200" alt="image" 
+src="https://user-images.githubusercontent.com/71516524/104198847-bba1c980-53f4-11eb-8458-5bc43b41859d.png">
 
 
 *Previous Update*
 
-Made study links active 
+Added a How To page (will be updated when everything is finalized)
 
-<img width="700" alt="image" src="https://user-images.githubusercontent.com/71516524/103916489-7e7ac600-50da-11eb-9102-f5aab0b9afdc.png">
-
+<img width="920" alt="image" src="https://user-images.githubusercontent.com/71516524/103947448-104bf880-5106-11eb-8134-cc3b3740afb9.png">
