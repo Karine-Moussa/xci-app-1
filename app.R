@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-07 13:02:47 EST" # Sys.time()
+publication_date <- "2021-01-11 10:18:26 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -241,7 +241,7 @@ server <- function(input, output, session) {
         for(gene in returned_genes_list){
             assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
             temp_df <- create_association_df(gene)
-            df <- rbind(df, temp_df[temp_df$Disease.Trait == diseaseofinterest,])
+            df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
             # ^subsets the GWAS table only for the disease of interest
         }
         ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html

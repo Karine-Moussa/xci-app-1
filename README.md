@@ -5,7 +5,7 @@
 Finished disease/trait conversion chart. Added sex bias information.
 
 <img width="1200" alt="image" 
-src="https://user-images.githubusercontent.com/71516524/104198847-bba1c980-53f4-11eb-8458-5bc43b41859d.png">
+src="https://user-images.githubusercontent.com/71516524/104213608-7c7b7480-5404-11eb-8b28-197b9aba24bb.png">
 
 
 *Previous Update*
