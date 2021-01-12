@@ -61,14 +61,14 @@ for(i in 1:length(cott_carr_will_df$start)){
 }
 # Then create a data frame from the x_expr_mod data using only those genes that
 # are shared across both data sets
-matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene[!is.na(cott_carr_will_df$gene)]
-#matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene_mapped[!is.na(cott_carr_will_df$gene_mapped)]
+#matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene[!is.na(cott_carr_will_df$gene)]
+matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene_mapped[!is.na(cott_carr_will_df$gene_mapped)]
 p_cott_carr_will <- x_expr_mod[matching_TF_vector,]
 # add an escape color column
 for(i in 1:nrow(p_cott_carr_will)){
     gene <- p_cott_carr_will$GENE[i]
-    color_vector <- cott_carr_will_df$color[cott_carr_will_df$gene == gene]
-    #color_vector <- cott_carr_will_df$color[cott_carr_will_df$gene_mapped == gene]
+    #color_vector <- cott_carr_will_df$color[cott_carr_will_df$gene == gene]
+    color_vector <- cott_carr_will_df$color[cott_carr_will_df$gene_mapped == gene]
     color <- color_vector[!is.na(color_vector)]
     p_cott_carr_will$color[i] <- color
 }
