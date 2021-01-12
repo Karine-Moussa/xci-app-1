@@ -57,8 +57,8 @@ ui <- fluidPage(title = "XCI Data",
                                     selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
                                 ),
                                 checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
-                                verbatimTextOutput("checkbox_text1"),
-                                verbatimTextOutput("test1"),
+                                #verbatimTextOutput("checkbox_text1"),
+                                #verbatimTextOutput("test1"),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
                                     selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME))
@@ -350,7 +350,9 @@ server <- function(input, output, session) {
         ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
         ###
         # Include supplementary information if user specifies it
-        ifelse(rv$addStudies == 'study1', cott_carr_will_df <- cott_carr_will_df, cott_carr_will_df <- data.frame())
+        ifelse(rv$addStudies == 'study1',
+               p_study1 <- p_cott_carr_will_noinactive,
+               p_study1 <- data.frame())
         #cott_carr_will_df = data.frame()
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
@@ -382,7 +384,7 @@ server <- function(input, output, session) {
         # Create plot
         genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
                                                     shape=p_mod_flag, label=GENE, label2=end, 
-                                                    label3=ChromPos, group=1)) +
+                                                    group=1)) +
             mytheme + ggtitle("X-Chromosome Escape Profile") + 
             xlab("X-Chromosome Position") + ylab("-log10(p)") + 
             # Add PAR and CENTROMERE shading
@@ -391,13 +393,16 @@ server <- function(input, output, session) {
             geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330), 
                       fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
-                      fill="pink", alpha=0.25) + 
-            # Add Supplementary study information
-            annotate("segment", x=cott_carr_will_df[cott_carr_will_df$status != "inactive", "start"], 
-                     xend=cott_carr_will_df[cott_carr_will_df$status != "inactive", "start"],
-                     y = 0, yend = ymax, size = 1,
-                     color = cott_carr_will_df[cott_carr_will_df$status != "inactive", "color"]) + 
-            # Data Points
+                      fill="pink", alpha=0.25)
+        if(rv$addStudies == 'study1'){
+            genepvalue <- genepvalue + 
+                # Add Supplementary Study 1 information (cott_carr_will)
+                geom_point(p_study1, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                           fill=p_study1$color, colour=p_study1$color, 
+                           alpha = 1, size=5, group=2)
+            }
+        genepvalue <- genepvalue + 
+            # Main Data Points
             geom_point(fill = p_less_300$BandColor, size = 2) + 
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill=p_more_300$BandColor, size=2, group=2) +
