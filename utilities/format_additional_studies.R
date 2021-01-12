@@ -41,7 +41,7 @@ cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name
                                 status = tuketal_suppl_table_1_combined$`Combined XCI status`,
                                 color = ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "escape", "purple", 
                                                ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "variable", 
-                                                      "turquoise3","white")))
+                                                      "turquoise3","lightsteelblue3")))
 # Get the remapped versions 
 for(i in 1:length(cott_carr_will_df$start)){
     pos_start <- cott_carr_will_df$start[i]
@@ -72,7 +72,7 @@ for(i in 1:nrow(p_cott_carr_will)){
     color <- color_vector[!is.na(color_vector)]
     p_cott_carr_will$color[i] <- color
 }
-### remove "inactive" states for plotting
+### optional: remove "inactive" states for plotting
 state_TF_vector <- p_cott_carr_will$GENE %in% cott_carr_will_df[cott_carr_will_df$status != "inactive", "gene"]
 p_cott_carr_will_noinactive <- p_cott_carr_will[state_TF_vector,]
 rm(matching_TF_vector, gene, color_vector, color, state_TF_vector)

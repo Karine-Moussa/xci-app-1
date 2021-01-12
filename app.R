@@ -351,7 +351,7 @@ server <- function(input, output, session) {
         ###
         # Include supplementary information if user specifies it
         ifelse(rv$addStudies == 'study1',
-               p_study1 <- p_cott_carr_will_noinactive,
+               p_study1 <- p_cott_carr_will,
                p_study1 <- data.frame())
         #cott_carr_will_df = data.frame()
         # Split data by -10log(p) > or < 300
@@ -440,7 +440,7 @@ server <- function(input, output, session) {
             # to shift y up, y -> +1
         # Add supplementary legend if user specified
         ifelse(rv$addStudies == 'study1', 
-               (p <- p + draw_image("images/mainplot_additional_studies_legend.png", x = .43, y = 0.10, scale = 0.08)), 
+               (p <- p + draw_image("images/mainplot_additional_studies_legend_inactive.png", x = .43, y = 0.10, scale = 0.12)), 
                "")
         p
     })
