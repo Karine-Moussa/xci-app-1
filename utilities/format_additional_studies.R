@@ -64,7 +64,7 @@ for(i in 1:length(cott_carr_will_df$start)){
 matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene[!is.na(cott_carr_will_df$gene)]
 #matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene_mapped[!is.na(cott_carr_will_df$gene_mapped)]
 p_cott_carr_will <- x_expr_mod[matching_TF_vector,]
-# add a color column
+# add an escape color column
 for(i in 1:nrow(p_cott_carr_will)){
     gene <- p_cott_carr_will$GENE[i]
     color_vector <- cott_carr_will_df$color[cott_carr_will_df$gene == gene]

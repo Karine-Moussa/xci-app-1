@@ -30,6 +30,15 @@ x_expr_mod <- cbind(x_expr, BandColor, ChromPos,
                     p_value_mod, p_mod_flag, skew,
                     p_value_mod_neglog10)
 
+# add an escape color column
+for(i in 1:nrow(x_expr_mod)){
+    status <- x_expr_mod$status[i]
+    color <- ifelse(status == "E", "purple", 
+                    ifelse(status == "S", 
+                           "lightsteelblue3", "turquoise3"))
+    x_expr_mod$color[i] <- color
+}
+
 # clean up variables 
 rm(i) 
 rm(gene)

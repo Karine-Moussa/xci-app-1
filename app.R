@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-11 12:55:17 EST" # Sys.time()
+publication_date <- "2021-01-12 12:23:37 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -56,7 +56,7 @@ ui <- fluidPage(title = "XCI Data",
                                     condition = "input.searchType == 'gene'",
                                     selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
                                 ),
-                                checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
+                                #checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
                                 #verbatimTextOutput("checkbox_text1"),
                                 #verbatimTextOutput("test1"),
                                 conditionalPanel(
@@ -64,10 +64,10 @@ ui <- fluidPage(title = "XCI Data",
                                     selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME))
                                 ),
                                 br(),
-                                selectInput("addStudies", "View Additional Studies",
+                                selectInput("addStudies", "View Escape States (including additional studies)",
                                             c(" " = "empty",
-                                            "Cotton et al. + Carrel/Willard" = "study1", 
-                                            "someotherstudy" = "study2")
+                                              "present study (GEUVIDAS lymphoblast cells)" = "study1",
+                                              "Cotton et al. + Carrel/Willard" = "study2")
                                 ),
                                 br(),
                                 strong("Directions for Use", style = "font-size:12px"),br(),
@@ -350,9 +350,11 @@ server <- function(input, output, session) {
         ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
         ###
         # Include supplementary information if user specifies it
+        supp_study <- data.frame()
         ifelse(rv$addStudies == 'study1',
-               p_study1 <- p_cott_carr_will,
-               p_study1 <- data.frame())
+               supp_study <- x_expr_mod, "")
+        ifelse(rv$addStudies == 'study2',
+               supp_study <- p_cott_carr_will, "")
         #cott_carr_will_df = data.frame()
         # Split data by -10log(p) > or < 300
         p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
@@ -394,18 +396,18 @@ server <- function(input, output, session) {
                       fill="lightblue", alpha=0.25) + 
             geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                       fill="pink", alpha=0.25)
-        if(rv$addStudies == 'study1'){
+        if(rv$addStudies != 'empty'){
             genepvalue <- genepvalue + 
-                # Add Supplementary Study 1 information (cott_carr_will)
-                geom_point(p_study1, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                           fill=p_study1$color, colour=p_study1$color, 
+                # Add Supplementary Study (escape states) information
+                geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                           fill=supp_study$color, colour=supp_study$color, 
                            alpha = 1, size=5, group=2)
             }
         genepvalue <- genepvalue + 
             # Main Data Points
             geom_point(fill = p_less_300$BandColor, size = 2) + 
             geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                       fill=p_more_300$BandColor, size=2, group=2) +
+                       fill=p_more_300$BandColor, size=2, group=3) +
             # Data points below significance
             geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],  
                        mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'], 
@@ -413,7 +415,7 @@ server <- function(input, output, session) {
                                    shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']), 
                        fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
                        color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
-                       size=2, group=3) + 
+                       size=2, group=4) + 
             # Scaling and Legends
             scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) + 
             scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) + 
@@ -425,12 +427,12 @@ server <- function(input, output, session) {
             geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='red', size=3, group=2) + 
             annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = y_gene_annot, 
-                     color = "red", vjust = 2, group = 4) +
+                     color = "red", vjust = 2, group = 5) +
             # Data points added by user reactive values: Disease of Interest
             geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                        fill='green', size=3, group=2) + 
             annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = y_disease_annot, 
-                     color = "forestgreen", vjust = 2, group = 4) +
+                     color = "forestgreen", vjust = 2, group = 5) +
             # Scale shape manual (though right now this is disabled)
             scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
         p <- ggdraw() + 
@@ -439,7 +441,7 @@ server <- function(input, output, session) {
             # to shift x left, x -> -1
             # to shift y up, y -> +1
         # Add supplementary legend if user specified
-        ifelse(rv$addStudies == 'study1', 
+        ifelse(rv$addStudies != 'empty', 
                (p <- p + draw_image("images/mainplot_additional_studies_legend_inactive.png", x = .43, y = 0.10, scale = 0.12)), 
                "")
         p
