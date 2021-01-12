@@ -57,12 +57,13 @@ ui <- fluidPage(title = "XCI Data",
                                     selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
                                 ),
                                 #checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
-                                #verbatimTextOutput("checkbox_text1"),
-                                #verbatimTextOutput("test1"),
+                                #verbatimTextOutput("test"),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
                                     selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME))
                                 ),
+                                actionButton("resetButton", "Clear Genes"),
+                                br(),
                                 br(),
                                 selectInput("addStudies", "View Escape States (including additional studies)",
                                             c(" " = "empty",
@@ -85,7 +86,7 @@ ui <- fluidPage(title = "XCI Data",
                             ),
                             # Create plot and Action Buttons in Main Panel
                             mainPanel(
-                                withSpinner(plotOutput(outputId = "gene_pvalue", height = "500px"), type = 2),
+                                withSpinner(plotOutput(outputId = "gene_pvalue", height = "500px", click = "myclick"), type = 2),
                                 plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
                                # Only show this panel if the plot type is a histogram
                                 conditionalPanel(
@@ -170,7 +171,6 @@ ui <- fluidPage(title = "XCI Data",
 )
 
 server <- function(input, output, session) {
-    
     # Reactive values
     rv <- reactiveValues(
         geneofinterest1 = "",
@@ -178,7 +178,11 @@ server <- function(input, output, session) {
         diseaseofinterest1 = "",
         searchType = "",
         addStudies = "",
-        checkbox_input1 = ""
+        checkbox_input1 = "",
+        plot1_coord_x = c(),
+        plot1_coord_y = c(),
+        mapped_gene = "",
+        closest_expr_index = ""
         )
     # ObserveEvents Tab 1 
     observeEvent(input$geneofinterest1, { 
@@ -195,22 +199,43 @@ server <- function(input, output, session) {
                rv$test1 <- "PikaTRUE",
                rv$test1 <- "LuFALSio")
         ifelse(rv$checkbox_input1 == "TRUE", 
-              # rv$geneofinterest1 <- "MECP2",
                rv$geneofinterest1 <- unique(x_expr_mod[x_expr_mod$status == "E","GENE"]),
                rv$geneofinterest1 <- "")
     })
     observeEvent(input$addStudies, { 
         rv$addStudies <- input$addStudies
     })
+    observeEvent(input$myclick, {
+        rv$plot1_coord_x = c(rv$plot1_coord_x, input$myclick$x)
+        rv$plot1_coord_y = c(rv$plot1_coord_y, input$myclick$y)
+        for(i in 1:length(rv$plot1_coord_x)){
+            index <- which.min(abs(x_expr$start - rv$plot1_coord_x[i]))
+            rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
+        rv$geneofinterest1 = rv$mapped_gene
+    })
+    observeEvent(input$resetButton, {
+        rv$geneofinterest1 = ""
+        rv$diseaseofinterest1 = ""
+    })
     # ObserveEvents Tab2
     observeEvent(input$geneofinterest2, { 
         rv$geneofinterest2 <- input$geneofinterest2 
     })
     ##############################
+    ## FOR TESTING ###############
+    ##############################
+    ## for testing:
+    output$test <- renderPrint({ 
+        str(rv$mapped_gene)
+        str(rv$plot1_coord_x)
+    })
+    ##############################
     ## CHECKBOXES ################
     ##############################
-    output$checkbox_text1 <- renderPrint({ rv$checkbox_input1 })
-    output$test1 <- renderPrint({ rv$test1 })
+    # output$checkbox_text1 <- renderPrint({ rv$checkbox_input1 })
     ##############################
     ## DOWNLOAD HANDLERS #########
     ##############################
@@ -444,6 +469,7 @@ server <- function(input, output, session) {
         ifelse(rv$addStudies != 'empty', 
                (p <- p + draw_image("images/mainplot_additional_studies_legend_inactive.png", x = .43, y = 0.10, scale = 0.12)), 
                "")
+        p <- genepvalue # for testing
         p
     })
     ## X chromosome "image"
