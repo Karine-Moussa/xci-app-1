@@ -304,7 +304,7 @@ server <- function(input, output, session) {
         geneofinterest <- rv$geneofinterest1
         df <- data.frame()
         for(gene in geneofinterest){
-            df <- rbind(df, create_association_df(gene))
+            df <- rbind(df, create_gwas_association_df(gene))
         }
         ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
             df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>'))
@@ -330,7 +330,7 @@ server <- function(input, output, session) {
         df <- data.frame()
         for(gene in returned_genes_list){
             assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
-            temp_df <- create_association_df(gene)
+            temp_df <- create_gwas_association_df(gene)
             df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
             # ^subsets the GWAS table only for the disease of interest
         }

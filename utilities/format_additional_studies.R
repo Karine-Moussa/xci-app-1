@@ -20,12 +20,36 @@ hg19_to_hg38 <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38.csv")
 #hg19_to_hg38 <- hg19_to_hg38[hg19_to_hg38$mapped_int != "NULL",] # remove NULL lines
 hg19_to_hg38 <- hg19_to_hg38[hg19_to_hg38$recip != "Second Pass",] # for now remove repeated mapping
 
-
-# MERIT ET AL 2020
+# MERIT ET AL 2020 (the GTEx papers)
 meritetal_suppl_table_3_path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
 meritetal_suppl_table_3_top30 <- read_excel(meritetal_suppl_table_3_path, sheet = "Top30_autosomal_predictive_gene")
 meritetal_suppl_table_3_top100 <- read_excel(meritetal_suppl_table_3_path, sheet = "Top100_autosomal_predictive_acr")
 
+## GWAS associations
+GWAS_ASSOCIATIONS <- read.csv("data_intermediate/gwas_assoc_v1_02_xonly.csv", header=T,na.strings="?")
+#LIST_OF_TRAITS_GWAS <- data.frame(GWAS_NAME = tolower(unique(GWAS_ASSOCIATIONS$DISEASE.TRAIT)))
+df <- data.frame(GWAS_NAME = tolower(pheno_conv_GWAS_list$`DISEASE/TRAIT`),
+                 UKBIO_NAME = tolower(pheno_conv_GWAS_list$UKBIO))
+cols <- c("GWAS_NAME","UKBIO_NAME")
+colnames(df) <- cols
+LIST_OF_TRAITS_GWAS <- df
+rm(df)
+
+## Nelson et al associations (incorporates GWAS, OMIM, GWASCentral, dbGaP)
+NELSON_ASSOCIATIONS_1 <- read.delim("resources_studies/Nelsonetal2015/nelson_supp_dataset1",header=T,sep="\t",na.strings="?")
+df <- data.frame(GWAS_NAME = tolower(pheno_conv_NELSON1_list$`DISEASE/TRAIT`),
+                 UKBIO_NAME = tolower(pheno_conv_NELSON1_list$UKBIO))
+cols <- c("NELS1_NAME","UKBIO_NAME")
+colnames(df) <- cols
+LIST_OF_TRAITS_NELSON_1<- df
+rm(df)
+NELSON_ASSOCIATIONS_2 <- read.delim("resources_studies/Nelsonetal2015/nelson_supp_dataset2",header=T,sep="\t",na.strings="?")
+df <- data.frame(GWAS_NAME = tolower(pheno_conv_NELSON2_list$`DISEASE/TRAIT`),
+                 UKBIO_NAME = tolower(pheno_conv_NELSON2_list$UKBIO))
+cols <- c("NELS2_NAME","UKBIO_NAME")
+colnames(df) <- cols
+LIST_OF_TRAITS_NELSON_2 <- df
+rm(df)
 
 ##################################
 ### PREPARE FILES FOR USE IN CODE

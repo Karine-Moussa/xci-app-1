@@ -9,23 +9,36 @@ create_single_trait_stats <- function(trait)
     trait_gwas2ukbio = LIST_OF_TRAITS_GWAS[grepl(tolower(paste0("^",trait_no_parenthesis,"$")), 
                                                  gsub('\\(|\\)',"", tolower(LIST_OF_TRAITS_GWAS$GWAS_NAME))) & 
                                                !is.na(LIST_OF_TRAITS_GWAS$UKBIO_NAME), 'UKBIO_NAME']
+    trait_nelson2ukbio = LIST_OF_TRAITS_NELSON_2[grepl(tolower(paste0("^",trait_no_parenthesis,"$")), 
+                                                   gsub('\\(|\\)',"", tolower(LIST_OF_TRAITS_NELSON_2$NELS2_NAME))) & 
+                                                 !is.na(LIST_OF_TRAITS_NELSON_2$UKBIO_NAME), 'UKBIO_NAME']
+    trait_ukbio <- ""
+    ifelse(trait_gwas2ukbio != "", trait_ukbio <- trait_gwas2ukbio,"")
+    ifelse(trait_nelson2ukbio != "", trait_ukbio <- trait_nelson2ukbio,"")
     # Assign attributes to trait
     assign(paste0(trait, "_stats"),
            # Add any attributes of interest to this list
            (list(
                # Trait name (single)
                trait = trait,
-               # Where it can be found (single)
-            #   in_GWAS = ifelse(trait %in% tolower(LIST_OF_TRAITS_GWAS$GWAS_NAME), "yes","no"),
-            #   in_UKBIO = ifelse(trait %in% tolower(LIST_OF_TRAITS_UKBIO), "yes","no"),
-            #   in_NELSON = ifelse(trait %in% tolower(LIST_OF_TRAITS_NELSON), "yes","no"),
-               # GWAS to UKBIO name conversion
-               # UK Biobank rates
+               trait_ukbio = trait_ukbio,
+               # UKBIO stats 
+               case_female = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_ukbio & PHENO_RATES_UKBIO$gender == 'female', 'case'],
+               case_male = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_ukbio & PHENO_RATES_UKBIO$gender == 'male', 'case'],
+               ratio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_ukbio & PHENO_RATES_UKBIO$gender == 'female', 'ratio'],
+               bias = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_ukbio & PHENO_RATES_UKBIO$gender == 'female', 'bias'],
+               # GWAS to UKBIO stats
                trait_gwas2ukbio = trait_gwas2ukbio,
-               ukbio_case_female = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'case'],
-               ukbio_case_male = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'male', 'case'],
-               ukbio_ratio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'ratio'],
-               ukbio_bias = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'bias']
+               case_female_gwas2ukbio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'case'],
+               case_male_gwas2ukbio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'male', 'case'],
+               ratio_gwas2ukbio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'ratio'],
+               bias_gwas2ukbio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_gwas2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'bias'],
+               # NELSON2 to UKBIO stats
+               trait_nelson2ukbio = trait_nelson2ukbio,
+               case_female_nels2ukbio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nelson2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'case'],
+               case_male_nels2ukbio  = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nelson2ukbio & PHENO_RATES_UKBIO$gender == 'male', 'case'],
+               ratio_nels2ukbio  = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nelson2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'ratio'],
+               bias_nels2ukbio  = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nelson2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'bias']
                 )
            )
     )

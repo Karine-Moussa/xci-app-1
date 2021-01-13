@@ -15,6 +15,9 @@ create_single_gene_stats <- function(gene, ref_table)
         # Break out of this loop once we find a stain color
         if(isTruthy(gene_stain != "")){break}
     }
+# Establish a TRUE/FALSE vector for matching disease/traits to UKBIO names
+    # (this is just to make code cleaner further down)
+    TRUE_FALSE_VECTOR_NELSON = grepl(gene, NELSON_ASSOCIATIONS_2$Gene)
 # Then, assign attributes to gene
     assign(paste0(gene, "_stats"),
         # Add any attributes of interest to this list
@@ -70,7 +73,13 @@ create_single_gene_stats <- function(gene, ref_table)
             gwas_df = data.frame(Date = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"DATE.ADDED.TO.CATALOG"],
                                  "Mapped.Gene" = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"MAPPED_GENE"],
                                  "Disease/Trait" = tolower(GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"DISEASE.TRAIT"]),
-                                 Link = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"LINK"])
+                                 Link = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"LINK"]),
+            # Add NELSON association info
+            nelson_df = data.frame("Gene" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Gene"],
+                                   "Disease/Trait" = tolower(NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"MSH"]),
+                                   "Link" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Link"],
+                                   "Source" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Source"],
+                                   check.names = FALSE)
         )
         )
 )
