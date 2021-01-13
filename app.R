@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-12 12:23:37 EST" # Sys.time()
+publication_date <- "2021-01-13 12:45:14 EST" # Sys.time()
 
 ### Options for Loading Spinner #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -55,26 +55,27 @@ ui <- fluidPage(title = "XCI Data",
                                 conditionalPanel(
                                     condition = "input.searchType == 'gene'",
                                     selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
+                                    p("(Click on individual data points to add more genes)", style = "font-size:14px")
                                 ),
                                 #checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
                                 #verbatimTextOutput("test"),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
-                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME))
+                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME)),
+                                    p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                                 ),
+                                br(),
                                 actionButton("resetButton", "Clear Genes"),
                                 br(),
                                 br(),
-                                selectInput("addStudies", "View Escape States (including additional studies)",
+                                selectInput("addStudies", "View Escape States (according to various studies)",
                                             c(" " = "empty",
                                               "present study (GEUVIDAS lymphoblast cells)" = "study1",
                                               "Cotton et al. + Carrel/Willard" = "study2")
                                 ),
                                 br(),
-                                strong("Directions for Use", style = "font-size:12px"),br(),
-                                em("---<update directions>", style = "font-size:12px"),br(),
-                                em("---<update directions>", style = "font-size:12px"),br(),
-                                em("---<update directions>", style = "font-size:12px"),br(),
+                                strong("Displayed Genes:", style = "font-size:14px"),br(),
+                                verbatimTextOutput("displayedGenes"),
                                 br(),
                                 strong("Input Dataset"),
                                 p("GEUVIDAS: ", span(a("102 Samples, 268 Genes, Lymphoblast Cells (link currently not working)", href="https://raw.githubusercontent.com/Karine-Moussa/xci-app-1/main/data_sources/x_expr.tsv?token=ARBUC3AOO3X6PWUK6HEGB6C73UATC", 
@@ -176,22 +177,38 @@ server <- function(input, output, session) {
         geneofinterest1 = "",
         geneofinterest2 = "",
         diseaseofinterest1 = "",
-        searchType = "",
+        searchType = "gene",
         addStudies = "",
         checkbox_input1 = "",
+        myclick = "",
         plot1_coord_x = c(),
         plot1_coord_y = c(),
         mapped_gene = "",
-        closest_expr_index = ""
+        closest_expr_index = "",
+        returned_genes_list = ""
         )
     # ObserveEvents Tab 1 
     observeEvent(input$geneofinterest1, { 
-        rv$geneofinterest1 <- input$geneofinterest1
+        rv$geneofinterest1 <- unique(c(input$geneofinterest1, rv$mapped_gene))
+        rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
         rv$searchType <- input$searchType
         })
     observeEvent(input$diseaseofinterest1, { 
         rv$diseaseofinterest1 <- input$diseaseofinterest1
         rv$searchType <- input$searchType
+    })
+    observeEvent(input$searchType, {
+        previous_searchtype <- rv$searchType
+        rv$searchType <- input$searchType
+        if(previous_searchtype != rv$searchType) {
+            rv$mapped_gene = ""
+            rv$geneofinterest1 = ""
+            rv$diseaseofinterest1 = ""
+            rv$plot1_coord_x = c()
+            rv$plot1_coord_y = c()
+            rv$closest_expr_index = "" 
+            rv$returned_genes_list = ""
+        }
     })
     observeEvent(input$checkbox_input1, {
         rv$checkbox_input1 <- input$checkbox_input1
@@ -206,19 +223,30 @@ server <- function(input, output, session) {
         rv$addStudies <- input$addStudies
     })
     observeEvent(input$myclick, {
-        rv$plot1_coord_x = c(rv$plot1_coord_x, input$myclick$x)
-        rv$plot1_coord_y = c(rv$plot1_coord_y, input$myclick$y)
-        for(i in 1:length(rv$plot1_coord_x)){
-            index <- which.min(abs(x_expr$start - rv$plot1_coord_x[i]))
-            rv$closest_expr_index[i] <- index
+        if(rv$searchType == 'gene'){
+            rv$plot1_coord_x = c(rv$plot1_coord_x, input$myclick$x)
+            rv$plot1_coord_y = c(rv$plot1_coord_y, input$myclick$y)
+            for(i in 1:length(rv$plot1_coord_x)){
+                index <- which.min(abs(x_expr$start - rv$plot1_coord_x[i]))
+                rv$closest_expr_index[i] <- index
+            }
+            rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+            rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
+            if(rv$geneofinterest1 == ""){
+                rv$geneofinterest1 = rv$mapped_gene
+            } else {
+                rv$geneofinterest1 = unique(c(rv$geneofinterest1, rv$mapped_gene))
+            }
         }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
-        rv$geneofinterest1 = rv$mapped_gene
     })
     observeEvent(input$resetButton, {
+        rv$mapped_gene = ""
         rv$geneofinterest1 = ""
         rv$diseaseofinterest1 = ""
+        rv$plot1_coord_x = c()
+        rv$plot1_coord_y = c()
+        rv$closest_expr_index = ""
+        rv$returned_genes_list = ""
     })
     # ObserveEvents Tab2
     observeEvent(input$geneofinterest2, { 
@@ -230,8 +258,22 @@ server <- function(input, output, session) {
     ## for testing:
     output$test <- renderPrint({ 
         str(rv$mapped_gene)
+        str(rv$geneofinterest1)
         str(rv$plot1_coord_x)
     })
+    ##############################
+    ## OUTPUT TEXT ###############
+    ##############################
+    output$displayedGenes <- renderPrint({
+        to_display = ""
+        if(rv$searchType == "gene") { 
+               to_display <- rv$geneofinterest1
+        } else {
+               to_display <- rv$returned_genes_list
+        } 
+        print(to_display)
+    })
+    ##############################
     ##############################
     ## CHECKBOXES ################
     ##############################
@@ -283,6 +325,8 @@ server <- function(input, output, session) {
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
         }
+        # for event conditioning syntax, returned_genes would need to be "" if empty
+        ifelse(returned_genes_list != c(), rv$returned_genes_list <- returned_genes_list, rv$returned_genes_list <- "")
         df <- data.frame()
         for(gene in returned_genes_list){
             assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
@@ -323,8 +367,8 @@ server <- function(input, output, session) {
         diseaseofinterest <- rv$diseaseofinterest1
         # Erase either geneofinterest or diseaseofinterest depending on the search engine
         searchType <- rv$searchType
-        ifelse(searchType == 'gene', diseaseofinterest <- "", "")
-        ifelse(searchType == 'disease', geneofinterest <- "", "")
+    #    ifelse(searchType == 'gene', diseaseofinterest <- "", "")
+    #    ifelse(searchType == 'disease', geneofinterest <- "", "")
         # Create gene of interest data frame
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% geneofinterest,]
         geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start),]
@@ -334,6 +378,7 @@ server <- function(input, output, session) {
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
         }
+        rv$returned_genes_list <- returned_genes_list
         returned_genes_list_length <- (length(returned_genes_list)) # use this to set up graph dimensions
         disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% returned_genes_list,]
         disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
