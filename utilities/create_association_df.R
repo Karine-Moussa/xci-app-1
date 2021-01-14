@@ -1,11 +1,8 @@
 ######## For GWAS study ##########
 create_gwas_association_df <- function(gene){
 # create base association data frame
-association_df <- data.frame("Date" = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"DATE.ADDED.TO.CATALOG"],
-                     "Mapped Gene" = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"MAPPED_GENE"],
-                     "Disease/Trait" = tolower(GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"DISEASE.TRAIT"]),
-                     "Link" = GWAS_ASSOCIATIONS[grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE),"LINK"],
-                     check.names = FALSE)
+    assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
+    association_df <- gene_stats$gwas_df
 # collect sex bias information on disease/trait
 list_of_traits <- c(association_df$`Disease/Trait`)
 list_of_ukbionames <- c() # collect uk bio names
@@ -37,19 +34,28 @@ create_nelson_association_df <- function(gene){
     # first create gene stats then collect nelson df
     assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
     association_df <- gene_stats$nelson_df
+    print("I reached point 1")
+    # Only move on if nelson_df returned anything. Otherwise return blank association_df
+   # ifelse(nrow(association_df) == 0, return(association_df), "")
     # ADD-ONS:
     # add hyperlinks
-    list_of_hyperlinks = c() 
-    for(i in 1:length(association_df$Source)){
-        hyperlink <- ""
-        if (association_df$Source[i] == "OMIM"){
-            hyperlink <- paste0("https://www.omim.org/entry/", gsub("OMIM:", "", association_df$Link[i]))
+    list_of_hyperlinks = c()
+    # first check if there are any entries in association_df
+    if(nrow(association_df) != 0){
+        for(i in 1:length(association_df$Source)){
+            hyperlink <- ""
+            if(!is.na(association_df$Source[i])){  # First need to make sure Source exists.
+                if (association_df$Source[i] == "OMIM"){
+                    hyperlink <- paste0("www.omim.org/entry/", gsub("OMIM:", "", association_df$Link[i]))
+                }
+                if (association_df$Source[i] == "GWAS:A" || association_df$Source[i] == "GWAS:A") {
+                    hyperlink <- paste0("www.pubmed.ncbi.nlm.nih.gov/", gsub("PUBMEDID:", "", association_df$Link[i]))
+                }
+                list_of_hyperlinks <- c(list_of_hyperlinks, hyperlink)
+            } 
         }
-        if (association_df$Source[i] == "GWAS:A" || association_df$Source[i] == "GWAS:A") {
-            hyperlink <- paste0("https://pubmed.ncbi.nlm.nih.gov/", gsub("PUBMEDID:", "", association_df$Link[i]))
-        }
-        list_of_hyperlinks <- c(list_of_hyperlinks, hyperlink)
     }
+    print("I reached point 2")
     # add sex bias information on disease/trait
     list_of_traits <- c(association_df$`Disease/Trait`)
     list_of_ukbionames <- c() # collect uk bio names
@@ -67,6 +73,7 @@ create_nelson_association_df <- function(gene){
         ifelse(is.na(stats$bias_nelson2ukbio), bias <- "N/A", bias <- stats$bias_nelson2ukbio)
         list_of_bias <- c(list_of_bias, bias)
     }
+    print("I reached point 3")
     # add to the right of association df
     association_df <- cbind(data.frame(association_df, check.names = FALSE), 
                             data.frame("Hyperlink" = list_of_hyperlinks, 
@@ -74,5 +81,6 @@ create_nelson_association_df <- function(gene){
                                        "Ratio (f/m)" = list_of_ratios,
                                        "Bias" = list_of_bias,
                                        check.names = FALSE))
+    print("I reached point 4")
     return(association_df)
 }
