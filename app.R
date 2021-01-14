@@ -61,10 +61,10 @@ ui <- fluidPage(title = "XCI Data",
                                 #verbatimTextOutput("test"),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
-                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", 
+                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:",
+                                                   multiple = TRUE,
                                                    # search in a combined list of GWAS and Nelson traits
-                                                   c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))
-                                                   ),
+                                                   c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
                                     p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                                 ),
                                 br(),
@@ -370,8 +370,15 @@ server <- function(input, output, session) {
     output$gene_disease_gwas_data <- renderDataTable({
         validate(need(rv$diseaseofinterest1,""))
         diseaseofinterest <- rv$diseaseofinterest1
-        # Get list of matching genes
-        mapped_genes <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
+        # return a list of mapped genes (per disease "d")
+        mapped_genes_gwas <- c()
+        for(d in diseaseofinterest){
+            mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+            if(!identical(mg_gwas, character(0))){
+                ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+            }
+        }
+        mapped_genes <- mapped_genes_gwas
         returned_genes_list <- c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -379,11 +386,13 @@ server <- function(input, output, session) {
         # for event conditioning syntax, returned_genes would need to be "" if empty
         ifelse(returned_genes_list != c(), rv$returned_genes_list <- returned_genes_list, rv$returned_genes_list <- "")
         df <- data.frame()
-        for(gene in returned_genes_list){
-            assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
-            temp_df <- create_gwas_association_df(gene)
-            df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
-            # ^subsets the GWAS table only for the disease of interest
+        for(d in diseaseofinterest){
+            for(gene in returned_genes_list){
+                assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
+                temp_df <- create_gwas_association_df(gene)
+                df <- rbind(df, temp_df[temp_df$`Disease/Trait` == d,])
+                # ^subsets the GWAS table only for the disease of interest
+            }
         }
         ### only perform this section if the assocation_df isn't empty ###
         ### this cleans up selection to remove columns that are empty ####
@@ -403,42 +412,42 @@ server <- function(input, output, session) {
         escape = FALSE
     )
     # Disease Nelson table
-    output$gene_disease_nelson_data <- renderDataTable({
-        validate(need(rv$diseaseofinterest1,""))
-        diseaseofinterest <- rv$diseaseofinterest1
-        # Get list of matching genes
-        mapped_genes <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == diseaseofinterest,'Gene']
-        returned_genes_list <- c()
-        returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
-            ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
-        }
-        # for event conditioning syntax, returned_genes would need to be "" if empty
-        ifelse(returned_genes_list != c(), rv$returned_genes_list <- returned_genes_list, rv$returned_genes_list <- "")
-        df <- data.frame()
-        for(gene in returned_genes_list){
-            assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
-            temp_df <- create_nelson_association_df(gene)
-            df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
-            # ^subsets the Nelson table only for the disease of interest
-        }
-        ### only perform this section if the assocation_df isn't empty ###
-        ### this cleans up selection to remove columns that are empty ####
-        if(nrow(df) != 0){
-            df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
-            df <- select(df, -"Hyperlink") # remove Hyperlink column
-            to_remove <- "" # if all rows in a column are blank, then remove the column
-            for(i in 1:ncol(df)){
-                if(sum((df[,i]) == "") == nrow(df)){
-                    ifelse(to_remove == "", to_remove <- i, to_remove <- c(to_remove, i))
-                }
-            }
-            # make sure to_remove actually exists before removing it from df
-            ifelse(to_remove != "", df <- select(df, -c(all_of(to_remove))),"")
-        } 
-        #### done ########################################################
-        df}, # display df
-        escape = FALSE
-    )
+#    output$gene_disease_nelson_data <- renderDataTable({
+#        validate(need(rv$diseaseofinterest1,""))
+#        diseaseofinterest <- rv$diseaseofinterest1
+#        # Get list of matching genes
+#        mapped_genes <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == diseaseofinterest,'Gene']
+#        returned_genes_list <- c()
+#        returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+#            ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+#        }
+#        # for event conditioning syntax, returned_genes would need to be "" if empty
+#        ifelse(returned_genes_list != c(), rv$returned_genes_list <- returned_genes_list, rv$returned_genes_list <- "")
+#        df <- data.frame()
+#        for(gene in returned_genes_list){
+#            assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
+#            temp_df <- create_nelson_association_df(gene)
+#            df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
+#            # ^subsets the Nelson table only for the disease of interest
+#        }
+#        ### only perform this section if the assocation_df isn't empty ###
+#        ### this cleans up selection to remove columns that are empty ####
+#        if(nrow(df) != 0){
+#            df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
+#            df <- select(df, -"Hyperlink") # remove Hyperlink column
+#            to_remove <- "" # if all rows in a column are blank, then remove the column
+#            for(i in 1:ncol(df)){
+#                if(sum((df[,i]) == "") == nrow(df)){
+#                    ifelse(to_remove == "", to_remove <- i, to_remove <- c(to_remove, i))
+#                }
+#            }
+#            # make sure to_remove actually exists before removing it from df
+#            ifelse(to_remove != "", df <- select(df, -c(all_of(to_remove))),"")
+#        } 
+#        #### done ########################################################
+#        df}, # display df
+#        escape = FALSE
+#    )
     ### TAB 2
     # TAU Table
     output$gene_detail_table <- renderDataTable({
@@ -471,8 +480,20 @@ server <- function(input, output, session) {
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% geneofinterest,]
         geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start),]
         # Create disease of interest data frame subsetting x_expr_mod data
-        mapped_genes_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
-        mapped_genes_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == diseaseofinterest,'Gene']
+        mapped_genes_gwas <- c()
+        mapped_genes_nels <- c()
+        for(d in diseaseofinterest){
+            mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+            mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
+            if(!identical(mg_gwas, character(0))){
+                ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+            }
+            if(!identical(mg_nels, character(0))){
+                ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
+            } 
+        }
+      #  mapped_genes_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
+      #  mapped_genes_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == diseaseofinterest,'Gene']
         mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
         returned_genes_list <- c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
