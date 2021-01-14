@@ -17,8 +17,7 @@ create_single_gene_stats <- function(gene, ref_table)
     }
 # Establish a TRUE/FALSE vector for matching disease/traits to UKBIO names
     # (this is just to make code cleaner further down)
-    TRUE_FALSE_VECTOR_GWAS = grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE)
-    TRUE_FALSE_VECTOR_NELSON = grepl(gene, NELSON_ASSOCIATIONS_2$Gene)
+
 # Then, assign attributes to gene
     assign(paste0(gene, "_stats"),
         # Add any attributes of interest to this list
@@ -69,20 +68,7 @@ create_single_gene_stats <- function(gene, ref_table)
             # Stain color
             #stain_color = BandColor[xchrom_map$density == "NA"] = xcolors[1],
             # Cell Type (vector)
-            cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"]))),
-            # Add GWAS association info
-            gwas_df = data.frame("Date" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DATE.ADDED.TO.CATALOG"],
-                                 "Mapped Gene" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"MAPPED_GENE"],
-                                 "Disease/Trait" = tolower(GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DISEASE.TRAIT"]),
-                                 "Link" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"LINK"],
-                                 check.names = FALSE),
-            # Add NELSON association info
-            nelson_df = data.frame("Gene" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Gene"],
-                                   "Disease/Trait" = tolower(NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"MSH"]),
-                                   "Link" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Link"],
-                                   "Source" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Source"],
-                                   "eQTL" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"eqtl"],
-                                   check.names = FALSE)
+            cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"])))
         )
         )
 )

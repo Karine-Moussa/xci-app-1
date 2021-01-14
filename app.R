@@ -103,7 +103,10 @@ ui <- fluidPage(title = "XCI Data",
                                     condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
                                     strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
                                     p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                    (dataTableOutput(outputId = "gene_disease_data"))
+                                    (dataTableOutput(outputId = "gene_disease_gwas_data")),
+                                    strong("<additional> Catalog Search (Disease/Trait)", style = "font-size:16px"),
+                                    p(span(a("Searching \"some source\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                    (dataTableOutput(outputId = "gene_disease_nelson_data"))
                                 )
                             )
                         )
@@ -315,7 +318,6 @@ server <- function(input, output, session) {
             df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>')
             to_remove <- "" # if all rows in a column are blank, then remove the column
             for(i in 1:ncol(df)){
-                print(i)
                 if(sum((df[,i]) == "") == nrow(df)){
                     ifelse(to_remove == "", to_remove <- i, to_remove <- c(to_remove, i))
                 }
@@ -363,7 +365,7 @@ server <- function(input, output, session) {
         escape = FALSE
     )
     # Disease GWAS table
-    output$gene_disease_data <- renderDataTable({
+    output$gene_disease_gwas_data <- renderDataTable({
         validate(need(rv$diseaseofinterest1,""))
         diseaseofinterest <- rv$diseaseofinterest1
         # Get list of matching genes
@@ -384,6 +386,30 @@ server <- function(input, output, session) {
         ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
                df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>'))
         df},
+        escape = FALSE
+    )
+    # Disease Nelson table
+    output$gene_disease_nelson_data <- renderDataTable({
+        validate(need(rv$diseaseofinterest1,""))
+        diseaseofinterest <- rv$diseaseofinterest1
+        # Get list of matching genes
+        mapped_genes <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == diseaseofinterest,'Gene']
+        returned_genes_list <- c()
+        returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+            ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+        }
+        # for event conditioning syntax, returned_genes would need to be "" if empty
+        ifelse(returned_genes_list != c(), rv$returned_genes_list <- returned_genes_list, rv$returned_genes_list <- "")
+        df <- data.frame()
+        for(gene in returned_genes_list){
+            assign(("gene_stats"), create_single_gene_stats(gene, x_expr)) # may not need this
+            temp_df <- create_nelson_association_df(gene)
+            df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
+            # ^subsets the Nelson table only for the disease of interest
+        }
+        ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
+               df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>'))
+        df}, # display df
         escape = FALSE
     )
     ### TAB 2

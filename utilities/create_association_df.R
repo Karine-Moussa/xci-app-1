@@ -1,8 +1,12 @@
 ######## For GWAS study ##########
 create_gwas_association_df <- function(gene){
 # create base association data frame
-    assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
-    association_df <- gene_stats$gwas_df
+    TRUE_FALSE_VECTOR_GWAS = grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE)
+    association_df <- data.frame("Date" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DATE.ADDED.TO.CATALOG"],
+                         "Mapped Gene" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"MAPPED_GENE"],
+                         "Disease/Trait" = tolower(GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DISEASE.TRAIT"]),
+                         "Link" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"LINK"],
+                         check.names = FALSE)
 # collect sex bias information on disease/trait
 list_of_traits <- c(association_df$`Disease/Trait`)
 list_of_ukbionames <- c() # collect uk bio names
@@ -32,11 +36,14 @@ return(association_df)
 ######## For Nelson study ##########
 create_nelson_association_df <- function(gene){
     # first create gene stats then collect nelson df
-    assign(("gene_stats"), create_single_gene_stats(gene, x_expr))
-    association_df <- gene_stats$nelson_df
+    TRUE_FALSE_VECTOR_NELSON = grepl(gene, NELSON_ASSOCIATIONS_2$Gene)
+    association_df <- data.frame("Gene" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Gene"],
+                                 "Disease/Trait" = tolower(NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"MSH"]),
+                                 "Link" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Link"],
+                                 "Source" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Source"],
+                                 "eQTL" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"eqtl"],
+                                 check.names = FALSE)
     print("I reached point 1")
-    # Only move on if nelson_df returned anything. Otherwise return blank association_df
-   # ifelse(nrow(association_df) == 0, return(association_df), "")
     # ADD-ONS:
     # add hyperlinks
     list_of_hyperlinks = c()
@@ -64,13 +71,13 @@ create_nelson_association_df <- function(gene){
     for(trait in list_of_traits) {
         assign(("stats"), create_single_trait_stats(trait)) # create diseasetrait object
         ukbioname <- "" # to build ukbioname vector
-        ifelse(is.na(stats$trait_nelson2ukbio), ukbioname <- "N/A", ukbioname <- stats$trait_nelson2ukbio)
+        ifelse(is.na(stats$trait_nels2ukbio), ukbioname <- "N/A", ukbioname <- stats$trait_nels2ukbio)
         list_of_ukbionames <- c(list_of_ukbionames, ukbioname)
         ratio <- "" # to build ratio vector
-        ifelse(is.na(stats$ratio_nelson2ukbio), ratio <- "N/A", ratio <- format(stats$ratio_nelson2ukbio, digits = 4))
+        ifelse(is.na(stats$ratio_nels2ukbio), ratio <- "N/A", ratio <- format(stats$ratio_nels2ukbio, digits = 4))
         list_of_ratios <- c(list_of_ratios, ratio)
         bias <- "" # to build bias vector
-        ifelse(is.na(stats$bias_nelson2ukbio), bias <- "N/A", bias <- stats$bias_nelson2ukbio)
+        ifelse(is.na(stats$bias_nels2ukbio), bias <- "N/A", bias <- stats$bias_nels2ukbio)
         list_of_bias <- c(list_of_bias, bias)
     }
     print("I reached point 3")
