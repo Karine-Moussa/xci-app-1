@@ -61,7 +61,10 @@ ui <- fluidPage(title = "XCI Data",
                                 #verbatimTextOutput("test"),
                                 conditionalPanel(
                                     condition = "input.searchType == 'disease'",
-                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", c("",LIST_OF_TRAITS_GWAS$GWAS_NAME)),
+                                    selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:", 
+                                                   # search in a combined list of GWAS and Nelson traits
+                                                   c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))
+                                                   ),
                                     p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                                 ),
                                 br(),
@@ -341,11 +344,10 @@ server <- function(input, output, session) {
         for(gene in geneofinterest){
             df <- rbind(df, create_nelson_association_df(gene))
         }
-        ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
-               df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>'))
     ### only perform this section if the assocation_df isn't empty ###
     ### this cleans up selection to remove columns that are empty ####
         if(nrow(df) != 0){
+            df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
             df <- select(df, -"Hyperlink") # remove Hyperlink column
             to_remove <- "" # if all rows in a column are blank, then remove the column
             for(i in 1:ncol(df)){
@@ -383,8 +385,20 @@ server <- function(input, output, session) {
             df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
             # ^subsets the GWAS table only for the disease of interest
         }
-        ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
-               df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>'))
+        ### only perform this section if the assocation_df isn't empty ###
+        ### this cleans up selection to remove columns that are empty ####
+        if(nrow(df) != 0){
+            df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>')
+            to_remove <- "" # if all rows in a column are blank, then remove the column
+            for(i in 1:ncol(df)){
+                if(sum((df[,i]) == "") == nrow(df)){
+                    ifelse(to_remove == "", to_remove <- i, to_remove <- c(to_remove, i))
+                }
+            }
+            # make sure to_remove actually exists before removing it from df
+            ifelse(to_remove != "", df <- select(df, -c(all_of(to_remove))),"")
+        } 
+        #### done ########################################################
         df},
         escape = FALSE
     )
@@ -407,8 +421,21 @@ server <- function(input, output, session) {
             df <- rbind(df, temp_df[temp_df$`Disease/Trait` == diseaseofinterest,])
             # ^subsets the Nelson table only for the disease of interest
         }
-        ifelse(nrow(df) == 0,"", # if df$Link has no entry do nothing, otherwise reformat for html
-               df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>'))
+        ### only perform this section if the assocation_df isn't empty ###
+        ### this cleans up selection to remove columns that are empty ####
+        if(nrow(df) != 0){
+            df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
+            df <- select(df, -"Hyperlink") # remove Hyperlink column
+            to_remove <- "" # if all rows in a column are blank, then remove the column
+            for(i in 1:ncol(df)){
+                if(sum((df[,i]) == "") == nrow(df)){
+                    ifelse(to_remove == "", to_remove <- i, to_remove <- c(to_remove, i))
+                }
+            }
+            # make sure to_remove actually exists before removing it from df
+            ifelse(to_remove != "", df <- select(df, -c(all_of(to_remove))),"")
+        } 
+        #### done ########################################################
         df}, # display df
         escape = FALSE
     )
@@ -440,13 +467,13 @@ server <- function(input, output, session) {
         diseaseofinterest <- rv$diseaseofinterest1
         # Erase either geneofinterest or diseaseofinterest depending on the search engine
         searchType <- rv$searchType
-    #    ifelse(searchType == 'gene', diseaseofinterest <- "", "")
-    #    ifelse(searchType == 'disease', geneofinterest <- "", "")
         # Create gene of interest data frame
         geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% geneofinterest,]
         geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start),]
-        # Create disease of interest data frame
-        mapped_genes <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
+        # Create disease of interest data frame subsetting x_expr_mod data
+        mapped_genes_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
+        mapped_genes_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == diseaseofinterest,'Gene']
+        mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
         returned_genes_list <- c()
         returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
             ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")

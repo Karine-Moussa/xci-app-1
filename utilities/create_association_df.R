@@ -43,7 +43,19 @@ create_nelson_association_df <- function(gene){
                                  "Source" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Source"],
                                  "eQTL" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"eqtl"],
                                  check.names = FALSE)
-    print("I reached point 1")
+    # Make sure for each row, the Gene can be found within our data
+    # if not, then remove it. 
+    if(nrow(association_df != 0)){ # first make sure assocation_df is populated
+        to_remove <- ""
+        for(i in 1:nrow(association_df)){
+            if(sum(association_df$Gene[i] %in% LIST_OF_GENES) == 0){ 
+                # if to_remove is blank, assign it to i. Otherwise append i to it. 
+                ifelse(to_remove == "", to_remove <- i, to_remove <- c(to_remove, i))
+            }
+        }
+        # make sure to_remove actually exists before de-subbing it from data frame
+        ifelse(to_remove != "", association_df <- association_df[-c(to_remove),], "")
+    }
     # ADD-ONS:
     # add hyperlinks
     list_of_hyperlinks = c()
@@ -62,7 +74,6 @@ create_nelson_association_df <- function(gene){
             } 
         }
     }
-    print("I reached point 2")
     # add sex bias information on disease/trait
     list_of_traits <- c(association_df$`Disease/Trait`)
     list_of_ukbionames <- c() # collect uk bio names
@@ -80,7 +91,6 @@ create_nelson_association_df <- function(gene){
         ifelse(is.na(stats$bias_nels2ukbio), bias <- "N/A", bias <- stats$bias_nels2ukbio)
         list_of_bias <- c(list_of_bias, bias)
     }
-    print("I reached point 3")
     # add to the right of association df
     association_df <- cbind(data.frame(association_df, check.names = FALSE), 
                             data.frame("Hyperlink" = list_of_hyperlinks, 
@@ -88,6 +98,7 @@ create_nelson_association_df <- function(gene){
                                        "Ratio (f/m)" = list_of_ratios,
                                        "Bias" = list_of_bias,
                                        check.names = FALSE))
-    print("I reached point 4")
+    # lastly, remove any duplicate rows
+    association_df <- unique(association_df)
     return(association_df)
 }
