@@ -18,7 +18,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      conditionalPanel(
                          condition = "input.searchType == 'disease'",
                          selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:",
-                                        multiple = TRUE,
+                                    #    multiple = TRUE,
                                         # search in a combined list of GWAS and Nelson traits
                                         c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
                          p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
