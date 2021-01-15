@@ -104,7 +104,8 @@ getAssocObjDisease <- function(db){
         df}, # display df
         options = list(
             autoWidth = TRUE,
-            columnDefs = list(list(width='20px',targets=2))
+            columnDefs = list(list(width='20px',targets=2)),
+            processing = FALSE
         ),
         escape = FALSE
     )

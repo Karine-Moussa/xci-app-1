@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-15 12:22:08 EST" # Sys.time()
+publication_date <- "2021-01-15 16:02:20 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -132,7 +132,7 @@ server <- function(input, output, session) {
       }
       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
       rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
-      if(rv$geneofinterest1 == ""){
+      if(rv$geneofinterest1[1] == ""){
         rv$geneofinterest1 = rv$mapped_gene
       } else {
         rv$geneofinterest1 = unique(c(rv$geneofinterest1, rv$mapped_gene))
@@ -161,6 +161,18 @@ server <- function(input, output, session) {
     str(rv$geneofinterest1)
     str(rv$plot1_coord_x)
   })
+  ##############################
+  ## PANEL STATUS ##############
+  ##############################
+  output$geneTableStatus <- reactive({
+    rv$geneofinterest1 != ""
+  })
+  outputOptions(output, "geneTableStatus", suspendWhenHidden = FALSE)
+  
+  output$diseaseTableStatus <- reactive({
+    rv$diseaseofinterest1 != ""
+  })
+  outputOptions(output, "diseaseTableStatus", suspendWhenHidden = FALSE)
   ##############################
   ## OUTPUT TEXT ###############
   ##############################
@@ -251,8 +263,6 @@ server <- function(input, output, session) {
         ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
       } 
     }
-    #  mapped_genes_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == diseaseofinterest,'MAPPED_GENE']
-    #  mapped_genes_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == diseaseofinterest,'Gene']
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
     returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){

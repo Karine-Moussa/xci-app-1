@@ -50,7 +50,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
                      # Only show this panel if the plot type is a histogram
                      conditionalPanel(
-                         condition = "input.searchType == 'gene' && input.geneofinterest1 != ''",
+                         condition = "output.geneTableStatus",
                          strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
                          p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                          (dataTableOutput(outputId = "gene_gwas_data")),
@@ -59,7 +59,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          (dataTableOutput(outputId = "gene_nelson_data"))
                      ),
                      conditionalPanel(
-                         condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
+                       #  condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
+                         condition = "output.diseaseTableStatus",
                          strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
                          p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                          (dataTableOutput(outputId = "gene_disease_gwas_data")),
