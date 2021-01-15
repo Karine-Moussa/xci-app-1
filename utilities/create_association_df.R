@@ -1,7 +1,7 @@
 ######## For GWAS study ##########
 create_gwas_association_df <- function(gene){
 # create base association data frame
-    TRUE_FALSE_VECTOR_GWAS = grepl(gene, GWAS_ASSOCIATIONS$MAPPED_GENE)
+    TRUE_FALSE_VECTOR_GWAS = grepl(paste0("\\b",gene,"\\b"), GWAS_ASSOCIATIONS$MAPPED_GENE)
     association_df <- data.frame("Date" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DATE.ADDED.TO.CATALOG"],
                          "Mapped Gene" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"MAPPED_GENE"],
                          "Disease/Trait" = tolower(GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DISEASE.TRAIT"]),
@@ -36,7 +36,7 @@ return(association_df)
 ######## For Nelson study ##########
 create_nelson_association_df <- function(gene){
     # first create gene stats then collect nelson df
-    TRUE_FALSE_VECTOR_NELSON = grepl(gene, NELSON_ASSOCIATIONS_2$Gene)
+    TRUE_FALSE_VECTOR_NELSON = grepl(paste0("\\b",gene,"\\b"), NELSON_ASSOCIATIONS_2$Gene)
     association_df <- data.frame("Gene" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Gene"],
                                  "Disease/Trait" = tolower(NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"MSH"]),
                                  "Link" = NELSON_ASSOCIATIONS_2[TRUE_FALSE_VECTOR_NELSON ,"Link"],

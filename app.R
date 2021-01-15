@@ -256,7 +256,7 @@ server <- function(input, output, session) {
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
     returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
-      ifelse(TRUE %in% grepl(gene, mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
     returned_genes_list_length <- (length(returned_genes_list)) # use this to set up graph dimensions
