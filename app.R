@@ -318,7 +318,7 @@ server <- function(input, output, session) {
         ### only perform this section if the assocation_df isn't empty ###
         ### this cleans up selection to remove columns that are empty ####
         if(nrow(df) != 0){
-            df$Link <- paste0('<a href="https://',df$Link,'" target="_blank">', df$Link, '</a>')
+            df$Link <- paste0('<a href="https://', df$Link,'" target="_blank">', df$Link, '</a>')
             to_remove <- "" # if all rows in a column are blank, then remove the column
             for(i in 1:ncol(df)){
                 if(sum((df[,i]) == "") == nrow(df)){
