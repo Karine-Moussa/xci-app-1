@@ -6,6 +6,7 @@ create_gwas_association_df <- function(gene){
                          "Mapped Gene" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"MAPPED_GENE"],
                          "Disease/Trait" = tolower(GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DISEASE.TRAIT"]),
                          "Link" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"LINK"],
+                         "Hyperlink" = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"LINK"],
                          check.names = FALSE)
 # collect sex bias information on disease/trait
 list_of_traits <- c(association_df$`Disease/Trait`)

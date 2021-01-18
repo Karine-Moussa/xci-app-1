@@ -24,9 +24,7 @@ getAssocObjGene <- function(db){
         ### this cleans up selection to remove columns that are empty ####
         if(nrow(df) != 0){
             df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
-            if(db == "nels"){
-                df <- select(df, -"Hyperlink") # remove Hyperlink column if its from Nelson
-            }
+            df <- select(df, -"Hyperlink") # remove Hyperlink column 
             to_remove <- "" # if all rows in a column are blank, then remove the column
             for(i in 1:ncol(df)){
                 if(sum((df[,i]) == "") == nrow(df)){
@@ -88,9 +86,7 @@ getAssocObjDisease <- function(db){
         ### this cleans up selection to remove columns that are empty ####
         if(nrow(df) != 0){
             df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
-            if(db == "nels"){
-                df <- select(df, -"Hyperlink") # remove Hyperlink column if Nelson
-            }
+            df <- select(df, -"Hyperlink") # remove Hyperlink column 
             to_remove <- "" # if all rows in a column are blank, then remove the column
             for(i in 1:ncol(df)){
                 if(sum((df[,i]) == "") == nrow(df)){

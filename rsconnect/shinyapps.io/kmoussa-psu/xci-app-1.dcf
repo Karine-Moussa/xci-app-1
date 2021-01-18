@@ -5,8 +5,9 @@ account: kmoussa-psu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3220450
-bundleId: 4092027
+bundleId: 4101526
 url: https://kmoussa-psu.shinyapps.io/xci-app-1/
-when: 1610562497.7476
+when: 1610744663.25151
 asMultiple: FALSE
 asStatic: FALSE
+ignoredFiles: sandbox
