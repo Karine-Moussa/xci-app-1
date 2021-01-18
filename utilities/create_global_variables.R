@@ -6,7 +6,10 @@ GENE <- as.factor(x_expr$GENE)
 SAMPLE_NAMES <- c(unique(x_expr[,"sample"]))
 LIST_OF_GENES <- c(unique(x_expr[,"GENE"]))
 
-# P-value significance
-P_SIG <- 0.05/(length(unique(GENE)))
-P_SIG <- 1.87e-4
+# P-value significance Bonferroni
+# P_SIG <- 0.05/(length(unique(GENE)))
+# P_SIG <- 1.87e-4
 P_MIN <- 2.845412e-304
+
+# P-value based on XCIR app
+P_SIG <- 0.05
