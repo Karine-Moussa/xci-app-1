@@ -2,3 +2,4 @@ sandbox/
 data_sources/gwas_associations_v1
 data_sources/gwas_assoc_v1_02
 data_intermediate/gwas_assoc_v1_xonly.csv
+resources_studies/Nelsonetal2015/nelson_supp_dataset4.xlsx
