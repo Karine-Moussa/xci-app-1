@@ -13,3 +13,7 @@ P_MIN <- 2.845412e-304
 
 # P-value based on XCIR app
 P_SIG <- 0.05
+
+# Escape thresholds (which can be updated)
+SV_threshold = 0.25  # suppressed to variable threshold
+VE_threshold = 0.75  # variable to escape threshold

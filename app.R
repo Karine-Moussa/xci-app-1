@@ -85,7 +85,9 @@ server <- function(input, output, session) {
     plot1_coord_y = c(),
     mapped_gene = "",
     closest_expr_index = "",
-    returned_genes_list = ""
+    returned_genes_list = "",
+    slider1 = SV_threshold,
+    slider2 = VE_threshold
   )
   # ObserveEvents Tab 1 
   observeEvent(input$geneofinterest1, { 
@@ -147,6 +149,22 @@ server <- function(input, output, session) {
     rv$plot1_coord_y = c()
     rv$closest_expr_index = ""
     rv$returned_genes_list = ""
+  })
+  observeEvent(input$slider1, {
+    previous_val1 <- rv$slider1
+    rv$slider1 <- input$slider1
+    # it can't be higher than the VE_threshold
+    if(rv$slider1 >= rv$slider2){
+      rv$slider1 <- previous_val1
+    }
+  })
+  observeEvent(input$slider2, {
+    previous_val2 <- rv$slider2
+    rv$slider2 <- input$slider2
+    # it can't be lower than the SV_threshold
+    if(rv$slider1 >= rv$slider2){
+      rv$slider2 <- previous_val2
+    }
   })
   # ObserveEvents Tab2
   observeEvent(input$geneofinterest2, { 
@@ -236,7 +254,7 @@ server <- function(input, output, session) {
   ##############################
   ### TAB 1
   ##### Main Plot
-  # Local variables
+  # Local variables and source materials
   plot1_xmin = 0
   plot1_xmax = max(x_expr$start) + 1.3e7
   # Output object
@@ -309,7 +327,10 @@ server <- function(input, output, session) {
     ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
     ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
     ###
-    # Include supplementary information if user specifies it
+    ##### Include supplementary information if user specifies it
+    # Determine the "variable" state of genes in our data set
+    SV_threshold <- rv$slider1
+    VE_threshold <- rv$slider2
     supp_study <- data.frame()
     ifelse(rv$addStudies == 'study1',
            supp_study <- x_expr_mod, "")
@@ -358,9 +379,12 @@ server <- function(input, output, session) {
                 fill="pink", alpha=0.25)
     if(rv$addStudies != 'empty'){
       genepvalue <- genepvalue + 
-        # Add Supplementary Study (escape states) information
+        # Add Supplementary Study (escape states) information before Main Data Points
         geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                   fill=supp_study$color, colour=supp_study$color, 
+                   fill=ifelse(supp_study$perc_samples_esc <= SV_threshold, "lightsteelblue3", 
+                               ifelse(supp_study$perc_samples_esc > SV_threshold & supp_study$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
+                   colour=ifelse(supp_study$perc_samples_esc <= SV_threshold, "lightsteelblue3", 
+                                 ifelse(supp_study$perc_samples_esc > SV_threshold & supp_study$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
                    alpha = 1, size=5, group=2)
     }
     genepvalue <- genepvalue + 
@@ -382,7 +406,8 @@ server <- function(input, output, session) {
       # Annotations
       geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
       annotate("text", x = max(x_expr$start), y = -log10(P_SIG)+.40, hjust=-0.1, family = "serif",
-               label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
+              # label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
+              label = paste0("    p = ", P_SIG), size = (4)) + 
       # Data points added by user reactive values: Gene of Interest
       geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                  fill='red', size=3, group=2) + 

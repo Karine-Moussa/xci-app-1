@@ -51,14 +51,14 @@ create_single_gene_stats <- function(gene, ref_table)
             min_skew = min(c(skew=ref_table[ref_table$GENE==gene,"f"])),
             max_skew = max(c(skew=ref_table[ref_table$GENE==gene,"f"])),
             # Skew < %25
-            skew_values_plus = c(skew=ref_table[ref_table$GENE==gene & ref_table$f < 0.25,"f"]),
+            skew_values_plus = c(skew=ref_table[ref_table$GENE==gene & ref_table$f <= 0.25,"f"]),
             # Escape state (based on Vector of escape calls) (single)
             escape_category = ifelse(all(c(esc_cat=ref_table[ref_table$GENE==gene,"status"]) == "S"), "SUPPRESS",
                            ifelse(all(c(esc_cat=ref_table[ref_table$GENE==gene,"status"]) == "E"),"ESCAPE",
                                   "VARIABLE")),
             # Percentage of samples for which gene escaped (single)
-            perc_samples_esc = sum(c(ref_table[ref_table$GENE==gene,"status"]) == "E")/length(c(ref_table[ref_table$GENE==gene,"status"])),
-            perc_samples_esc_tauplus = sum(c(ref_table[ref_table$GENE==gene & ref_table$f < 0.25,"status"]) == "E")/length(c(ref_table[ref_table$GENE==gene & ref_table$f < 0.25,"status"])),
+            perc_samples_esc = mean(ref_table[ref_table$GENE == gene, "status"] == "E"),
+            perc_samples_esc_tauplus = mean(ref_table[ref_table$GENE == gene & ref_table$f <= 0.25, "status"] == "E"),
             # Tau (vector)
             tau = c(tau=ref_table[ref_table$GENE==gene,"tau"]),
             # Average, min, and max tau_value (single)

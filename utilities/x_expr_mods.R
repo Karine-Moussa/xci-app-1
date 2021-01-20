@@ -30,14 +30,44 @@ x_expr_mod <- cbind(x_expr, BandColor, ChromPos,
                     p_value_mod, p_mod_flag, skew,
                     p_value_mod_neglog10)
 
-# add an escape color column
-for(i in 1:nrow(x_expr_mod)){
-    status <- x_expr_mod$status[i]
-    color <- ifelse(status == "E", "purple", 
-                    ifelse(status == "S", 
-                           "lightsteelblue3", "turquoise3"))
-    x_expr_mod$color[i] <- color
+# Determine the "variable" state of genes in our data set
+# First get percent of samples for which gene escaped (single)
+x_expr_mod$status_adv <- rep("",nrow(x_expr))
+x_expr_mod$color <- rep("",nrow(x_expr))
+x_expr_mod$perc_samples_esc <- rep("",nrow(x_expr))
+x_expr_mod$perc_samples_esc_tauplus <- rep("",nrow(x_expr))
+for(gene in unique(x_expr$GENE)){
+    perc_samples_esc = mean(x_expr[x_expr$GENE == gene, "status"] == "E")
+    perc_samples_esc_tauplus = mean(x_expr[x_expr$GENE == gene & x_expr$f <= 0.25, "status"] == "E")
+    ifelse(length(perc_samples_esc_tauplus) == 0, perc <- perc_samples_esc, perc <- perc_samples_esc_tauplus)
+    if(perc < SV_threshold){
+        st = "S"
+        color = "lightsteelblue3"
+    } else if (perc >= SV_threshold & perc < VE_threshold) {
+        st = "V"
+        color = "turquoise3"
+    } else if (perc >= VE_threshold){
+        st = "E"
+        color = "purple"
+    }
+    for(i in 1:nrow(x_expr_mod)){
+        if(x_expr_mod$GENE[i] == gene){
+            x_expr_mod$status_adv[i] <- st
+            x_expr_mod$color[i] <- color
+            x_expr_mod$perc_samples_esc[i] <- perc_samples_esc
+            x_expr_mod$perc_samples_esc_tauplus[i] <- perc_samples_esc_tauplus
+        }
+    }
 }
+
+# add an escape color column
+#for(i in 1:nrow(x_expr_mod)){
+#    status <- x_expr_mod$status[i]
+#    color <- ifelse(status == "E", "purple", 
+#                    ifelse(status == "S", 
+#                           "lightsteelblue3", "turquoise3"))
+#    x_expr_mod$color[i] <- color
+#}
 
 # clean up variables 
 rm(i) 

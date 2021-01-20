@@ -1,5 +1,6 @@
 # Libraries
 library(readxl)
+library(readr)
 ##################################
 #### IMPORT AND FORMAT FILES
 ##################################
@@ -50,6 +51,9 @@ cols <- c("NELS2_NAME","UKBIO_NAME")
 colnames(df) <- cols
 LIST_OF_TRAITS_NELSON_2 <- df
 rm(df)
+
+## MANUALLY ADDED STUDIES
+MANUAL_STUDIES <- read_excel("data_intermediate/additional_findings.xlsx", sheet = "additional_findings")
 
 ##################################
 ### PREPARE FILES FOR USE IN CODE
