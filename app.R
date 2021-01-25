@@ -87,7 +87,9 @@ server <- function(input, output, session) {
     closest_expr_index = "",
     returned_genes_list = "",
     slider1 = SV_threshold,
-    slider2 = VE_threshold
+    slider2 = VE_threshold,
+    SV_threshold = SV_threshold,
+    VE_threshold = VE_threshold
   )
   # ObserveEvents Tab 1 
   observeEvent(input$geneofinterest1, { 
@@ -153,17 +155,22 @@ server <- function(input, output, session) {
   observeEvent(input$slider1, {
     previous_val1 <- rv$slider1
     rv$slider1 <- input$slider1
-    # it can't be higher than the VE_threshold
-    if(rv$slider1 >= rv$slider2){
-      rv$slider1 <- previous_val1
+    # it cant be higher than the VE_threshold
+    if(rv$SV_threshold >= rv$VE_threshold){
+      rv$SV_threshold <- previous_val1
+    }
+    else{
+      rv$SV_threshold <- input$slider1
     }
   })
   observeEvent(input$slider2, {
     previous_val2 <- rv$slider2
     rv$slider2 <- input$slider2
     # it can't be lower than the SV_threshold
-    if(rv$slider1 >= rv$slider2){
-      rv$slider2 <- previous_val2
+    if(rv$SV_threshold >= rv$VE_threshold){
+      rv$VE_threshold <- previous_val2
+    } else {
+      rv$VE_threshold <- input$slider2
     }
   })
   # ObserveEvents Tab2
@@ -182,6 +189,7 @@ server <- function(input, output, session) {
   ##############################
   ## PANEL STATUS ##############
   ##############################
+  # The logic for whether the table titles are displayed 
   output$geneTableStatus <- reactive({
     rv$geneofinterest1 != ""
   })
@@ -191,6 +199,12 @@ server <- function(input, output, session) {
     rv$diseaseofinterest1 != ""
   })
   outputOptions(output, "diseaseTableStatus", suspendWhenHidden = FALSE)
+  
+  # The logic for the slider warning message
+  output$sliderWarning <- reactive({
+    rv$slider1 >= rv$slider2
+  })
+  outputOptions(output, "sliderWarning", suspendWhenHidden = FALSE)
   ##############################
   ## OUTPUT TEXT ###############
   ##############################
@@ -201,7 +215,7 @@ server <- function(input, output, session) {
       to_display <- rv$geneofinterest1
     } else {
       to_display <- rv$returned_genes_list
-    } 
+    }
     print(to_display)
   })
   ##############################
@@ -329,8 +343,8 @@ server <- function(input, output, session) {
     ###
     ##### Include supplementary information if user specifies it
     # Determine the "variable" state of genes in our data set
-    SV_threshold <- rv$slider1
-    VE_threshold <- rv$slider2
+    SV_threshold <- rv$SV_threshold
+    VE_threshold <- rv$VE_threshold
     supp_study <- data.frame()
     ifelse(rv$addStudies == 'study1',
            supp_study <- x_expr_mod, "")

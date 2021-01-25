@@ -1,6 +1,6 @@
 # All genes, main plot
 TAB1 <- tabPanel(title = "All Escape Expressions",
-                 tags$script(src = "lazy_slider.js"),
+               #  tags$script(src = "lazy_slider.js"),
                  # Create a layout with a sidebar and main area ----
                  sidebarLayout(
                      # Create a sidebar panel containing input controls ----
@@ -24,11 +24,14 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                             c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
                              p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                          ),
-                         br(),
+                        
                          actionButton("resetButton", "Clear Genes"),
                          br(),
                          br(),
-                         selectInput("addStudies", "View Escape States (according to various studies)",
+                         strong("Displayed Genes:", style = "font-size:14px"),br(),
+                         verbatimTextOutput("displayedGenes"),
+                         br(),
+                         selectInput("addStudies", "View Escape States",
                                      c(" " = "empty",
                                        "GEUVIDAS lymphoblast cells (present study)" = "study1",
                                        "Cotton et al. + Carrel/Willard" = "study2")
@@ -42,9 +45,13 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          label = "Choose an escape frequency for the [variable | escape] threshold", 
                                          value = VE_threshold, min = 0.25, max = 0.99)
                          ),
-                         br(),
-                         strong("Displayed Genes:", style = "font-size:14px"),br(),
-                         verbatimTextOutput("displayedGenes"),
+                         conditionalPanel(
+                             condition = "output.sliderWarning",
+                          #   verbatimTextOutput("sliderWarningMessage"),
+                             h2("Warning: the [inactive | variable] threshold cannot be greater than
+                                the [variable | escape] treshold. Threshold value has been set back to previous
+                                value", style="font-size:14px;color:red")
+                         ),
                          br(),
                          strong("Input Dataset"),
                          p("GEUVIDAS DATA: ", a("102 Samples, 268 Genes, Lymphoblast Cells", href="x_expr.tsv",
