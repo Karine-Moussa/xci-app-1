@@ -32,7 +32,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          verbatimTextOutput("displayedGenes"),
                          br(),
                          selectInput("addStudies", "View Escape States",
-                                     c(" " = "",
+                                     c(" " = "empty",
                                        "GEUVIDAS lymphoblast cells (present study)" = "study1",
                                        "Cotton et al. + Carrel/Willard" = "study2")
                          ),
@@ -65,15 +65,31 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      mainPanel(
                          withSpinner(plotOutput(outputId = "gene_pvalue", height = "500px", click = "myclick"), type = 2),
                          plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
-                         # Only show this panel if we're looking at escape states
+                         # Show the baseline legend if we're not looking at escape states:
                          conditionalPanel(
-                             condition = "input.addStudies != ''",
+                             condition = "input.addStudies == 'empty'",
+                             p("", style = "font-size:4px"),
                              fluidRow(
                                  column(4, offset = 1,
-                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", width = 300))
+                                        img(src = "mainplot_legend_horizontal.png", height = 23))
+                             ),
+                             p("", style = "font-size:4px"),
+                         ),
+                         # Only show this panel if we're looking at escape states
+                         # Also updatee the legend here if that's the casee
+                         conditionalPanel(
+                             condition = "input.addStudies != 'empty'",
+                             p("", style = "font-size:4px"),
+                             fluidRow(
+                                 column(4, offset = 1,
+                                        img(src = "mainplot_legend_horizontal.png", height = 23)),
+                                 column(4, offset = 2,
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", height = 23))
                                  ),
                              br(),
-                             strong("Status Table:", style = "font-size:18px")
+                             strong("Status Table:", style = "font-size:18px"),
+                             br(),
+                             em("Work in progress...")
                          ),
                          # Only show this panel if the we're looking at genes or diseases 
                          conditionalPanel(

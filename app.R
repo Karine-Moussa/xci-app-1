@@ -78,7 +78,7 @@ server <- function(input, output, session) {
     geneofinterest2 = "",
     diseaseofinterest1 = "",
     searchType = "gene",
-    addStudies = "",
+    addStudies = "empty",
     checkbox_input1 = "",
     myclick = "",
     plot1_coord_x = c(),
@@ -114,6 +114,7 @@ server <- function(input, output, session) {
       rv$plot1_coord_y = c()
       rv$closest_expr_index = "" 
       rv$returned_genes_list = ""
+      rv$addStudies = "empty"
     }
   })
   observeEvent(input$checkbox_input1, {
@@ -192,12 +193,12 @@ server <- function(input, output, session) {
   ##########################################
   # The logic for whether the tables are displayed 
   output$geneTableStatus <- reactive({
-    rv$geneofinterest1 != "" & rv$addStudies == ""
+    rv$geneofinterest1 != "" & rv$addStudies == "empty"
   })
   outputOptions(output, "geneTableStatus", suspendWhenHidden = FALSE)
   
   output$diseaseTableStatus <- reactive({
-    rv$diseaseofinterest1 != "" & rv$addStudies == ""
+    rv$diseaseofinterest1 != "" & rv$addStudies == "empty"
   })
   outputOptions(output, "diseaseTableStatus", suspendWhenHidden = FALSE)
   
@@ -392,7 +393,7 @@ server <- function(input, output, session) {
                 fill="lightblue", alpha=0.25) + 
       geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                 fill="pink", alpha=0.25)
-    if(rv$addStudies != ''){
+    if(rv$addStudies != 'empty'){
       genepvalue <- genepvalue + 
         # Add Supplementary Study (escape states) information before Main Data Points
         geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
@@ -441,7 +442,7 @@ server <- function(input, output, session) {
     # to shift x left, x -> -1
     # to shift y up, y -> +1
     # Add supplementary legend if user specified
-    ifelse(rv$addStudies != '', 
+    ifelse(rv$addStudies != 'empty', 
            (p <- p + draw_image("images/mainplot_additional_studies_legend_inactive.png", x = .43, y = 0.10, scale = 0.12)), 
            "")
     p <- genepvalue # for testing
