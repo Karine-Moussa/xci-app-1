@@ -88,6 +88,8 @@ server <- function(input, output, session) {
     returned_genes_list = "",
     slider1 = SV_threshold,
     slider2 = VE_threshold,
+    previous_val1 = "",
+    previous_val2 = "",
     SV_threshold = SV_threshold,
     VE_threshold = VE_threshold
   )
@@ -153,24 +155,22 @@ server <- function(input, output, session) {
     rv$returned_genes_list = ""
   })
   observeEvent(input$slider1, {
-    previous_val1 <- rv$slider1
     rv$slider1 <- input$slider1
     # it cant be higher than the VE_threshold
-    if(rv$SV_threshold >= rv$VE_threshold){
-      rv$SV_threshold <- previous_val1
+    if(rv$slider1 >= rv$slider2){
+      rv$SV_threshold <- SV_threshold # value unchanged
     }
     else{
-      rv$SV_threshold <- input$slider1
+      rv$SV_threshold <- input$slider1 # value updated
     }
   })
   observeEvent(input$slider2, {
-    previous_val2 <- rv$slider2
     rv$slider2 <- input$slider2
     # it can't be lower than the SV_threshold
-    if(rv$SV_threshold >= rv$VE_threshold){
-      rv$VE_threshold <- previous_val2
+    if(rv$slider1 >= rv$slider2){
+      rv$VE_threshold <- rv$VE_threshold # value unchanged
     } else {
-      rv$VE_threshold <- input$slider2
+      rv$VE_threshold <- input$slider2 # value updated
     }
   })
   # ObserveEvents Tab2
@@ -182,9 +182,10 @@ server <- function(input, output, session) {
   ##############################
   ## for testing (disable/enable this in myUI.R)
   output$test <- renderPrint({ 
-    str(rv$mapped_gene)
-    str(rv$geneofinterest1)
-    str(rv$plot1_coord_x)
+    print(paste0("rv$slider1:", rv$slider1))
+    print(paste0("rv$SV_threshold:", rv$SV_threshold))
+    print(paste0("rv$slider2:", rv$slider2))
+    print(paste0("rv$VE_threshold:", rv$VE_threshold))
   })
   ##########################################
   ## CONDITIONAL PANEL STATUS ##############
@@ -196,7 +197,7 @@ server <- function(input, output, session) {
   outputOptions(output, "geneTableStatus", suspendWhenHidden = FALSE)
   
   output$diseaseTableStatus <- reactive({
-    rv$diseaseofinterest1 != ""
+    rv$diseaseofinterest1 != "" & rv$addStudies == ""
   })
   outputOptions(output, "diseaseTableStatus", suspendWhenHidden = FALSE)
   

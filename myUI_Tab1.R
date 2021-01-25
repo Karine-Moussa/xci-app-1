@@ -15,7 +15,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              p("(Click on individual data points to add more genes)", style = "font-size:14px")
                          ),
                          #checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
-                         #verbatimTextOutput("test"),
+                #         verbatimTextOutput("test"),
                          conditionalPanel(
                              condition = "input.searchType == 'disease'",
                              selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:",
@@ -31,8 +31,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          strong("Displayed Genes:", style = "font-size:14px"),br(),
                          verbatimTextOutput("displayedGenes"),
                          br(),
-                         # for testing
-                         verbatimTextOutput("fortesting"),
                          selectInput("addStudies", "View Escape States",
                                      c(" " = "",
                                        "GEUVIDAS lymphoblast cells (present study)" = "study1",
@@ -67,7 +65,17 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      mainPanel(
                          withSpinner(plotOutput(outputId = "gene_pvalue", height = "500px", click = "myclick"), type = 2),
                          plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
-                         # Only show this panel if the plot type is a histogram
+                         # Only show this panel if we're looking at escape states
+                         conditionalPanel(
+                             condition = "input.addStudies != ''",
+                             fluidRow(
+                                 column(4, offset = 1,
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", width = 300))
+                                 ),
+                             br(),
+                             strong("Status Table:", style = "font-size:18px")
+                         ),
+                         # Only show this panel if the we're looking at genes or diseases 
                          conditionalPanel(
                              condition = "output.geneTableStatus",
                              strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
