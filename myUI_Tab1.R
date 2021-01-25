@@ -31,10 +31,19 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          strong("Displayed Genes:", style = "font-size:14px"),br(),
                          verbatimTextOutput("displayedGenes"),
                          br(),
+                         # for testing
+                         verbatimTextOutput("fortesting"),
                          selectInput("addStudies", "View Escape States",
-                                     c(" " = "empty",
+                                     c(" " = "",
                                        "GEUVIDAS lymphoblast cells (present study)" = "study1",
                                        "Cotton et al. + Carrel/Willard" = "study2")
+                         ),
+                         conditionalPanel(
+                             condition = "output.sliderWarning",
+                             #   verbatimTextOutput("sliderWarningMessage"),
+                             h2("Warning: the [inactive | variable] threshold cannot be greater than
+                                the [variable | escape] treshold. Threshold value has been set back to previous
+                                value", style="font-size:14px;color:red")
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study1'",
@@ -44,13 +53,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              sliderInput(inputId = "slider2", 
                                          label = "Choose an escape frequency for the [variable | escape] threshold", 
                                          value = VE_threshold, min = 0.25, max = 0.99)
-                         ),
-                         conditionalPanel(
-                             condition = "output.sliderWarning",
-                          #   verbatimTextOutput("sliderWarningMessage"),
-                             h2("Warning: the [inactive | variable] threshold cannot be greater than
-                                the [variable | escape] treshold. Threshold value has been set back to previous
-                                value", style="font-size:14px;color:red")
                          ),
                          br(),
                          strong("Input Dataset"),

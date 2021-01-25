@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-15 16:02:20 EST" # Sys.time()
+publication_date <- "2021-01-25 08:49:01 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -186,12 +186,12 @@ server <- function(input, output, session) {
     str(rv$geneofinterest1)
     str(rv$plot1_coord_x)
   })
-  ##############################
-  ## PANEL STATUS ##############
-  ##############################
-  # The logic for whether the table titles are displayed 
+  ##########################################
+  ## CONDITIONAL PANEL STATUS ##############
+  ##########################################
+  # The logic for whether the tables are displayed 
   output$geneTableStatus <- reactive({
-    rv$geneofinterest1 != ""
+    rv$geneofinterest1 != "" & rv$addStudies == ""
   })
   outputOptions(output, "geneTableStatus", suspendWhenHidden = FALSE)
   
@@ -391,7 +391,7 @@ server <- function(input, output, session) {
                 fill="lightblue", alpha=0.25) + 
       geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                 fill="pink", alpha=0.25)
-    if(rv$addStudies != 'empty'){
+    if(rv$addStudies != ''){
       genepvalue <- genepvalue + 
         # Add Supplementary Study (escape states) information before Main Data Points
         geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
@@ -440,7 +440,7 @@ server <- function(input, output, session) {
     # to shift x left, x -> -1
     # to shift y up, y -> +1
     # Add supplementary legend if user specified
-    ifelse(rv$addStudies != 'empty', 
+    ifelse(rv$addStudies != '', 
            (p <- p + draw_image("images/mainplot_additional_studies_legend_inactive.png", x = .43, y = 0.10, scale = 0.12)), 
            "")
     p <- genepvalue # for testing
