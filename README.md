@@ -1,19 +1,15 @@
 # xci-app-1
 
 *Latest Update*
+Added slider to adjust the variable escape thresholds for our data.
+
+![image](https://user-images.githubusercontent.com/71516524/105713942-b7dc6f80-5ee9-11eb-9049-319c74e9c5ef.png)
+
+![image](https://user-images.githubusercontent.com/71516524/105713999-c88ce580-5ee9-11eb-9d43-b8984391c652.png)
+
+*Previous Update*
 
 Added a "click to add gene" feature. (only for gene searches, disabled for\
 disease/trait searches)
 
 <img width="1054" alt="image" src="https://user-images.githubusercontent.com/71516524/104488899-01999180-559d-11eb-9729-4e140c6f3168.png">
-
-*Previous Update*
-
-Remapped the new gene positions for Cott + Carr/Willard study.\
-Updated the visualization for "additional studies"
-
-<img width="1301" alt="image" src="https://user-images.githubusercontent.com/71516524/104345614-91233f80-54cc-11eb-8027-82d62929f956.png">
-
-Present study 
-
-<img width="1303" alt="image" src="https://user-images.githubusercontent.com/71516524/104349372-d8abca80-54d0-11eb-8c58-cf355e40a8e6.png">
