@@ -31,7 +31,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-25 10:38:43 EST" # Sys.time()
+publication_date <- "2021-01-27 15:08:13 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -82,6 +82,7 @@ server <- function(input, output, session) {
     addStudies = "empty",
     checkbox_input1 = "",
     myclick = "",
+    myhover= "",
     plot1_coord_x = c(),
     plot1_coord_y = c(),
     mapped_gene = "",
