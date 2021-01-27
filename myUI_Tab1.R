@@ -88,8 +88,18 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                  ),
                              br(),
                              strong("Status Table:", style = "font-size:18px"),
-                             br(),
-                             em("Work in progress...")
+                             conditionalPanel( # conditional panel within conditional panel
+                                 condition = "input.addStudies == 'study1'",
+                                 p("GEUVIDAS (present study)", style = "font-size:16px"),
+                                 br(),
+                                 (dataTableOutput(outputId = "status_table_study1"))
+                             ),
+                             conditionalPanel( # conditional panel within conditional panel
+                                 condition = "input.addStudies == 'study2'",
+                                 p("Cotton et al. + Carrel/Willard", style = "font-size:16px"),
+                                 br(),
+                                 (dataTableOutput(outputId = "status_table_study2"))
+                             ),
                          ),
                          # Only show this panel if the we're looking at genes or diseases 
                          conditionalPanel(

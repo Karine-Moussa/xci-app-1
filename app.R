@@ -249,10 +249,40 @@ server <- function(input, output, session) {
   output$gene_disease_gwas_data <- getAssocObjDisease("gwas")
   # Disease Nelson table
   output$gene_disease_nelson_data <- getAssocObjDisease("nels")
+  # Status Table (Study1)
+  output$status_table_study1 <- renderDataTable({
+    df <- data.frame(Gene = distinct(x_expr_mod, GENE),
+                     "Start (hg38)" = distinct(x_expr_mod, GENE, start)[,'start'],
+                     "Escape Freq" = distinct(x_expr_mod, GENE, perc_samples_esc)[,'perc_samples_esc'],
+                     check.names = FALSE
+    )
+    # State is going to be a little complex because it now
+    # depends on the slider inputs.
+    # If mean(status == 'E' <= SV_threshold), 'inactive'
+    # If mean(status == 'E < SV_threshold <= VE_threshold), 'variable'
+    # If mean(status == 'E' > VE-threshold), 'escape'
+    for(i in 1:nrow(df)) {
+      if(df$`Escape Freq`[i] <= rv$SV_threshold){
+        df$State[i] <- 'inactive'
+      }
+      if(df$`Escape Freq`[i] > rv$SV_threshold & df$`Escape Freq`[i] <= rv$VE_threshold){
+        df$State[i] <- 'variable'
+      }
+      if(df$`Escape Freq`[i] > rv$VE_threshold){
+        df$State[i] <- 'escape'
+      }
+    }
+    # Also update format of frequency column
+    df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
+    saveRDS(df,'data_output/escape_status_study2.rds')
+    df
+  })
   # Status Table (Study2)
   output$status_table_study2 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
-                     Start = cott_carr_will_df$start_mapped
+                     "Start (hg38)" = cott_carr_will_df$start_mapped,
+                     State = cott_carr_will_df$status,
+                     check.names = FALSE
     )
     saveRDS(df,'data_output/escape_status_study2.rds')
     df
