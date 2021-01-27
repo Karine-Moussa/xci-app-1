@@ -6,6 +6,7 @@ palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
 
 # Libraries
 library(shiny, warn.conflicts = FALSE)
+library(shinydashboard, warn.conflicts = FALSE)
 library(dqshiny, warn.conflicts = FALSE)
 library(ggplot2, warn.conflicts = FALSE)
 library(plotly, warn.conflicts = FALSE)
@@ -193,12 +194,12 @@ server <- function(input, output, session) {
   ##########################################
   # The logic for whether the tables are displayed 
   output$geneTableStatus <- reactive({
-    rv$geneofinterest1 != "" & rv$addStudies == "empty"
+    rv$geneofinterest1 != "" 
   })
   outputOptions(output, "geneTableStatus", suspendWhenHidden = FALSE)
   
   output$diseaseTableStatus <- reactive({
-    rv$diseaseofinterest1 != "" & rv$addStudies == "empty"
+    rv$diseaseofinterest1 != ""
   })
   outputOptions(output, "diseaseTableStatus", suspendWhenHidden = FALSE)
   
@@ -210,7 +211,8 @@ server <- function(input, output, session) {
   ##############################
   ## OUTPUT TEXT ###############
   ##############################
-  ## TAB 1
+  ### TAB 1
+  # Genes displayed
   output$displayedGenes <- renderPrint({
     to_display = ""
     if(rv$searchType == "gene") { 
@@ -219,6 +221,14 @@ server <- function(input, output, session) {
       to_display <- rv$returned_genes_list
     }
     print(to_display)
+  })
+  # "please enter" message
+  output$pleaseInput <- renderText({
+    text <- ""
+    if(rv$geneofinterest1[1] == "" & rv$diseaseofinterest1[1] == ""){
+      text <- "Input gene or disease of interest for association data"
+    }
+    text
   })
   ##############################
   ## DOWNLOAD HANDLERS #########
@@ -252,7 +262,7 @@ server <- function(input, output, session) {
   # Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
     df <- data.frame(Gene = distinct(x_expr_mod, GENE),
-                     "Start (hg38)" = distinct(x_expr_mod, GENE, start)[,'start'],
+                     "Start (bp) [hg38]" = distinct(x_expr_mod, GENE, start)[,'start'],
                      "Escape Freq" = distinct(x_expr_mod, GENE, perc_samples_esc)[,'perc_samples_esc'],
                      check.names = FALSE
     )
@@ -274,17 +284,17 @@ server <- function(input, output, session) {
     }
     # Also update format of frequency column
     df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
-    saveRDS(df,'data_output/escape_status_study2.rds')
+    saveRDS(df,'data_output/geuvidas_xstates.rds')
     df
   })
   # Status Table (Study2)
   output$status_table_study2 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
-                     "Start (hg38)" = cott_carr_will_df$start_mapped,
+                     "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
                      State = cott_carr_will_df$status,
                      check.names = FALSE
     )
-    saveRDS(df,'data_output/escape_status_study2.rds')
+    saveRDS(df,'data_output/cott_carr_will_xstates.rds')
     df
   })
   ### TAB 2

@@ -24,7 +24,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                             c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
                              p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                          ),
-                        
                          actionButton("resetButton", "Clear Genes"),
                          br(),
                          br(),
@@ -65,6 +64,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      mainPanel(
                          withSpinner(plotOutput(outputId = "gene_pvalue", height = "500px", click = "myclick"), type = 2),
                          plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
+                         # LEGENDS
                          # Show the baseline legend if we're not looking at escape states:
                          conditionalPanel(
                              condition = "input.addStudies == 'empty'",
@@ -75,8 +75,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              ),
                              p("", style = "font-size:4px"),
                          ),
+                         # LEGENDS
                          # Only show this panel if we're looking at escape states
-                         # Also updatee the legend here if that's the casee
+                         # Also update the legend here if that's the case
                          conditionalPanel(
                              condition = "input.addStudies != 'empty'",
                              p("", style = "font-size:4px"),
@@ -87,39 +88,51 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                         img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", height = 23))
                                  ),
                              br(),
-                             strong("Status Table:", style = "font-size:18px"),
-                             conditionalPanel( # conditional panel within conditional panel
-                                 condition = "input.addStudies == 'study1'",
-                                 p("GEUVIDAS (present study)", style = "font-size:16px"),
-                                 br(),
-                                 (dataTableOutput(outputId = "status_table_study1"))
-                             ),
-                             conditionalPanel( # conditional panel within conditional panel
-                                 condition = "input.addStudies == 'study2'",
-                                 p("Cotton et al. + Carrel/Willard", style = "font-size:16px"),
-                                 br(),
-                                 (dataTableOutput(outputId = "status_table_study2"))
-                             ),
                          ),
-                         # Only show this panel if the we're looking at genes or diseases 
-                         conditionalPanel(
-                             condition = "output.geneTableStatus",
-                             strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
-                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                             (dataTableOutput(outputId = "gene_gwas_data")),
-                             strong("<additional> Catalog Search (Gene)", style = "font-size:16px"),
-                             p(span(a("Searching \"some source\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                             (dataTableOutput(outputId = "gene_nelson_data"))
-                         ),
-                         conditionalPanel(
-                             #  condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
-                             condition = "output.diseaseTableStatus",
-                             strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
-                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                             (dataTableOutput(outputId = "gene_disease_gwas_data")),
-                             strong("<additional> Catalog Search (Disease/Trait)", style = "font-size:16px"),
-                             p(span(a("Searching \"some source\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                             (dataTableOutput(outputId = "gene_disease_nelson_data"))
+                         tabBox(title = "",
+                                tabPanel("Association Data",
+                                         # Only show this message if no genes or diseases are inputted
+                                         p("", style="font-size:10px"),
+                                         span(textOutput("pleaseInput"), style="font-size:18px;font-style:italic"),
+                                         br(),
+                                         # Only show this panel if the we're looking at genes or diseases 
+                                         conditionalPanel(
+                                             condition = "output.geneTableStatus",
+                                             strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
+                                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                             (dataTableOutput(outputId = "gene_gwas_data")),
+                                             strong("<additional> Catalog Search (Gene)", style = "font-size:16px"),
+                                             p(span(a("Searching \"some source\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                             (dataTableOutput(outputId = "gene_nelson_data"))
+                                         ),
+                                         conditionalPanel(
+                                             #  condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
+                                             condition = "output.diseaseTableStatus",
+                                             strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
+                                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                             (dataTableOutput(outputId = "gene_disease_gwas_data")),
+                                             strong("<additional> Catalog Search (Disease/Trait)", style = "font-size:16px"),
+                                             p(span(a("Searching \"some source\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                             (dataTableOutput(outputId = "gene_disease_nelson_data"))
+                                         )
+                                ),
+                                tabPanel("Escape States",
+                                         conditionalPanel( # conditional panel within conditional panel
+                                             condition = "input.addStudies == 'empty' || input.addStudies == 'study1'",
+                                             p("", style = "font-size:14px"),
+                                             p("GEUVIDAS (present study)", style = "font-size:18px"),
+                                             br(),
+                                             (dataTableOutput(outputId = "status_table_study1"))
+                                         ),
+                                         conditionalPanel( # conditional panel within conditional panel
+                                             condition = "input.addStudies == 'study2'",
+                                             p("", style = "font-size:14px"),
+                                             p("Cotton et al. + Carrel/Willard", style = "font-size:18px"),
+                                             br(),
+                                             (dataTableOutput(outputId = "status_table_study2"))
+                                         )
+                                ),
+                                width = NULL, side = "left"
                          )
                      )
                  )
