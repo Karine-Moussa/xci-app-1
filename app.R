@@ -342,6 +342,11 @@ server <- function(input, output, session) {
     # If there were no disease returns, then set y_disease_annot to 0
     ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
     ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
+    # Finally, if we're observing the Cotton/Carrel study, lower all annotations
+    if(rv$addStudies == 'study2'){
+      y_disease_annot <- y_disease_annot - 0.6
+      y_gene_annot <- y_gene_annot - 0.6
+    }
     ###
     ##### Include supplementary information if user specifies it
     # Determine the "variable" state of genes in our data set
@@ -358,6 +363,7 @@ server <- function(input, output, session) {
     p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
     # Range of plot
     ymin = 0
+    ifelse(rv$addStudies == 'study2', ymin <- -1, '')
     ifelse(returned_genes_list_length > 1, ymin <- min(y_disease_annot),'')
     ifelse(length(geneofinterest) > 1, ymin <- min(y_gene_annot),'')
     ymax = 330
@@ -407,7 +413,7 @@ server <- function(input, output, session) {
       genepvalue <- genepvalue + 
         annotate("segment", x=cott_carr_will_df[, "start"], 
                  xend=cott_carr_will_df[, "start"],
-                 y=0, yend=ymax, size=1, alpha=0.8,
+                 y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color"])
     }
     genepvalue <- genepvalue + 
