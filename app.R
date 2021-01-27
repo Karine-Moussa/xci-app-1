@@ -30,7 +30,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-25 08:49:01 EST" # Sys.time()
+publication_date <- "2021-01-25 10:38:43 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -393,7 +393,7 @@ server <- function(input, output, session) {
                 fill="lightblue", alpha=0.25) + 
       geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                 fill="pink", alpha=0.25)
-    if(rv$addStudies != 'empty'){
+    if(rv$addStudies == 'study1'){
       genepvalue <- genepvalue + 
         # Add Supplementary Study (escape states) information before Main Data Points
         geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
@@ -402,6 +402,13 @@ server <- function(input, output, session) {
                    colour=ifelse(supp_study$perc_samples_esc <= SV_threshold, "lightsteelblue3", 
                                  ifelse(supp_study$perc_samples_esc > SV_threshold & supp_study$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
                    alpha = 1, size=5, group=2)
+    }
+    if(rv$addStudies == 'study2'){
+      genepvalue <- genepvalue + 
+        annotate("segment", x=cott_carr_will_df[, "start"], 
+                 xend=cott_carr_will_df[, "start"],
+                 y=0, yend=ymax, size=1, alpha=0.8,
+                 color=cott_carr_will_df[, "color"])
     }
     genepvalue <- genepvalue + 
       # Main Data Points
