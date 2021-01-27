@@ -87,6 +87,7 @@ for(i in 1:length(cott_carr_will_df$start)){
     cott_carr_will_df$end_mapped[i] <- mapped_pos_stop
     cott_carr_will_df$gene_mapped[i] <- mapped_gene
 }
+cott_carr_will_df$start_mapped <- as.numeric(cott_carr_will_df$start_mapped)
 # Then create a data frame from the x_expr_mod data using only those genes that
 # are shared across both data sets
 #matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene[!is.na(cott_carr_will_df$gene)]

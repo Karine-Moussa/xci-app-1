@@ -249,6 +249,14 @@ server <- function(input, output, session) {
   output$gene_disease_gwas_data <- getAssocObjDisease("gwas")
   # Disease Nelson table
   output$gene_disease_nelson_data <- getAssocObjDisease("nels")
+  # Status Table (Study2)
+  output$status_table_study2 <- renderDataTable({
+    df <- data.frame(Gene = cott_carr_will_df$gene,
+                     Start = cott_carr_will_df$start_mapped
+    )
+    saveRDS(df,'data_output/escape_status_study2.rds')
+    df
+  })
   ### TAB 2
   # TAU Table
   output$gene_detail_table <- renderDataTable({
@@ -343,6 +351,7 @@ server <- function(input, output, session) {
     ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
     ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
     # Finally, if we're observing the Cotton/Carrel study, lower all annotations
+    # to make room for the color bar
     if(rv$addStudies == 'study2'){
       y_disease_annot <- y_disease_annot - 0.6
       y_gene_annot <- y_gene_annot - 0.6
@@ -411,8 +420,8 @@ server <- function(input, output, session) {
     }
     if(rv$addStudies == 'study2'){
       genepvalue <- genepvalue + 
-        annotate("segment", x=cott_carr_will_df[, "start"], 
-                 xend=cott_carr_will_df[, "start"],
+        annotate("segment", x=cott_carr_will_df[, "start_mapped"], 
+                 xend=cott_carr_will_df[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color"])
     }
