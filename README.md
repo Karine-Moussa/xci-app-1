@@ -2,6 +2,13 @@
 
 *Latest Update*
 
+Added invidual gene escape state table (tab 2)
+
+![image](https://user-images.githubusercontent.com/71516524/106655481-69714580-6567-11eb-9e3a-f8aa3eaaa11c.png)
+
+
+*Previous Update*
+
 Added tables for escape studies of various studies. Uses tabBox to switch\
 between datatables. Also changed the way that the cott + carr/will study\
 is represented on the plot.

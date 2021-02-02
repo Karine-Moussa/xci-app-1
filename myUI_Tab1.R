@@ -32,7 +32,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          br(),
                          selectInput("addStudies", "View Escape States",
                                      c(" " = "empty",
-                                       "GEUVIDAS lymphoblast cells (present study)" = "study1",
+                                       "GEUVIDAS lymphoblast cells (displayed study)" = "study1",
                                        "Cotton et al. + Carrel/Willard" = "study2")
                          ),
                          conditionalPanel(
@@ -120,7 +120,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'empty' || input.addStudies == 'study1'",
                                              p("", style = "font-size:14px"),
-                                             p("GEUVIDAS (present study)", style = "font-size:18px"),
+                                             p("GEUVIDAS (displayed study)", style = "font-size:18px"),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study1"))
                                          ),

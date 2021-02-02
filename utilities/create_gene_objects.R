@@ -69,6 +69,7 @@ create_single_gene_stats <- function(gene, ref_table)
             #stain_color = BandColor[xchrom_map$density == "NA"] = xcolors[1],
             # Cell Type (vector)
             cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"])))
+            # Escape State DF
         )
         )
 )

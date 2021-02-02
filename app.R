@@ -16,6 +16,7 @@ library(gridExtra, warn.conflicts = FALSE)
 library(shinycssloaders, warn.conflicts = FALSE)
 library(magick, warn.conflicts = FALSE)
 library(cowplot, warn.conflicts = FALSE)
+library(rlist, warn.conflicts = FALSE)
 
 ### Source Data and Functions ###
 source("utilities/format_input_data.R", local = TRUE)
@@ -25,6 +26,7 @@ source("utilities/format_additional_studies.R", local = TRUE)
 source("utilities/create_association_df.R", local = TRUE)
 source("utilities/create_trait_objects.R", local = TRUE)
 source("utilities/create_gene_objects.R", local = TRUE)
+source("utilities/create_escape_df.R", local = TRUE)
 source("utilities/format_plot_aesthetics.R", local = TRUE)
 
 ### Load files and pre-processed data
@@ -247,6 +249,18 @@ server <- function(input, output, session) {
       write.csv(mydata, file)
     }
   )
+  # Download button for individual gene escape table
+  output$individual_gene_escape_download <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      paste(rv$geneofinterest1, "_individual_escape_table.csv", sep = "")
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/individual_escape_table.rds')
+      write.csv(mydata, file)
+    }
+  )
   ##############################
   ## DATA TABLES ###############
   ##############################
@@ -309,10 +323,17 @@ server <- function(input, output, session) {
                              state = gene_stats$status,
                              tau = gene_stats$tau,
                              skew = gene_stats$skew_values,
-                             p = gene_stats$p_values,
+                             p = sprintf("%1.3f", gene_stats$p_values),
                              tau_plus = ifelse(gene_stats$skew_values < 0.25, "yes","no"))
     saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
     genestatdf
+  })
+  output$ind_escape_states_table <- renderDataTable({
+    validate(need(input$geneofinterest2,""))
+    geneofinterest <- rv$geneofinterest2
+    df <- create_escape_df(geneofinterest)
+    saveRDS(df,'data_output/individual_escape_table.rds')
+    df
   })
   ##############################
   ## PLOTS/IMAGES ##############

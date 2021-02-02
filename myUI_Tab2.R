@@ -32,12 +32,19 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                              fluidRow(
                                  column(12, "",
                                         fixedRow(
-                                            column(4,
+                                            column(5,
                                                    p("TAU Data", style = "font-size:16px"),
                                                    (downloadButton("table1_download", "Download TAU Data")),
                                                    br(),
                                                    br(),
                                                    (dataTableOutput(outputId = "gene_detail_table"))
+                                            ),
+                                            column(5, offset = 2,
+                                                   p("Escape States", style = "font-size:16px"), 
+                                                   (downloadButton("individual_gene_escape_download", "Download Escape Data")),
+                                                   br(),
+                                                   br(),
+                                                   (dataTableOutput(outputId = "ind_escape_states_table"))
                                             )
                                         )
                                  )
