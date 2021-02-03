@@ -33,7 +33,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-01-27 15:08:13 EST" # Sys.time()
+publication_date <- "2021-02-02 16:06:01 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -470,23 +470,6 @@ server <- function(input, output, session) {
                 fill="lightblue", alpha=0.25) + 
       geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
                 fill="pink", alpha=0.25)
-    if(rv$addStudies == 'study1'){
-      genepvalue <- genepvalue + 
-        # Add Supplementary Study (escape states) information before Main Data Points
-        geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                   fill=ifelse(supp_study$perc_samples_esc <= SV_threshold, "lightsteelblue3", 
-                               ifelse(supp_study$perc_samples_esc > SV_threshold & supp_study$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
-                   colour=ifelse(supp_study$perc_samples_esc <= SV_threshold, "lightsteelblue3", 
-                                 ifelse(supp_study$perc_samples_esc > SV_threshold & supp_study$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
-                   alpha = 1, size=5, group=2)
-    }
-    if(rv$addStudies == 'study2'){
-      genepvalue <- genepvalue + 
-        annotate("segment", x=cott_carr_will_df[, "start_mapped"], 
-                 xend=cott_carr_will_df[, "start_mapped"],
-                 y=-.6, yend=-.2, size=1, alpha=0.8,
-                 color=cott_carr_will_df[, "color"])
-    }
     genepvalue <- genepvalue + 
       # Main Data Points
       geom_point(fill = p_less_300$BandColor, size = 2) + 
@@ -511,8 +494,10 @@ server <- function(input, output, session) {
       # Data points added by user reactive values: Gene of Interest
       geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                  fill='red', size=3, group=2) + 
+      # Change annotation color based on the displayed study
       annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = y_gene_annot, 
-               color = "red", vjust = 2, group = 5) +
+               color = "red",
+               vjust = 2, group = 5) +
       # Data points added by user reactive values: Disease of Interest
       geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
                  fill='green', size=3, group=2) + 
@@ -520,6 +505,21 @@ server <- function(input, output, session) {
                color = "forestgreen", vjust = 2, group = 5) +
       # Scale shape manual (though right now this is disabled)
       scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
+    if(rv$addStudies == 'study1'){
+      genepvalue <- genepvalue + 
+        # Add Supplementary Study (escape states) information after Main Data Points
+        geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+                   fill=ifelse(supp_study$perc_samples_esc <= SV_threshold, "lightsteelblue3", 
+                               ifelse(supp_study$perc_samples_esc > SV_threshold & supp_study$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
+                   size=3, group=2)
+    }
+    if(rv$addStudies == 'study2'){
+      genepvalue <- genepvalue + 
+        annotate("segment", x=cott_carr_will_df[, "start_mapped"], 
+                 xend=cott_carr_will_df[, "start_mapped"],
+                 y=-.6, yend=-.2, size=1, alpha=0.8,
+                 color=cott_carr_will_df[, "color"])
+    }
     p <- ggdraw() + 
       draw_plot(genepvalue) + 
       draw_image("images/mainplot_legend.png", x = .44, y = 0.30, scale = 0.10)
