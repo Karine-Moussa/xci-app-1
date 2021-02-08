@@ -275,11 +275,23 @@ server <- function(input, output, session) {
   output$gene_disease_nelson_data <- getAssocObjDisease("nels")
   # Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
-    df <- data.frame(Gene = distinct(x_expr_mod, GENE),
+    df <- data.frame("Gene" = distinct(x_expr_mod, GENE),
                      "Start (bp) [hg38]" = distinct(x_expr_mod, GENE, start)[,'start'],
                      "Escape Freq" = distinct(x_expr_mod, GENE, perc_samples_esc)[,'perc_samples_esc'],
                      check.names = FALSE
     )
+    # Filter the df based on what genes are being displayed.
+    # a. By default, it displays ALL genes
+    to_display = df$GENE
+    # b. If the study search is 'gene' use 'geneofinterest' reactive value
+    # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+    if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+      to_display <- rv$geneofinterest1
+    }
+    if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+      to_display <- rv$returned_genes_list
+    }
+    df <- df[df$GENE %in% to_display,]
     # State is going to be a little complex because it now
     # depends on the slider inputs.
     # If mean(status == 'E' <= SV_threshold), 'inactive'
@@ -308,6 +320,18 @@ server <- function(input, output, session) {
                      State = cott_carr_will_df$status,
                      check.names = FALSE
     )
+    # Filter the df based on what genes are being displayed.
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    # b. If the study search is 'gene' use 'geneofinterest' reactive value
+    # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+    if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+      to_display <- rv$geneofinterest1
+    }
+    if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+      to_display <- rv$returned_genes_list
+    }
+    df <- df[df$Gene %in% to_display,]
     saveRDS(df,'data_output/cott_carr_will_xstates.rds')
     df
   })
@@ -519,17 +543,7 @@ server <- function(input, output, session) {
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color"])
     }
-    p <- ggdraw() + 
-      draw_plot(genepvalue) + 
-      draw_image("images/mainplot_legend.png", x = .44, y = 0.30, scale = 0.10)
-    # to shift x left, x -> -1
-    # to shift y up, y -> +1
-    # Add supplementary legend if user specified
-    ifelse(rv$addStudies != 'empty', 
-           (p <- p + draw_image("images/mainplot_additional_studies_legend_inactive.png", x = .43, y = 0.10, scale = 0.12)), 
-           "")
-    p <- genepvalue # for testing
-    p
+    genepvalue
   })
   ## X chromosome "image"
   output$gene_pvalue_xchromosome <- renderPlot({
