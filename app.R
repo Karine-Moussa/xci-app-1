@@ -265,15 +265,15 @@ server <- function(input, output, session) {
   ##############################
   ### TAB 1
   source("myServer_Tab1_assocTables.R", local = TRUE) # Source for association tables
-  # Gene GWAS table 
+  ## Gene GWAS table 
   output$gene_gwas_data <- getAssocObjGene("gwas")
-  # Gene NELSON table
+  ## Gene NELSON table (currently commented out in myUI_Tab1.R)
   output$gene_nelson_data <- getAssocObjGene("nels")
-  # Disease GWAS table
+  ## Disease GWAS table
   output$gene_disease_gwas_data <- getAssocObjDisease("gwas")
-  # Disease Nelson table
+  ## Disease Nelson table (currently commented out in myUI_Tab1.R)
   output$gene_disease_nelson_data <- getAssocObjDisease("nels")
-  # Status Table (Study1)
+  ## Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
     df <- data.frame("Gene" = distinct(x_expr_mod, GENE),
                      "Start (bp) [hg38]" = distinct(x_expr_mod, GENE, start)[,'start'],
@@ -313,7 +313,7 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/geuvadis_xstates.rds')
     df
   })
-  # Status Table (Study2)
+  ## Status Table (Study2)
   output$status_table_study2 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
