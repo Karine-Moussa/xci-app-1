@@ -299,7 +299,7 @@ server <- function(input, output, session) {
     }
     # Also update format of frequency column
     df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
-    saveRDS(df,'data_output/geuvidas_xstates.rds')
+    saveRDS(df,'data_output/geuvadis_xstates.rds')
     df
   })
   # Status Table (Study2)

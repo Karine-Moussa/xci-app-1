@@ -19,10 +19,10 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          p("Gene = 268 X-Chromosome Genes",style = "font-size:12px"),
                          br(),
                          strong("Input Dataset"),
-                         p("GEUVIDAS DATA: ", a("102 Samples, 268 Genes, Lymphoblast Cells", href="x_expr.tsv",
+                         p("GEUVADIS DATA: ", a("102 Samples, 268 Genes, Lymphoblast Cells", href="x_expr.tsv",
                                                 target="_blank"), style = "font-size:12px"),
                          br(),
-                         p("GEUVIDAS genome build: hg38", style = "font-size:12px"),
+                         p("GEUVADIS genome build: hg38", style = "font-size:12px"),
                          em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                      ),
                      mainPanel(

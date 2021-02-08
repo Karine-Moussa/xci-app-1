@@ -32,7 +32,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          br(),
                          selectInput("addStudies", "View Escape States",
                                      c(" " = "empty",
-                                       "GEUVIDAS lymphoblast cells (displayed study)" = "study1",
+                                       "GEUVADIS lymphoblast cells (displayed study)" = "study1",
                                        "Cotton et al. + Carrel/Willard" = "study2")
                          ),
                          conditionalPanel(
@@ -53,11 +53,11 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          br(),
                          strong("Input Dataset"),
-                         p("GEUVIDAS DATA: ", a("102 Samples, 268 Genes, Lymphoblast Cells", href="x_expr.tsv",
+                         p("GEUVADIS DATA: ", a("102 Samples, 268 Genes, Lymphoblast Cells", href="x_expr.tsv",
                                                 target="_blank"), style = "font-size:12px"),
                          br(),
                          br(),
-                         p("GEUVIDAS genome build: hg38", style = "font-size:12px;color:grey"),
+                         p("GEUVADIS genome build: hg38", style = "font-size:12px;color:grey"),
                          em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                      ),
                      # Create plot and Action Buttons in Main Panel
@@ -120,7 +120,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'empty' || input.addStudies == 'study1'",
                                              p("", style = "font-size:14px"),
-                                             p("GEUVIDAS (displayed study)", style = "font-size:18px"),
+                                             p("GEUVADIS (displayed study)", style = "font-size:18px"),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study1"))
                                          ),
