@@ -118,7 +118,6 @@ server <- function(input, output, session) {
       rv$plot1_coord_y = c()
       rv$closest_expr_index = "" 
       rv$returned_genes_list = ""
-      rv$addStudies = "empty"
     }
   })
   observeEvent(input$checkbox_input1, {
