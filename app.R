@@ -95,7 +95,9 @@ server <- function(input, output, session) {
     previous_val1 = "",
     previous_val2 = "",
     SV_threshold = SV_threshold,
-    VE_threshold = VE_threshold
+    VE_threshold = VE_threshold,
+    states_filter_study1 = "on",
+    states_filter_study2 = "on"
   )
   # ObserveEvents Tab 1 
   observeEvent(input$geneofinterest1, { 
@@ -176,6 +178,14 @@ server <- function(input, output, session) {
     } else {
       rv$VE_threshold <- input$slider2 # value updated
     }
+  })
+  # If "filter" check box is updated in study1 escape states table
+  observeEvent(input$states_filter_study1, {
+    rv$states_filter_study1 <- input$states_filter_study1
+  })
+  # If "filter" check box is updated in study2 escape states table
+  observeEvent(input$states_filter_study2, {
+    rv$states_filter_study2 <- input$states_filter_study2
   })
   # ObserveEvents Tab2
   observeEvent(input$geneofinterest2, { 
@@ -304,16 +314,19 @@ server <- function(input, output, session) {
                      "Escape Freq" = distinct(x_expr_mod, GENE, perc_samples_esc)[,'perc_samples_esc'],
                      check.names = FALSE
     )
-    # Filter the df based on what genes are being displayed.
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df$GENE
-    # b. If the study search is 'gene' use 'geneofinterest' reactive value
-    # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-    if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
-      to_display <- rv$geneofinterest1
-    }
-    if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
-      to_display <- rv$returned_genes_list
+    if (isTruthy(rv$states_filter_study1)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
     }
     df <- df[df$GENE %in% to_display,]
     # State is going to be a little complex because it now
@@ -344,16 +357,19 @@ server <- function(input, output, session) {
                      State = cott_carr_will_df$status,
                      check.names = FALSE
     )
-    # Filter the df based on what genes are being displayed.
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df$Gene
+    if (isTruthy(rv$states_filter_study2)){
     # b. If the study search is 'gene' use 'geneofinterest' reactive value
     # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-    if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
-      to_display <- rv$geneofinterest1
-    }
-    if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
-      to_display <- rv$returned_genes_list
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
     }
     df <- df[df$Gene %in% to_display,]
     saveRDS(df,'data_output/cott_carr_will_xstates.rds')
