@@ -235,6 +235,30 @@ server <- function(input, output, session) {
   ##############################
   ## DOWNLOAD HANDLERS #########
   ##############################
+  ### TAB 1
+  ## Download escape states 
+  output$download_states_study1 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "geuvadis_lcl_escape_states.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/geuvadis_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_study2 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "cott_carr_will_escape_states.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/cott_carr_will_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
   ### TAB 2
   # Tau Download button for geneofinterest
   output$table1_download <- downloadHandler(

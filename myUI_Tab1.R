@@ -122,14 +122,16 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'empty' || input.addStudies == 'study1'",
                                              p("", style = "font-size:14px"),
-                                             p("GEUVADIS (displayed study)", style = "font-size:18px"),
+                                             p("GEUVADIS (displayed study)  ", style = "font-size:18px", 
+                                               downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study1"))
                                          ),
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'study2'",
                                              p("", style = "font-size:14px"),
-                                             p("Cotton et al. + Carrel/Willard", style = "font-size:18px"),
+                                             p("Cotton et al. + Carrel/Willard  ", style = "font-size:18px", 
+                                               downloadLink('download_states_study2','[download table]', style = "font-size:14px")),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study2"))
                                          )
