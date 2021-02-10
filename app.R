@@ -33,7 +33,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-02-02 16:06:01 EST" # Sys.time()
+publication_date <- "2021-02-09 09:36:49 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -62,14 +62,31 @@ ui <- fluidPage(title = "XCI Data",
                     ),
                     ## TAB 4: How To Page
                     tabPanel(title = "How To",
-                             br(),
-                             em("This is a concept page, all footage will be redone when product is finalized", style = "font-size:14px"),
                              br(),br(),
                              strong("Search for genes:", style = "font-size:18px"),br(),
-                             tags$img(type="mp4",src="xcidemo1.mp4", height="400px"),br(),
+                             em("Type or click to add genes", style = "font-size:18px"),br(),
+                             tags$img(type="mp4",src="xcidemo1.mp4", height="500px"),br(),
                              br(),br(),br(),
                              strong("Search for diseases/traits:", style = "font-size:18px"),br(),
-                             tags$img(type="mp4",src="xcidemo2.mp4", height="400px")
+                             tags$img(type="mp4",src="xcidemo2.mp4", height="500px"),
+                             br(),br(),br(),
+                             strong("Clear all displayed genes:", style = "font-size:18px"),br(),
+                             tags$img(type="mp4",src="xcidemo3.mp4", height="500px"),
+                             br(),br(),br(),
+                             strong("See escape states (graphically):", style = "font-size:18px"),br(),
+                             tags$img(type="mp4",src="xcidemo4.mp4", height="500px"),
+                             br(),br(),br(),
+                             strong("See escape states (data table):", style = "font-size:18px"),br(),
+                             tags$img(type="mp4",src="xcidemo5.mp4", height="500px"),
+                             br(),br(),br(),
+                             strong("Observe GWAS catalog information:", style = "font-size:18px"),br(),
+                             tags$img(type="mp4",src="xcidemo6.mp4", height="500px"),
+                             br(),br(),br(),
+                             strong("Change escape threshold for main study:", style = "font-size:18px"),br(),
+                             tags$img(type="mp4",src="xcidemo7.mp4", height="500px"),
+                             br(),br(),br(),
+                             strong("Search individual gene characteristics:", style = "font-size:18px"),br(),
+                             tags$img(type="mp4",src="xcidemo8.mp4", height="500px")
                     )
                   )
 )
