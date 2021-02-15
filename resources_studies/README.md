@@ -29,6 +29,6 @@ A single RNA-seq study on two cell types: fibroblast (n=104) & lymphoblast (n=25
 -table_s3_mod.xlsx: Same as table_s3.xlsx but with the description row (first row) removed from sheet 'ChrX'.
   - note: to convert table_s3 to the proper genome build (hg38), the chromosome positions\
 were compiled, and uploaded to [NCBI Genome Remapping Service](https://www.ncbi.nlm.nih.gov/genome/tools/remap#)\
-The source genome was hg19, the converted genome was hg38.\
+The source genome was hg19, the converted genome was hg38.
 
 -table_s5.xlsx: "A list of informative SNPs (iSNPs) along with their labeling on ChrX, Chr17 and autosomes from single cell lymphoblasts and Pool100 lymphoblasts. (XLSX 5482 kb)"
