@@ -35,7 +35,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          selectInput("addStudies", "View Escape States",
                                      c(" " = "empty",
                                        "GEUVADIS lymphoblast cells (displayed study)" = "study1",
-                                       "Cotton et al. + Carrel/Willard" = "study2")
+                                       "Cotton et al. + Carrel/Willard" = "study2",
+                                       "Katsir + Linial: scRNA-seq lymphoblast" = "study3")
                          ),
                          conditionalPanel(
                              condition = "output.sliderWarning",
@@ -102,20 +103,14 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              condition = "output.geneTableStatus",
                                              strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
                                              p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                             (dataTableOutput(outputId = "gene_gwas_data")),
-                                          #   strong("<additional> Catalog Search (Gene)", style = "font-size:16px"),
-                                          #   p(span(a("Searching \"some source\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                          #   (dataTableOutput(outputId = "gene_nelson_data"))
+                                             (dataTableOutput(outputId = "gene_gwas_data"))
                                          ),
                                          conditionalPanel(
                                              #  condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
                                              condition = "output.diseaseTableStatus",
                                              strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
                                              p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                             (dataTableOutput(outputId = "gene_disease_gwas_data")),
-                                        #     strong("<additional> Catalog Search (Disease/Trait)", style = "font-size:16px"),
-                                        #     p(span(a("Searching \"some source\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                        #     (dataTableOutput(outputId = "gene_disease_nelson_data"))
+                                             (dataTableOutput(outputId = "gene_disease_gwas_data"))
                                          )
                                 ),
                                 tabPanel("Escape States",
@@ -140,6 +135,17 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                            value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study2"))
+                                         ),
+                                         conditionalPanel( # conditional panel within conditional panel
+                                             condition = "input.addStudies == 'study3'",
+                                             p("", style = "font-size:14px"),
+                                             p("Katsir + Linial scRNA-seq lymphoblast (n = 25)  ", style = "font-size:18px", 
+                                               downloadLink('download_states_study3','[download table]', style = "font-size:14px")),
+                                             checkboxInput("states_filter_study3", 
+                                                           "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
+                                                           value = TRUE),
+                                             br(),
+                                             (dataTableOutput(outputId = "status_table_study3"))
                                          )
                                 ),
                                 width = NULL, side = "left"

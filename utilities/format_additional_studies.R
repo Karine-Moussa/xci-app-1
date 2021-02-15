@@ -22,9 +22,10 @@ hg19_to_hg38 <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38.csv")
 hg19_to_hg38 <- hg19_to_hg38[hg19_to_hg38$recip != "Second Pass",] # for now remove repeated mapping
 
 # MERIT ET AL 2020 (the GTEx papers)
-meritetal_suppl_table_3_path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
-meritetal_suppl_table_3_top30 <- read_excel(meritetal_suppl_table_3_path, sheet = "Top30_autosomal_predictive_gene")
-meritetal_suppl_table_3_top100 <- read_excel(meritetal_suppl_table_3_path, sheet = "Top100_autosomal_predictive_acr")
+path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
+meritetal_suppl_table_3_top30 <- read_excel(path, sheet = "Top30_autosomal_predictive_gene")
+meritetal_suppl_table_3_top100 <- read_excel(path, sheet = "Top100_autosomal_predictive_acr")
+rm(path)
 
 ## GWAS associations
 GWAS_ASSOCIATIONS <- read.csv("data_intermediate/gwas_assoc_v1_02_xonly.csv", header=T,na.strings="?")
@@ -51,6 +52,11 @@ cols <- c("NELS2_NAME","UKBIO_NAME")
 colnames(df) <- cols
 LIST_OF_TRAITS_NELSON_2 <- df
 rm(df)
+
+# Katsir + Linial 2019 scRNA-seq study
+path <- "resources_studies/KatsirLinial2019/table_s3_mod.xlsx"
+katsir_linail_s3 <- read_excel(path, sheet = "ChrX")
+rm(path)
 
 ## MANUALLY ADDED STUDIES
 MANUAL_STUDIES <- read_excel("data_intermediate/additional_findings.xlsx", sheet = "additional_findings")
@@ -109,3 +115,38 @@ rm(matching_TF_vector, gene, color_vector, color, state_TF_vector)
 # MERIT ET AL 2020
 merit_top30 <- unique(meritetal_suppl_table_3_top30$ENSEMBL_gene_id)
 merit_top100 <- unique(meritetal_suppl_table_3_top100$ENSEMBL_gene_id)
+
+# Katsir + Linial 2019
+kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,
+                         gene_mapped = rep("",length(katsir_linail_s3$`geneSymbol`)),
+                         start = as.numeric(katsir_linail_s3$`start`),
+                         start_mapped = rep("",length(katsir_linail_s3$`start`)),
+                         end = as.numeric(katsir_linail_s3$`end`),
+                         end_mapped = rep("",length(katsir_linail_s3$`end`)),
+                         status_fb_raw = katsir_linail_s3$`iSNP_Protocol_Identification.fib`,
+                         status_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", "escape", 
+                                            ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Inactivated", 
+                                                   "inactive","")),
+                         status_lb_raw = katsir_linail_s3$`overall_Identification`,
+                         status_lb = rep("",length(katsir_linail_s3$`overall_Identification`)),
+                         color_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", "purple", 
+                                           ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Inactivated", 
+                                                  "lightsteelblue3","")),
+                         color_lb = rep("",length(katsir_linail_s3$`geneSymbol`)))
+
+# get status_lb and color_lb
+for (i in 1:nrow(kat_lin_df)){
+    status = ""
+    color = ""
+    if(grepl("Escaper",kat_lin_df$status_lb_raw[i])){
+        status <- "escape"
+        color <- "purple"
+    }
+    if(grepl("Inactivated",kat_lin_df$status_lb_raw[i])){
+        status <- "inactive"
+        color <- "lightsteelblue3"
+    }
+    kat_lin_df$status_lb[i] <- status 
+    kat_lin_df$color_lb[i] <- color
+}
+rm(status)

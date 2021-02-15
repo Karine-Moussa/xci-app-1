@@ -33,7 +33,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-02-09 09:36:49 EST" # Sys.time()
+publication_date <- "2021-02-10 15:58:41 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -114,7 +114,8 @@ server <- function(input, output, session) {
     SV_threshold = SV_threshold,
     VE_threshold = VE_threshold,
     states_filter_study1 = "on",
-    states_filter_study2 = "on"
+    states_filter_study2 = "on",
+    states_filter_study3 = "on"
   )
   # ObserveEvents Tab 1 
   observeEvent(input$geneofinterest1, { 
@@ -203,6 +204,9 @@ server <- function(input, output, session) {
   # If "filter" check box is updated in study2 escape states table
   observeEvent(input$states_filter_study2, {
     rv$states_filter_study2 <- input$states_filter_study2
+  })
+  observeEvent(input$states_filter_study3, {
+    rv$states_filter_study3 <- input$states_filter_study3
   })
   # ObserveEvents Tab2
   observeEvent(input$geneofinterest2, { 
@@ -392,6 +396,31 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/cott_carr_will_xstates.rds')
     df
   })
+  ## Status Table (Study2)
+  output$status_table_study3 <- renderDataTable({
+    df <- data.frame(Gene = kat_lin_df$gene,
+                     "Start (bp) [hg38]" = kat_lin_df$start_mapped,
+                     State = kat_lin_df$status_lb,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study3)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    saveRDS(df,'data_output/katsir_linial_lymphoblast_xstates.rds')
+    df
+  })
   ### TAB 2
   # TAU Table
   output$gene_detail_table <- renderDataTable({
@@ -508,7 +537,6 @@ server <- function(input, output, session) {
            supp_study <- x_expr_mod, "")
     ifelse(rv$addStudies == 'study2',
            supp_study <- p_cott_carr_will, "")
-    #cott_carr_will_df = data.frame()
     # Split data by -10log(p) > or < 300
     p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
     p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
