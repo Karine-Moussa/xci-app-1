@@ -23,11 +23,12 @@ The positions were then remapped to fit the GEUVADIS escape calls.
 
 **KatsirLinial2019**\
 *Human genes escaping X-inactivation revealed by single cell expression data*\
-[DOI: 10.1186/s12864-019-5507-6](https://doi.org/10.1186/s12864-019-5507-6)
-A single RNA-seq study on two cell types: fibroblast (n=104) & lymphoblast (n=104)
--table_s3.xlsx: "A list of informative SNPs (iSNPs) along with their labeling on ChrX, Chr17, all autosomal chromosomes and imprinted genes from 101 fibroblast single cells. (XLSX 60374 kb)"
+[DOI: 10.1186/s12864-019-5507-6](https://doi.org/10.1186/s12864-019-5507-6)\
+A single RNA-seq study on two cell types: fibroblast (n=104) & lymphoblast (n=25)\
+-table_s3.xlsx: "A list of informative SNPs (iSNPs) along with their labeling on ChrX, Chr17, all autosomal chromosomes and imprinted genes from 101 fibroblast single cells. (XLSX 60374 kb)"\
 -table_s3_mod.xlsx: Same as table_s3.xlsx but with the description row (first row) removed from sheet 'ChrX'.
---note: to convert table_s3 to the proper genome build (hg38), the chromosome positions\
+  - note: to convert table_s3 to the proper genome build (hg38), the chromosome positions\
 were compiled, and uploaded to [NCBI Genome Remapping Service](https://www.ncbi.nlm.nih.gov/genome/tools/remap#)\
-The source genome was hg19, the converted genome was hg38.\
+The source genome was hg19, the converted genome was hg38.
+
 -table_s5.xlsx: "A list of informative SNPs (iSNPs) along with their labeling on ChrX, Chr17 and autosomes from single cell lymphoblasts and Pool100 lymphoblasts. (XLSX 5482 kb)"
