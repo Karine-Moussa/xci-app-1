@@ -1,5 +1,5 @@
 # Set variables
-TABLE=/Users/karinemoussa/Documents/DrLiu_Lab/Shiny_Apps/xci-app-1/resources_studies/Tuketal2017/Suppl.Table.1.csv
+TABLE="Suppl.Table.1.csv"
 
 OUTPUT="cott_car_will_chrX_positions_hg19.txt"
 

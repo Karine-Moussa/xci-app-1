@@ -1,5 +1,5 @@
 # Karine Moussa
-# XCI-app 
+# XCI-app
 # App Settings
 palette(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3",
           "#FF7F00", "#FFFF33", "#A65628", "#F781BF", "#999999"))
@@ -115,15 +115,16 @@ server <- function(input, output, session) {
     VE_threshold = VE_threshold,
     states_filter_study1 = "on",
     states_filter_study2 = "on",
-    states_filter_study3 = "on"
+    states_filter_study3 = "on",
+    states_filter_study4 = "on"
   )
-  # ObserveEvents Tab 1 
-  observeEvent(input$geneofinterest1, { 
+  # ObserveEvents Tab 1
+  observeEvent(input$geneofinterest1, {
     rv$geneofinterest1 <- unique(c(input$geneofinterest1, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
     rv$searchType <- input$searchType
   })
-  observeEvent(input$diseaseofinterest1, { 
+  observeEvent(input$diseaseofinterest1, {
     rv$diseaseofinterest1 <- input$diseaseofinterest1
     rv$searchType <- input$searchType
   })
@@ -136,20 +137,20 @@ server <- function(input, output, session) {
       rv$diseaseofinterest1 = ""
       rv$plot1_coord_x = c()
       rv$plot1_coord_y = c()
-      rv$closest_expr_index = "" 
+      rv$closest_expr_index = ""
       rv$returned_genes_list = ""
     }
   })
   observeEvent(input$checkbox_input1, {
     rv$checkbox_input1 <- input$checkbox_input1
-    ifelse(rv$checkbox_input1 == "TRUE", 
+    ifelse(rv$checkbox_input1 == "TRUE",
            rv$test1 <- "PikaTRUE",
            rv$test1 <- "LuFALSio")
-    ifelse(rv$checkbox_input1 == "TRUE", 
+    ifelse(rv$checkbox_input1 == "TRUE",
            rv$geneofinterest1 <- unique(x_expr_mod[x_expr_mod$status == "E","GENE"]),
            rv$geneofinterest1 <- "")
   })
-  observeEvent(input$addStudies, { 
+  observeEvent(input$addStudies, {
     rv$addStudies <- input$addStudies
   })
   observeEvent(input$myclick, {
@@ -197,26 +198,28 @@ server <- function(input, output, session) {
       rv$VE_threshold <- input$slider2 # value updated
     }
   })
-  # If "filter" check box is updated in study1 escape states table
+  # If "filter" check box is changed, updated escape states table
   observeEvent(input$states_filter_study1, {
     rv$states_filter_study1 <- input$states_filter_study1
   })
-  # If "filter" check box is updated in study2 escape states table
   observeEvent(input$states_filter_study2, {
     rv$states_filter_study2 <- input$states_filter_study2
   })
   observeEvent(input$states_filter_study3, {
     rv$states_filter_study3 <- input$states_filter_study3
   })
+  observeEvent(input$states_filter_study4, {
+    rv$states_filter_study4 <- input$states_filter_study4
+  })
   # ObserveEvents Tab2
-  observeEvent(input$geneofinterest2, { 
-    rv$geneofinterest2 <- input$geneofinterest2 
+  observeEvent(input$geneofinterest2, {
+    rv$geneofinterest2 <- input$geneofinterest2
   })
   ##############################
   ## FOR TESTING ###############
   ##############################
   ## for testing (disable/enable this in myUI.R)
-  output$test <- renderPrint({ 
+  output$test <- renderPrint({
     print(paste0("rv$slider1:", rv$slider1))
     print(paste0("rv$SV_threshold:", rv$SV_threshold))
     print(paste0("rv$slider2:", rv$slider2))
@@ -225,17 +228,17 @@ server <- function(input, output, session) {
   ##########################################
   ## CONDITIONAL PANEL STATUS ##############
   ##########################################
-  # The logic for whether the tables are displayed 
+  # The logic for whether the tables are displayed
   output$geneTableStatus <- reactive({
-    rv$geneofinterest1 != "" 
+    rv$geneofinterest1 != ""
   })
   outputOptions(output, "geneTableStatus", suspendWhenHidden = FALSE)
-  
+
   output$diseaseTableStatus <- reactive({
     rv$diseaseofinterest1 != ""
   })
   outputOptions(output, "diseaseTableStatus", suspendWhenHidden = FALSE)
-  
+
   # The logic for the slider warning message
   output$sliderWarning <- reactive({
     rv$slider1 >= rv$slider2
@@ -248,7 +251,7 @@ server <- function(input, output, session) {
   # Genes displayed
   output$displayedGenes <- renderPrint({
     to_display = ""
-    if(rv$searchType == "gene") { 
+    if(rv$searchType == "gene") {
       to_display <- rv$geneofinterest1
     } else {
       to_display <- rv$returned_genes_list
@@ -267,7 +270,7 @@ server <- function(input, output, session) {
   ## DOWNLOAD HANDLERS #########
   ##############################
   ### TAB 1
-  ## Download escape states 
+  ## Download escape states
   output$download_states_study1 <- downloadHandler(
     filename =  function(){
       # Name of created file
@@ -320,7 +323,7 @@ server <- function(input, output, session) {
   ##############################
   ### TAB 1
   source("myServer_Tab1_assocTables.R", local = TRUE) # Source for association tables
-  ## Gene GWAS table 
+  ## Gene GWAS table
   output$gene_gwas_data <- getAssocObjGene("gwas")
   ## Gene NELSON table (currently commented out in myUI_Tab1.R)
   output$gene_nelson_data <- getAssocObjGene("nels")
@@ -342,7 +345,7 @@ server <- function(input, output, session) {
     if (isTruthy(rv$states_filter_study1)){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
         to_display <- rv$geneofinterest1
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
@@ -385,7 +388,7 @@ server <- function(input, output, session) {
     if (isTruthy(rv$states_filter_study2)){
     # b. If the study search is 'gene' use 'geneofinterest' reactive value
     # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
         to_display <- rv$geneofinterest1
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
@@ -396,11 +399,11 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/cott_carr_will_xstates.rds')
     df
   })
-  ## Status Table (Study2)
+  ## Status Table (Study3)
   output$status_table_study3 <- renderDataTable({
-    df <- data.frame(Gene = kat_lin_df$gene,
-                     "Start (bp) [hg38]" = kat_lin_df$start_mapped,
-                     State = kat_lin_df$status_lb,
+    df <- data.frame(Gene = kat_lin_df_lb$gene,
+                     "Start (bp) [hg38]" = kat_lin_df_lb$start_mapped,
+                     State = kat_lin_df_lb$status_lb,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -410,7 +413,7 @@ server <- function(input, output, session) {
     if (isTruthy(rv$states_filter_study3)){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) { 
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
         to_display <- rv$geneofinterest1
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
@@ -419,6 +422,31 @@ server <- function(input, output, session) {
     }
     df <- df[df$Gene %in% to_display,]
     saveRDS(df,'data_output/katsir_linial_lymphoblast_xstates.rds')
+    df
+  })
+  ## Status Table (Study4)
+  output$status_table_study4 <- renderDataTable({
+    df <- data.frame(Gene = kat_lin_df_fb$gene,
+                     "Start (bp) [hg38]" = kat_lin_df_fb$start_mapped,
+                     State = kat_lin_df_fb$status_fb,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study4)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    saveRDS(df,'data_output/katsir_linial_fibroblast_xstates.rds')
     df
   })
   ### TAB 2
@@ -474,7 +502,7 @@ server <- function(input, output, session) {
       }
       if(!identical(mg_nels, character(0))){
         ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      } 
+      }
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
@@ -494,18 +522,18 @@ server <- function(input, output, session) {
     for(i in 2:(length(unique_disease_x_positions))){
       current_pos <- (unique_disease_x_positions[i])
       previous_pos <- (unique_disease_x_positions[i-1])
-      ifelse(current_pos - previous_pos > 15*10^6, 
-             y_disease_annot_unique[i] <- 0, 
+      ifelse(current_pos - previous_pos > 15*10^6,
+             y_disease_annot_unique[i] <- 0,
              y_disease_annot_unique[i] <- y_disease_annot_unique[i-1]-1/2)
     }
     for(i in 2:(length(unique_gene_x_positions))){
       current_pos <- (unique_gene_x_positions[i])
       previous_pos <- (unique_gene_x_positions[i-1])
-      ifelse(current_pos - previous_pos > 15*10^6, 
-             y_gene_annot_unique[i] <- 0, 
+      ifelse(current_pos - previous_pos > 15*10^6,
+             y_gene_annot_unique[i] <- 0,
              y_gene_annot_unique[i] <- y_gene_annot_unique[i-1]-1/2)
     }
-    # Then map each position to its gene occurrence 
+    # Then map each position to its gene occurrence
     y_disease_annot <- c()
     y_gene_annot <- c()
     for(i in 1:length(y_disease_annot_unique)){
@@ -521,9 +549,9 @@ server <- function(input, output, session) {
     # If there were no disease returns, then set y_disease_annot to 0
     ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
     ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
-    # Finally, if we're observing the Cotton/Carrel study, lower all annotations
+    # Finally, if we're observing the a supplementary study, lower all annotations
     # to make room for the color bar
-    if(rv$addStudies == 'study2'){
+    if(rv$addStudies != 'empty' & rv$addStudies != 'study1'){
       y_disease_annot <- y_disease_annot - 0.6
       y_gene_annot <- y_gene_annot - 0.6
     }
@@ -532,17 +560,17 @@ server <- function(input, output, session) {
     # Determine the "variable" state of genes in our data set
     SV_threshold <- rv$SV_threshold
     VE_threshold <- rv$VE_threshold
-    supp_study <- data.frame()
+    escape_states <- data.frame()
     ifelse(rv$addStudies == 'study1',
-           supp_study <- x_expr_mod, "")
+           escape_states <- x_expr_mod, "")
     ifelse(rv$addStudies == 'study2',
-           supp_study <- p_cott_carr_will, "")
+           escape_states <- p_cott_carr_will, "")
     # Split data by -10log(p) > or < 300
     p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
     p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
     # Range of plot
     ymin = 0
-    ifelse(rv$addStudies == 'study2', ymin <- -1, '')
+    ifelse(rv$addStudies != 'empty' & rv$addStudies != 'study1', ymin <- -1, '')
     ifelse(returned_genes_list_length > 1, ymin <- min(y_disease_annot),'')
     ifelse(length(geneofinterest) > 1, ymin <- min(y_gene_annot),'')
     ymax = 330
@@ -553,8 +581,8 @@ server <- function(input, output, session) {
     x_labels <- c(paste(first_label, "bp"),
                   paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
     # Create theme for plot
-    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1), 
-                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
                      #legend.position = "right", # removing legend
                      legend.position = "none",
@@ -562,108 +590,122 @@ server <- function(input, output, session) {
                      #axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
                      axis.title.x = element_blank(), # Removing X-title
                      axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
-                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10), 
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
                                                 face = "bold", angle=0, hjust=0.5),
                      panel.background = element_rect(fill = "white"))
     # Create plot
     genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
-                                                shape=p_mod_flag, label=GENE, label2=end, 
+                                                shape=p_mod_flag, label=GENE, label2=end,
                                                 group=1)) +
-      mytheme + ggtitle("X-Chromosome Escape Profile") + 
-      xlab("X-Chromosome Position") + ylab("-log10(p)") + 
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("-log10(p)") +
       # Add PAR and CENTROMERE shading
-      geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330), 
-                fill="lightblue", alpha=0.25) + 
-      geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330), 
-                fill="lightblue", alpha=0.25) + 
-      geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330), 
+      geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330),
+                fill="lightblue", alpha=0.25) +
+      geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330),
+                fill="lightblue", alpha=0.25) +
+      geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330),
                 fill="pink", alpha=0.25)
-    genepvalue <- genepvalue + 
+    genepvalue <- genepvalue +
       # Main Data Points
-      geom_point(fill = p_less_300$BandColor, size = 2) + 
-      geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
+      geom_point(fill = p_less_300$BandColor, size = 2) +
+      geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
                  fill=p_more_300$BandColor, size=2, group=3) +
       # Data points below significance
-      geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],  
-                 mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'], 
-                             y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']), 
-                             shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']), 
-                 fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
-                 color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'], 
-                 size=2, group=4) + 
+      geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],
+                 mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'],
+                             y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']),
+                             shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']),
+                 fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
+                 color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
+                 size=2, group=4) +
       # Scaling and Legends
-      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) + 
-      scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) + 
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) +
       # Annotations
-      geom_hline(yintercept = -log10(P_SIG), linetype='dotted') + 
+      geom_hline(yintercept = -log10(P_SIG), linetype='dotted') +
       annotate("text", x = max(x_expr$start), y = -log10(P_SIG)+.40, hjust=-0.1, family = "serif",
-              # label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) + 
-              label = paste0("    p = ", P_SIG), size = (4)) + 
+              # label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) +
+              label = paste0("    p = ", P_SIG), size = (4)) +
       # Data points added by user reactive values: Gene of Interest
-      geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                 fill='red', size=3, group=2) + 
+      geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
+                 fill='red', size=3, group=2) +
       # Change annotation color based on the displayed study
-      annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = y_gene_annot, 
+      annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = y_gene_annot,
                color = "red",
                vjust = 2, group = 5) +
       # Data points added by user reactive values: Disease of Interest
-      geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                 fill='green', size=3, group=2) + 
-      annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = y_disease_annot, 
+      geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
+                 fill='green', size=3, group=2) +
+      annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = y_disease_annot,
                color = "forestgreen", vjust = 2, group = 5) +
       # Scale shape manual (though right now this is disabled)
-      scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300")) 
+      scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
     if(rv$addStudies == 'study1'){
-      genepvalue <- genepvalue + 
-        # Add Supplementary Study (escape states) information after Main Data Points
-        geom_point(supp_study, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag), 
-                   fill=ifelse(supp_study$perc_samples_esc <= SV_threshold, "lightsteelblue3", 
-                               ifelse(supp_study$perc_samples_esc > SV_threshold & supp_study$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
+      genepvalue <- genepvalue +
+        # Add Escape State information after Main Data Points
+        geom_point(escape_states, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
+                   fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, "lightsteelblue3",
+                               ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
                    size=3, group=2)
     }
     if(rv$addStudies == 'study2'){
-      genepvalue <- genepvalue + 
-        annotate("segment", x=cott_carr_will_df[, "start_mapped"], 
+      genepvalue <- genepvalue +
+        annotate("segment", x=cott_carr_will_df[, "start_mapped"],
                  xend=cott_carr_will_df[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color"])
+    }
+    if(rv$addStudies == 'study3'){
+      genepvalue <- genepvalue +
+        annotate("segment", x=kat_lin_df_lb[, "start_mapped"],
+                 xend=kat_lin_df_lb[, "start_mapped"],
+                 y=-.6, yend=-.2, size=1, alpha=0.8,
+                 color=kat_lin_df_lb[, "color_lb"])
+    }
+    if(rv$addStudies == 'study4'){
+      genepvalue <- genepvalue +
+        annotate("segment", x=kat_lin_df_fb[, "start_mapped"],
+                 xend=kat_lin_df_fb[, "start_mapped"],
+                 y=-.6, yend=-.2, size=1, alpha=0.8,
+                 color=kat_lin_df_fb[, "color_fb"])
     }
     genepvalue
   })
   ## X chromosome "image"
   output$gene_pvalue_xchromosome <- renderPlot({
     # Create theme for plot
-    mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0), 
+    mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
                      legend.position = "none",
                      axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
                      axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
-                     axis.title.x = element_text(family = "Helvetica", size = (18), 
+                     axis.title.x = element_text(family = "Helvetica", size = (18),
                                                  colour = "steelblue4", face = "bold", hjust = .45, vjust = -1),
-                     axis.text.x = element_text(family = "Helvetica", 
+                     axis.text.x = element_text(family = "Helvetica",
                                                 colour = "steelblue4", size = (10), face = "bold", angle=90, hjust=1, vjust = 1),
                      axis.ticks.y = element_blank(),
                      panel.background = element_rect(fill = "white"))
     xchromosome_plot <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod), group=1)) +
-      mytheme + 
-      xlab("X-Chromosome Position") + ylab(" ") + 
+      mytheme +
+      xlab("X-Chromosome Position") + ylab(" ") +
       # Scaling and Legends
-      scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(plot1_xmin, plot1_xmax)) + 
-      scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) + 
+      scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) +
       # Add annotions
-      annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) + 
+      annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) +
       annotate("text", x=max(x_expr$start), y=-0.5, label="PAR2", size=4, color = "steelblue", hjust=.9) +
-      annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5, 
+      annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5,
                label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
       # Add chromosome map (yes the ordering is important)
-      chrom_segments_colored[c('start','end')] + 
-      chrom_segments + 
+      chrom_segments_colored[c('start','end')] +
+      chrom_segments +
       chrom_segments_colored[c('par1','par2','centre')]
     # ^these objects contains geom_segment() layers for each band.
     #  Created in utilities/format_plot_aesthetics.R
     xchromosome_plot
   })
-  ### TAB 2 
+  ### TAB 2
   ## Violin Plots - Gene of Interest
   output$individual_gene_tau_plot <- renderPlot({
     validate(
@@ -701,11 +743,11 @@ server <- function(input, output, session) {
                            "tau__tauskewvalues25" = c(geneofinterest_stats$tau,tau_tauplus))
     # If there are two or less entries for tau+, remove the
     # tau+ entries from the table (it's not enough info to display)
-    if(sum(tautable$tau__tauplus == "TAU+") <= 2) 
+    if(sum(tautable$tau__tauplus == "TAU+") <= 2)
     {tautable <- tautable[tautable$tau__tauplus == "TAU",]}
     # My Theme
-    mytheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (22), hjust = 0.5), 
-                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)), 
+    mytheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (22), hjust = 0.5),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
                      legend.position = "right",
                      axis.title = element_text(family = "Courier", size = (22), colour = "steelblue4", face = "bold"),
@@ -719,26 +761,26 @@ server <- function(input, output, session) {
     labely_tau = ifelse(avg_tau_value < 0.25, 0.48, 0.1)
     labely_tauplus = ifelse(avg_tauplus < 0.25, 0.48, 0.1)
     # Create Plot
-    geneofinterest_tauplot <- ggplot(tautable, 
+    geneofinterest_tauplot <- ggplot(tautable,
                                      aes(x = tau__tauplus, y = tau__tauskewvalues25, fill = tau__tauplus)) +
-      geom_violin(alpha = 0.5) + 
-      mytheme + 
-      ylim(-0.05,.5) + 
-      xlab(geneofinterest) + 
+      geom_violin(alpha = 0.5) +
+      mytheme +
+      ylim(-0.05,.5) +
+      xlab(geneofinterest) +
       # Add boxplots
-      geom_boxplot(width = 0.03, fill = "white") + 
+      geom_boxplot(width = 0.03, fill = "white") +
       # Annotate with tau values and p-values
-      annotate("text", x=0.45, y=c(labely_tau,labely_tau-0.025,labely_tau-0.05), 
-               label=c(paste0('avg tau: ', sprintf("%1.2f", avg_tau_value)), 
+      annotate("text", x=0.45, y=c(labely_tau,labely_tau-0.025,labely_tau-0.05),
+               label=c(paste0('avg tau: ', sprintf("%1.2f", avg_tau_value)),
                        paste0('min tau: ', sprintf("%1.2f", min_tau_value)),
                        paste0('max tau: ', sprintf("%1.2f", max_tau_value))),
-               family = 'Courier', color = "steelblue", size = 4, hjust = 0) + 
+               family = 'Courier', color = "steelblue", size = 4, hjust = 0) +
       annotate("text", x=1,y=-.03,
                label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc*100),'% of samples'),
-               family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
+               family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) +
       annotate("text", x=2,y=-.03,
                label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc_tauplus*100),'% of samples'),
-               family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) + 
+               family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) +
       scale_fill_manual("", values = c("cornflowerblue","purple"))
     # Remove legend if only one violin plot will be displayed
     if(sum(tautable$tau__tauplus == "TAU+") < 2){
@@ -748,14 +790,14 @@ server <- function(input, output, session) {
     # If there is enough information to display tau+ data,
     # display it. Criteria: TAU+ needs at least 2 entries.
     if(sum(tautable$tau__tauplus == "TAU+") >= 2){
-      geneofinterest_tauplot <- geneofinterest_tauplot + 
-        annotate("text", x=2.55, y=c(labely_tauplus,labely_tauplus-0.025,labely_tauplus-0.05), 
-                 label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tauplus)), 
+      geneofinterest_tauplot <- geneofinterest_tauplot +
+        annotate("text", x=2.55, y=c(labely_tauplus,labely_tauplus-0.025,labely_tauplus-0.05),
+                 label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tauplus)),
                          paste0('min tau+: ', sprintf("%1.2f", min_tauplus)),
                          paste0('max tau+: ', sprintf("%1.2f", max_tauplus))),
-                 family = 'Courier', color = "purple", size = 4, hjust = 1) + 
-        scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue","purple"), 
-                          labels=c("For all skew values", "Skew < 25%")) + 
+                 family = 'Courier', color = "purple", size = 4, hjust = 1) +
+        scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue","purple"),
+                          labels=c("For all skew values", "Skew < 25%")) +
         scale_x_discrete(limits = c("TAU","TAU+"))
     }
     geneofinterest_tauplot
@@ -763,11 +805,11 @@ server <- function(input, output, session) {
   ##################
   ## TAB 3 OUTPUT
   ##################
-  
+
   ##################
   ## TAB 4 OUTPUT
   ##################
-  
+
 }
 
 #This lets script know its a shiny app

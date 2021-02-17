@@ -36,7 +36,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                      c(" " = "empty",
                                        "GEUVADIS lymphoblast cells (displayed study)" = "study1",
                                        "Cotton et al. + Carrel/Willard" = "study2",
-                                       "Katsir + Linial: scRNA-seq lymphoblast" = "study3")
+                                       "Katsir + Linial: scRNA-seq lymphoblast" = "study3",
+                                       "Katsir + Linial: scRNA-seq fibroblast" = "study4")
                          ),
                          conditionalPanel(
                              condition = "output.sliderWarning",
@@ -117,7 +118,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'empty' || input.addStudies == 'study1'",
                                              p("", style = "font-size:14px"),
-                                             p("GEUVADIS (displayed study)  ", style = "font-size:18px", 
+                                             p("GEUVADIS lymphoblast (displayed study)  ", style = "font-size:18px", 
                                                downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
                                              checkboxInput("states_filter_study1", 
                                                            "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
@@ -146,6 +147,17 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                            value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study3"))
+                                         ),
+                                         conditionalPanel( # conditional panel within conditional panel
+                                             condition = "input.addStudies == 'study4'",
+                                             p("", style = "font-size:14px"),
+                                             p("Katsir + Linial scRNA-seq fibroblast (n = 104)  ", style = "font-size:18px", 
+                                               downloadLink('download_states_study4','[download table]', style = "font-size:14px")),
+                                             checkboxInput("states_filter_study4", 
+                                                           "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
+                                                           value = TRUE),
+                                             br(),
+                                             (dataTableOutput(outputId = "status_table_study4"))
                                          )
                                 ),
                                 width = NULL, side = "left"

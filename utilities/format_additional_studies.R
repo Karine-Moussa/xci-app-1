@@ -9,7 +9,7 @@ tuketal_suppl_table_1 <- read.csv("resources_studies/Tuketal2017/Suppl.Table.1.c
 tuketal_suppl_table_1 <- tuketal_suppl_table_1[-1,]  # remove top row
 names(tuketal_suppl_table_1) <- tuketal_suppl_table_1[1,] # make "new top row" the headers
 tuketal_suppl_table_1 <- tuketal_suppl_table_1[-1,] # remove "new top row"
-tuketal_suppl_table_1 <- tuketal_suppl_table_1[,-c(15:ncol(tuketal_suppl_table_1))] # remove NA colums 
+tuketal_suppl_table_1 <- tuketal_suppl_table_1[,-c(15:ncol(tuketal_suppl_table_1))] # remove NA colums
 tuketal_suppl_table_1_combined <- tuketal_suppl_table_1[,1:7]       # section suppl table
 tuketal_suppl_table_1_combined <- tuketal_suppl_table_1_combined[-which(tuketal_suppl_table_1_combined == ""), ] # remove blank rows
 tuketal_suppl_table_1_cottonetal <- tuketal_suppl_table_1[,8:11]    # section suppl table
@@ -17,9 +17,8 @@ tuketal_suppl_table_1_cottonetal <- tuketal_suppl_table_1_cottonetal[-which(tuke
 tuketal_suppl_table_1_carrwillard <- tuketal_suppl_table_1[,12:14]  # section suppl table
 tuketal_suppl_table_1_carrwillard <- tuketal_suppl_table_1_carrwillard[-which(tuketal_suppl_table_1_carrwillard == ""), ] # remove blank rows
 rm(tuketal_suppl_table_1)   # remove full tuketal_suppl_table_1
-hg19_to_hg38 <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38.csv")
-#hg19_to_hg38 <- hg19_to_hg38[hg19_to_hg38$mapped_int != "NULL",] # remove NULL lines
-hg19_to_hg38 <- hg19_to_hg38[hg19_to_hg38$recip != "Second Pass",] # for now remove repeated mapping
+hg19_to_hg38_cotcar <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38.csv")
+hg19_to_hg38_cotcar <- hg19_to_hg38_cotcar[hg19_to_hg38_cotcar$recip != "Second Pass",] # for now remove repeated mapping
 
 # MERIT ET AL 2020 (the GTEx papers)
 path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
@@ -56,6 +55,8 @@ rm(df)
 # Katsir + Linial 2019 scRNA-seq study
 path <- "resources_studies/KatsirLinial2019/table_s3_mod.xlsx"
 katsir_linail_s3 <- read_excel(path, sheet = "ChrX")
+hg19_to_hg38_katlin<- read.csv("resources_studies/KatsirLinial2019/hg19_to_hg38.csv")
+hg19_to_hg38_katlin <- hg19_to_hg38_katlin[hg19_to_hg38_katlin$recip != "Second Pass",] # for now remove repeated mapping
 rm(path)
 
 ## MANUALLY ADDED STUDIES
@@ -73,21 +74,21 @@ cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name
                                 end = as.numeric(tuketal_suppl_table_1_combined$`End position`),
                                 end_mapped = rep("",length(tuketal_suppl_table_1_combined$`End position`)),
                                 status = tuketal_suppl_table_1_combined$`Combined XCI status`,
-                                color = ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "escape", "purple", 
-                                               ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "variable", 
+                                color = ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "escape", "purple",
+                                               ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "variable",
                                                       "turquoise3","lightsteelblue3")))
-# Get the remapped versions 
+# Get the remapped versions
 for(i in 1:length(cott_carr_will_df$start)){
     pos_start <- cott_carr_will_df$start[i]
-    mapped_pos_start <- ifelse(pos_start %in% hg19_to_hg38$source_start,
-                               mapped_pos_start <- hg19_to_hg38[hg19_to_hg38$source_start == pos_start & !is.na(hg19_to_hg38$source_start), "mapped_start"],
+    mapped_pos_start <- ifelse(pos_start %in% hg19_to_hg38_cotcar$source_start,
+                               mapped_pos_start <- hg19_to_hg38_cotcar[hg19_to_hg38_cotcar$source_start == pos_start & !is.na(hg19_to_hg38_cotcar$source_start), "mapped_start"],
                                mapped_pos_start <- NA)
-    ifelse(mapped_pos_start %in% x_expr$start, 
+    ifelse(mapped_pos_start %in% x_expr$start,
            mapped_gene <- unique(x_expr[x_expr$start == mapped_pos_start, "GENE"]),
            mapped_gene <- NA)
     pos_stop <- cott_carr_will_df$end[i]
-    mapped_pos_stop <- ifelse(pos_stop %in% hg19_to_hg38$source_stop,
-                               mapped_pos_stop <- hg19_to_hg38[hg19_to_hg38$source_stop == pos_stop & !is.na(hg19_to_hg38$source_stop), "mapped_stop"],
+    mapped_pos_stop <- ifelse(pos_stop %in% hg19_to_hg38_cotcar$source_stop,
+                               mapped_pos_stop <- hg19_to_hg38_cotcar[hg19_to_hg38_cotcar$source_stop == pos_stop & !is.na(hg19_to_hg38_cotcar$source_stop), "mapped_stop"],
                                mapped_pos_stop <- NA)
     cott_carr_will_df$start_mapped[i] <- mapped_pos_start
     cott_carr_will_df$end_mapped[i] <- mapped_pos_stop
@@ -119,25 +120,28 @@ merit_top100 <- unique(meritetal_suppl_table_3_top100$ENSEMBL_gene_id)
 # Katsir + Linial 2019
 kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,
                          gene_mapped = rep("",length(katsir_linail_s3$`geneSymbol`)),
+                         snp_fb = katsir_linail_s3$SNPs_per_Gene.fib,
+                         snp_lb = katsir_linail_s3$SNPs_per_Gene.lymph,
                          start = as.numeric(katsir_linail_s3$`start`),
                          start_mapped = rep("",length(katsir_linail_s3$`start`)),
+                         start_name_based = rep("",length(katsir_linail_s3$`geneSymbol`)),
                          end = as.numeric(katsir_linail_s3$`end`),
                          end_mapped = rep("",length(katsir_linail_s3$`end`)),
                          status_fb_raw = katsir_linail_s3$`iSNP_Protocol_Identification.fib`,
-                         status_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", "escape", 
-                                            ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Inactivated", 
+                         status_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", "escape",
+                                            ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Inactivated",
                                                    "inactive","")),
                          status_lb_raw = katsir_linail_s3$`overall_Identification`,
                          status_lb = rep("",length(katsir_linail_s3$`overall_Identification`)),
-                         color_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", "purple", 
-                                           ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Inactivated", 
-                                                  "lightsteelblue3","")),
+                         color_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", "purple",
+                                           ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Inactivated",
+                                                  "lightsteelblue3",NA)),
                          color_lb = rep("",length(katsir_linail_s3$`geneSymbol`)))
 
 # get status_lb and color_lb
 for (i in 1:nrow(kat_lin_df)){
     status = ""
-    color = ""
+    color = NA
     if(grepl("Escaper",kat_lin_df$status_lb_raw[i])){
         status <- "escape"
         color <- "purple"
@@ -146,7 +150,21 @@ for (i in 1:nrow(kat_lin_df)){
         status <- "inactive"
         color <- "lightsteelblue3"
     }
-    kat_lin_df$status_lb[i] <- status 
+    kat_lin_df$status_lb[i] <- status
     kat_lin_df$color_lb[i] <- color
 }
 rm(status)
+
+# Get mapped position of each gene
+for(i in 1:nrow(kat_lin_df)){
+    start_orig <- kat_lin_df$start[i]
+    end_orig <- kat_lin_df$end[i]
+    kat_lin_df$start_mapped[i] <- hg19_to_hg38_katlin[hg19_to_hg38_katlin$source_start == start_orig, "mapped_start"]
+    kat_lin_df$end_mapped[i] <- hg19_to_hg38_katlin[hg19_to_hg38_katlin$source_stop == end_orig, "mapped_stop"]
+}
+kat_lin_df$start_mapped <- as.numeric(kat_lin_df$start_mapped)
+kat_lin_df$end_mapped <- as.numeric(kat_lin_df$end_mapped)
+
+# Split table based on cell type, and remove fb_snp or lb_snp column
+kat_lin_df_fb <- subset(kat_lin_df, snp_fb != "NA")
+kat_lin_df_lb <- subset(kat_lin_df, snp_lb != "NA")
