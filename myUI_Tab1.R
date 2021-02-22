@@ -23,7 +23,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                             ## search in a combined list of GWAS and Nelson traits
                                             #c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
                                             ## search in only the GWAS traits
-                                            c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
+                                            c("", unique(c("ALL FEMALE BIAS TRAITS", LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
                              p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                          ),
                          actionButton("resetButton", "Clear Genes"),

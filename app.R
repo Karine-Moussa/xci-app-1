@@ -33,7 +33,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-02-10 15:58:41 EST" # Sys.time()
+publication_date <- "2021-02-17 16:54:18 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -126,6 +126,9 @@ server <- function(input, output, session) {
   })
   observeEvent(input$diseaseofinterest1, {
     rv$diseaseofinterest1 <- input$diseaseofinterest1
+    if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS"){
+      rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.RData")
+    }
     rv$searchType <- input$searchType
   })
   observeEvent(input$searchType, {
