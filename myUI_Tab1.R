@@ -104,14 +104,14 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              condition = "output.geneTableStatus",
                                              strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
                                              p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                             (dataTableOutput(outputId = "gene_gwas_data"))
+                                             withSpinner(dataTableOutput(outputId = "gene_gwas_data"), type = 1)
                                          ),
                                          conditionalPanel(
                                              #  condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
                                              condition = "output.diseaseTableStatus",
                                              strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
                                              p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                             (dataTableOutput(outputId = "gene_disease_gwas_data"))
+                                             withSpinner(dataTableOutput(outputId = "gene_disease_gwas_data"), type = 1)
                                          )
                                 ),
                                 tabPanel("Escape States",
