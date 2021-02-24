@@ -33,7 +33,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-02-17 16:54:18 EST" # Sys.time()
+publication_date <- "2021-02-22 10:16:04 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -55,10 +55,14 @@ ui <- fluidPage(title = "XCI Data",
                     TAB2,
                     ## TAB 3: Glossary of Terms
                     tabPanel(title = "Terminology",
-                             p("Will update..."),
-                             p("XCI:"),
-                             p("Tau:"),
-                             p("Skew:"),
+                             strong("Will update...",style = "font-size:14px"),
+                             p("XCI: <define>"),
+                             img(src="demo1.png", height="100px"), br(),
+                             img(src="demo2.png", height="100px"), br(),br(),
+                             p("Tau: <define>"),
+                             img(src="demo3.png", height="100px"), br(),br(),
+                             p("Skew: <define>"),
+                             img(src="demo4.png", height="100px"),
                     ),
                     ## TAB 4: How To Page
                     tabPanel(title = "How To",

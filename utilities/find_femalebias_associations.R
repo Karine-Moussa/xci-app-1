@@ -23,3 +23,5 @@ for(i in 1:nrow(LIST_OF_TRAITS_GWAS)){
 }
 fbias_traits <- unlist(fbias_traits)
 saveRDS(fbias_traits, "data_intermediate/fbias_traits.RData")
+
+# Part 2 here
