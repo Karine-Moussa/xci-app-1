@@ -42,3 +42,6 @@ for(trait in GWAS_TRAITS){
 # note, will need to handle exceptions such as multiple EFO's per entry
 
 saveRDS(dt, file = "data_intermediate/gwas_ukbio_mapping_xchrom.rds")
+
+# cleanup
+rm(dt, temp_dt, temp_dt1, temp_dt2)

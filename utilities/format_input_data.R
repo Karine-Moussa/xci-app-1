@@ -18,6 +18,9 @@ rm(pheno_path)
 PHENO_RATES_UKBIO <- read.delim("data_sources/phenotypes_anno.tsv",header=T,sep="\t",na.strings="?")
 LIST_OF_TRAITS_UKBIO <- tolower(unique(PHENO_RATES_UKBIO$des))
 
+# GWAS - UKBIOBANK name mapping
+GWAS_UKBIO_MAPPING <- readRDS("data_intermediate/gwas_ukbio_mapping_xchrom.rds")
+
 ## X-chromosome staining
 xchrom_map_colored <- read.delim("data_intermediate/xchrom_map_colored",header=T,sep="\t")
 

@@ -25,6 +25,8 @@ for(trait in list_of_traits) {
     ifelse(is.na(stats$bias_gwas2ukbio), bias <- "N/A", bias <- stats$bias_gwas2ukbio)
     list_of_bias <- c(list_of_bias, bias)
 }
+
+
 # add to the right of association df
 association_df <- cbind(data.frame(association_df, check.names = FALSE), 
                         data.frame("UK Bio Desc." = list_of_ukbionames,
