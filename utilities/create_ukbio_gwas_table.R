@@ -13,6 +13,8 @@ GWAS_ASSOCIATIONS <- read.csv("data_intermediate/gwas_assoc_v1_02_xonly.csv", he
 GWAS_ASSOCIATIONS <- data.table(GWAS_ASSOCIATIONS)
 UK_BIOBANK_MASTER <- read_tsv("data_sources/UK_Biobank_master_file.tsv", col_names = T)
 UK_BIOBANK_MASTER <- data.table(UK_BIOBANK_MASTER)
+UK_BIOBANK_MASTER <- subset(UK_BIOBANK_MASTER, MAPPING_TYPE == "Broad" | MAPPING_TYPE == "Exact" | MAPPING_TYPE == "Narrow")
+# ^ subset only the clean returns
 
 # Get list of GWAS traits
 GWAS_TRAITS <- unique(GWAS_ASSOCIATIONS$DISEASE.TRAIT)
@@ -22,7 +24,7 @@ dt <- data.table()
 
 # For each GWAS trait, get the EFO
 for(trait in GWAS_TRAITS){
-    efo_link <- GWAS_ASSOCIATIONS[DISEASE.TRAIT == trait,MAPPED_TRAIT_URI][1]
+    efo_link <- GWAS_ASSOCIATIONS[DISEASE.TRAIT == trait, MAPPED_TRAIT_URI][1]
     efo <- str_extract(efo_link, "[A-Z].*")
     # Search for the EFO in UK_Biobank_master_file. Return
     # a data frame for "ukbioname", "mapping_type", and "icd10_code/s_r_t"
@@ -37,8 +39,6 @@ for(trait in GWAS_TRAITS){
     # append temp_dt to dt
     dt <- rbind(dt, temp_dt)
 }
-# remove questionable entries
-
 # note, will need to handle exceptions such as multiple EFO's per entry
 
 saveRDS(dt, file = "data_intermediate/gwas_ukbio_mapping_xchrom.rds")
