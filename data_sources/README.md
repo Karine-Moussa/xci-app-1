@@ -10,3 +10,5 @@
 
 - GWAS associations from [GWAS Catalog v1.02](https://www.ebi.ac.uk/gwas/docs/file-downloads)\
 The applications returns genes from the "MAPPED GENE" column of GWAS association data.
+
+- UK BIOBANK / GWAS terms (EFO) mapping from [Mapping UK Biobank to the Experimental Factor Ontology (EFO)](https://github.com/EBISPOT/EFO-UKB-mappings)
