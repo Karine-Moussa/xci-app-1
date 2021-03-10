@@ -23,7 +23,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                             ## search in a combined list of GWAS and Nelson traits
                                             #c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
                                             ## search in only the GWAS traits
-                                            c("", unique(c("ALL FEMALE BIAS TRAITS", LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
+                                            c("", unique(c("ALL FEMALE BIAS TRAITS (main study genes only)", LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
                              p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                          ),
                          actionButton("resetButton", "Clear Genes"),
@@ -56,7 +56,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          value = VE_threshold, min = 0.25, max = 0.99)
                          ),
                          br(),
-                         strong("Input Dataset"),
+                         strong("Main Dataset"),
                          p("GEUVADIS DATA: ", a("102 Samples, 268 Genes, Lymphoblast Cells", href="x_expr.tsv",
                                                 target="_blank"), style = "font-size:12px"),
                          br(),

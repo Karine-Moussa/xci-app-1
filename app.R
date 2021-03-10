@@ -131,7 +131,7 @@ server <- function(input, output, session) {
   })
   observeEvent(input$diseaseofinterest1, {
     rv$diseaseofinterest1 <- input$diseaseofinterest1
-    if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS"){
+    if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS (main study genes only)"){
       rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.RData")
     }
     rv$searchType <- input$searchType
