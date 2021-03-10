@@ -26,16 +26,6 @@ meritetal_suppl_table_3_top30 <- read_excel(path, sheet = "Top30_autosomal_predi
 meritetal_suppl_table_3_top100 <- read_excel(path, sheet = "Top100_autosomal_predictive_acr")
 rm(path)
 
-## GWAS associations
-GWAS_ASSOCIATIONS <- read.csv("data_intermediate/gwas_assoc_v1_02_xonly.csv", header=T,na.strings="?")
-#LIST_OF_TRAITS_GWAS <- data.frame(GWAS_NAME = tolower(unique(GWAS_ASSOCIATIONS$DISEASE.TRAIT)))
-df <- data.frame(GWAS_NAME = tolower(pheno_conv_GWAS_list$`DISEASE/TRAIT`),
-                 UKBIO_NAME = tolower(pheno_conv_GWAS_list$UKBIO))
-cols <- c("GWAS_NAME","UKBIO_NAME")
-colnames(df) <- cols
-LIST_OF_TRAITS_GWAS <- df
-rm(df)
-
 ## Nelson et al associations (incorporates GWAS, OMIM, GWASCentral, dbGaP)
 NELSON_ASSOCIATIONS_1 <- read.delim("resources_studies/Nelsonetal2015/nelson_supp_dataset1",header=T,sep="\t",na.strings="?")
 df <- data.frame(GWAS_NAME = tolower(pheno_conv_NELSON1_list$`DISEASE/TRAIT`),

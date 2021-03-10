@@ -14,6 +14,16 @@ pheno_conv_NELSON1_list <- read_excel(pheno_path, sheet = "NELSON1_list")
 pheno_conv_NELSON2_list <- read_excel(pheno_path, sheet = "NELSON2_list")
 rm(pheno_path)
 
+## GWAS associations
+GWAS_ASSOCIATIONS <- read.csv("data_intermediate/gwas_assoc_v1_02_xonly.csv", header=T,na.strings="?")
+#LIST_OF_TRAITS_GWAS <- data.frame(GWAS_NAME = tolower(unique(GWAS_ASSOCIATIONS$DISEASE.TRAIT)))
+df <- data.frame(GWAS_NAME = tolower(pheno_conv_GWAS_list$`DISEASE/TRAIT`),
+                 UKBIO_NAME = tolower(pheno_conv_GWAS_list$UKBIO))
+cols <- c("GWAS_NAME","UKBIO_NAME")
+colnames(df) <- cols
+LIST_OF_TRAITS_GWAS <- df
+rm(df)
+
 ## Phenotype Occurrence Rates from UK Biobank
 PHENO_RATES_UKBIO <- read.delim("data_sources/phenotypes_anno.tsv",header=T,sep="\t",na.strings="?")
 LIST_OF_TRAITS_UKBIO <- tolower(unique(PHENO_RATES_UKBIO$des))

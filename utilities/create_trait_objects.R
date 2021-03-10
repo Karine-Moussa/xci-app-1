@@ -18,7 +18,7 @@ create_single_trait_stats <- function(trait)
                                                  !is.na(LIST_OF_TRAITS_NELSON_2$UKBIO_NAME), 'UKBIO_NAME']
     trait_ukbio <- trait_gwas2ukbio
     if(length(trait_ukbio) == 0){
-      trait_ukbio = "NA"
+      trait_ukbio = ""
     }
   #  ifelse(!identical(trait_nels2ukbio, "character(0)"), trait_ukbio <- trait_nels2ukbio, trait_ukbio <- "")
     # Manual exceptions

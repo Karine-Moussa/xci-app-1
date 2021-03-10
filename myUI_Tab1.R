@@ -11,7 +11,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          conditionalPanel(
                              condition = "input.searchType == 'gene'",
-                             selectizeInput("geneofinterest1", "Gene of Interest:", c("",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
+                             selectizeInput("geneofinterest1", "Gene of Interest:", c("DUMMY",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
                              p("(Click on individual data points to add more genes)", style = "font-size:14px")
                          ),
                          #checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),

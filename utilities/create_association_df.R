@@ -6,6 +6,12 @@ create_gwas_association_df <- function(gene){
     mapped_traits = tolower(GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DISEASE.TRAIT"])
     links = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"LINK"]
     dates = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DATE.ADDED.TO.CATALOG"]
+    # 1.5 If the gene could not be found, set the returns to ""
+    # otherwise an error will be thrown because they are = character(0)
+    if(length(mapped_genes) == 0){mapped_genes = ""}
+    if(length(mapped_traits) == 0){mapped_traits = ""}
+    if(length(links) == 0){links = ""}
+    if(length(dates) == 0){dates = ""}
     # 2. for each trait get ukbio info
     # This may return multiple rows of information if there is more than 
     # one synomous ukbio term.
@@ -25,8 +31,18 @@ create_gwas_association_df <- function(gene){
         df1 <- trait_stats$ukbio_stats[,c("trait", "ratio", "bias")]
         df_final <- rbind(df_final, cbind(df0, df1))
     }
-    # 3. Clean up (remove duplicate rows, rename columns)
+    # 3. Clean up
+    # Remove duplicate rows.
     df_final <- unique(df_final)
+    # Remove blank rows
+    to_remove = c()
+    for(i in 1:nrow(df)){
+        if(sum(df[i,] == "") == ncol(df)){
+            to_remove = c(to_remove, i)
+        }
+    }
+    if(!is.null(to_remove)){df_final <- df_final[-to_remove, , drop = FALSE]}
+    # Add column names.
     col_ <- c("Date", "Mapped Gene", "Disease/Trait", "Link", "Hyperlink",
               "UK Bio Desc.", "Ratio (f/m)", "Bias")
     colnames(df_final) <- col_

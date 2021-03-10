@@ -34,7 +34,7 @@ source("utilities/format_plot_aesthetics.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
 
 ### Save publication date
-publication_date <- "2021-02-22 10:16:04 EST" # Sys.time()
+publication_date <- "2021-03-10 12:02:08 EST" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -361,24 +361,27 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$GENE %in% to_display,]
-    # State is going to be a little complex because it now
-    # depends on the slider inputs.
-    # If mean(status == 'E' <= SV_threshold), 'inactive'
-    # If mean(status == 'E < SV_threshold <= VE_threshold), 'variable'
-    # If mean(status == 'E' > VE-threshold), 'escape'
-    for(i in 1:nrow(df)) {
-      if(df$`Escape Freq`[i] <= rv$SV_threshold){
-        df$State[i] <- 'inactive'
+    # The rest can only be performed if the data table is populated
+    if(nrow(df) != 0){
+      # State is going to be a little complex because it now
+      # depends on the slider inputs.
+      # If mean(status == 'E' <= SV_threshold), 'inactive'
+      # If mean(status == 'E < SV_threshold <= VE_threshold), 'variable'
+      # If mean(status == 'E' > VE-threshold), 'escape'
+      for(i in 1:nrow(df)) {
+        if(df$`Escape Freq`[i] <= rv$SV_threshold){
+          df$State[i] <- 'inactive'
+        }
+        if(df$`Escape Freq`[i] > rv$SV_threshold & df$`Escape Freq`[i] <= rv$VE_threshold){
+          df$State[i] <- 'variable'
+        }
+        if(df$`Escape Freq`[i] > rv$VE_threshold){
+          df$State[i] <- 'escape'
+        }
       }
-      if(df$`Escape Freq`[i] > rv$SV_threshold & df$`Escape Freq`[i] <= rv$VE_threshold){
-        df$State[i] <- 'variable'
-      }
-      if(df$`Escape Freq`[i] > rv$VE_threshold){
-        df$State[i] <- 'escape'
-      }
+      # Also update format of frequency column
+      df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
     }
-    # Also update format of frequency column
-    df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
     saveRDS(df,'data_output/geuvadis_xstates.rds')
     df
   })
@@ -494,7 +497,7 @@ server <- function(input, output, session) {
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints
     diseaseofinterest <- rv$diseaseofinterest1
-    # Erase either geneofinterest or diseaseofinterest depending on the search engine
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
     # Create gene of interest data frame
     geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% geneofinterest,]
