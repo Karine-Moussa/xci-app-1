@@ -33,7 +33,7 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                                  column(12, "",
                                         fixedRow(
                                             column(5,
-                                                   p("TAU Data (GUEVADIS lympblast)", style = "font-size:16px"),
+                                                   p("TAU Data (GUEVADIS lymphoblast)", style = "font-size:16px"),
                                                    (downloadButton("table1_download", "Download TAU Data")),
                                                    br(),
                                                    br(),

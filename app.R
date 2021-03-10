@@ -120,6 +120,7 @@ server <- function(input, output, session) {
     VE_threshold = VE_threshold,
     states_filter_study1 = "on",
     states_filter_study2 = "on",
+    states_filter_studyX = "on",
     states_filter_study3 = "on",
     states_filter_study4 = "on"
   )
@@ -213,6 +214,9 @@ server <- function(input, output, session) {
   observeEvent(input$states_filter_study2, {
     rv$states_filter_study2 <- input$states_filter_study2
   })
+  observeEvent(input$states_filter_studyX, {
+    rv$states_filter_studyX <- input$states_filter_studyX
+  })
   observeEvent(input$states_filter_study3, {
     rv$states_filter_study3 <- input$states_filter_study3
   })
@@ -291,6 +295,17 @@ server <- function(input, output, session) {
     }
   )
   output$download_states_study2 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "cott_carr_will_escape_states.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/cott_carr_will_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_studyX <- downloadHandler( # same as cotton et al.
     filename =  function(){
       # Name of created file
       "cott_carr_will_escape_states.csv"
@@ -399,6 +414,32 @@ server <- function(input, output, session) {
     if (isTruthy(rv$states_filter_study2)){
     # b. If the study search is 'gene' use 'geneofinterest' reactive value
     # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    df <- df[df$State != "NA",]
+    saveRDS(df,'data_output/cott_carr_will_xstates.rds')
+    df
+  })
+  ## Status Table (StudyX)
+  output$status_table_studyX <- renderDataTable({
+    df <- data.frame(Gene = cott_carr_will_df$gene,
+                     "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
+                     State = cott_carr_will_df$status_carrwill,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_studyX)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
       if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
         to_display <- rv$geneofinterest1
       }
@@ -665,6 +706,13 @@ server <- function(input, output, session) {
                  xend=cott_carr_will_df[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color_cott"])
+    }
+    if(rv$addStudies == 'studyX'){
+      genepvalue <- genepvalue +
+        annotate("segment", x=cott_carr_will_df[, "start_mapped"],
+                 xend=cott_carr_will_df[, "start_mapped"],
+                 y=-.6, yend=-.2, size=1, alpha=0.8,
+                 color=cott_carr_will_df[, "color_carrwill"])
     }
     if(rv$addStudies == 'study3'){
       genepvalue <- genepvalue +
