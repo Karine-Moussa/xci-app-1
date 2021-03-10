@@ -64,9 +64,13 @@ cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name
                                 end = as.numeric(tuketal_suppl_table_1_combined$`End position`),
                                 end_mapped = rep("",length(tuketal_suppl_table_1_combined$`End position`)),
                                 status = tuketal_suppl_table_1_combined$`Combined XCI status`,
-                                color = ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "escape", "purple",
-                                               ifelse(tuketal_suppl_table_1_combined$`Combined XCI status` == "variable",
-                                                      "turquoise3","lightsteelblue3")))
+                                status_cott = tuketal_suppl_table_1_cottonetal$`XCI status`,
+                                status_carrwill = tuketal_suppl_table_1_carrwillard$`XCI status.1`,
+                                color = rep("",nrow(tuketal_suppl_table_1_combined)),
+                                color_cott = rep("",nrow(tuketal_suppl_table_1_combined)),
+                                color_carrwill = rep("",nrow(tuketal_suppl_table_1_combined))
+                                )
+                              
 # Get the remapped versions
 for(i in 1:length(cott_carr_will_df$start)){
     pos_start <- cott_carr_will_df$start[i]
@@ -85,27 +89,52 @@ for(i in 1:length(cott_carr_will_df$start)){
     cott_carr_will_df$gene_mapped[i] <- mapped_gene
 }
 cott_carr_will_df$start_mapped <- as.numeric(cott_carr_will_df$start_mapped)
-# Then create a data frame from the x_expr_mod data using only those genes that
-# are shared across both data sets
-#matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene[!is.na(cott_carr_will_df$gene)]
-matching_TF_vector <- x_expr_mod$GENE %in% cott_carr_will_df$gene_mapped[!is.na(cott_carr_will_df$gene_mapped)]
-p_cott_carr_will <- x_expr_mod[matching_TF_vector,]
-# add an escape color column
-for(i in 1:nrow(p_cott_carr_will)){
-    gene <- p_cott_carr_will$GENE[i]
-    #color_vector <- cott_carr_will_df$color[cott_carr_will_df$gene == gene]
-    color_vector <- cott_carr_will_df$color[cott_carr_will_df$gene_mapped == gene]
-    color <- color_vector[!is.na(color_vector)]
-    p_cott_carr_will$color[i] <- color
-}
-### optional: remove "inactive" states for plotting
-state_TF_vector <- p_cott_carr_will$GENE %in% cott_carr_will_df[cott_carr_will_df$status != "inactive", "gene"]
-p_cott_carr_will_noinactive <- p_cott_carr_will[state_TF_vector,]
-rm(matching_TF_vector, gene, color_vector, color, state_TF_vector)
 
-# MERIT ET AL 2020
-merit_top30 <- unique(meritetal_suppl_table_3_top30$ENSEMBL_gene_id)
-merit_top100 <- unique(meritetal_suppl_table_3_top100$ENSEMBL_gene_id)
+# Get color
+col_escape = "purple"
+col_variable = "turquoise3"
+col_inactive = "lightsteelblue3"
+col_na = "white"
+col_check = "green"
+for (i in 1:nrow(cott_carr_will_df)){
+    # Combined studies, colors
+    if(cott_carr_will_df$status[i] == "escape"){
+        cott_carr_will_df$color[i] = col_escape
+    } else if(cott_carr_will_df$status[i] == "variable"){
+        cott_carr_will_df$color[i] = col_variable
+    } else if(cott_carr_will_df$status[i] == "inactive"){
+        cott_carr_will_df$color[i] = col_inactive
+    } else if(cott_carr_will_df$status[i] == "NA"){
+        cott_carr_will_df$color[i] = col_na
+    } else {
+        cott_carr_will_df$color[i] = col_check
+    }
+    # Cotton colors
+    if(cott_carr_will_df$status_cott[i] == "escape"){
+        cott_carr_will_df$color_cott[i] = col_escape
+    } else if(cott_carr_will_df$status_cott[i] == "variable escape"){
+        cott_carr_will_df$color_cott[i] = col_variable
+    } else if(cott_carr_will_df$status_cott[i] == "subject"){
+        cott_carr_will_df$color_cott[i] = col_inactive
+    } else if(cott_carr_will_df$status_cott[i] == "NA"){
+        cott_carr_will_df$color_cott[i] = col_na
+    } else {
+        cott_carr_will_df$color_cott[i] = col_check
+    }
+    # Carrell / Willard colors
+    if(cott_carr_will_df$status_carrwill[i] == "escape"){
+        cott_carr_will_df$color_carrwill[i] = col_escape
+    } else if(cott_carr_will_df$status_carrwill[i] == "variable"){
+        cott_carr_will_df$color_carrwill[i] = col_variable
+    } else if(cott_carr_will_df$status_carrwill[i] == "inactive"){
+        cott_carr_will_df$color_carrwill[i] = col_inactive
+    } else if(cott_carr_will_df$status_carrwill[i] == "NA"){
+        cott_carr_will_df$color_carrwill[i] = col_na
+    } else {
+        cott_carr_will_df$color_carrwill[i] = col_check
+    }
+}
+
 
 # Katsir + Linial 2019
 kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,

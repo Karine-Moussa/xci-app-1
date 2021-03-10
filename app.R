@@ -389,7 +389,7 @@ server <- function(input, output, session) {
   output$status_table_study2 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
-                     State = cott_carr_will_df$status,
+                     State = cott_carr_will_df$status_cott,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -407,6 +407,7 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
+    df <- df[df$State != "NA",]
     saveRDS(df,'data_output/cott_carr_will_xstates.rds')
     df
   })
@@ -574,8 +575,6 @@ server <- function(input, output, session) {
     escape_states <- data.frame()
     ifelse(rv$addStudies == 'study1',
            escape_states <- x_expr_mod, "")
-    ifelse(rv$addStudies == 'study2',
-           escape_states <- p_cott_carr_will, "")
     # Split data by -10log(p) > or < 300
     p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
     p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
@@ -665,7 +664,7 @@ server <- function(input, output, session) {
         annotate("segment", x=cott_carr_will_df[, "start_mapped"],
                  xend=cott_carr_will_df[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
-                 color=cott_carr_will_df[, "color"])
+                 color=cott_carr_will_df[, "color_cott"])
     }
     if(rv$addStudies == 'study3'){
       genepvalue <- genepvalue +

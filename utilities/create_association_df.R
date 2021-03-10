@@ -34,14 +34,18 @@ create_gwas_association_df <- function(gene){
     # 3. Clean up
     # Remove duplicate rows.
     df_final <- unique(df_final)
-    # Remove blank rows
-    to_remove = c()
-    for(i in 1:nrow(df)){
-        if(sum(df[i,] == "") == ncol(df)){
-            to_remove = c(to_remove, i)
+    # Remove blank rows (if the df_final exists)
+    if(length(nrow(df_final)) != 0){
+        to_remove = c()
+        for(i in 1:nrow(df_final)){
+            # Check if each entry of a row is blank
+            if(sum(df_final[i,] == "") == ncol(df_final)){
+                to_remove = c(to_remove, i)
+            }
         }
+        # Make sure to_remove vector has values before using it
+        if(!is.null(to_remove)){df_final <- df_final[-to_remove, , drop = FALSE]}
     }
-    if(!is.null(to_remove)){df_final <- df_final[-to_remove, , drop = FALSE]}
     # Add column names.
     col_ <- c("Date", "Mapped Gene", "Disease/Trait", "Link", "Hyperlink",
               "UK Bio Desc.", "Ratio (f/m)", "Bias")
