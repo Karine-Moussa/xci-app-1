@@ -297,22 +297,22 @@ server <- function(input, output, session) {
   output$download_states_study2 <- downloadHandler(
     filename =  function(){
       # Name of created file
-      "cott_carr_will_escape_states.csv"
+      "cott_escape_states.csv"
     },
     content = function(file){
       # Get the data source
-      mydata <- readRDS('data_output/cott_carr_will_xstates.rds')
+      mydata <- readRDS('data_output/cott_xstates.rds')
       write.csv(mydata, file)
     }
   )
   output$download_states_studyX <- downloadHandler( # same as cotton et al.
     filename =  function(){
       # Name of created file
-      "cott_carr_will_escape_states.csv"
+      "carr_will_escape_states.csv"
     },
     content = function(file){
       # Get the data source
-      mydata <- readRDS('data_output/cott_carr_will_xstates.rds')
+      mydata <- readRDS('data_output/carr_will_xstates.rds')
       write.csv(mydata, file)
     }
   )
@@ -423,7 +423,7 @@ server <- function(input, output, session) {
     }
     df <- df[df$Gene %in% to_display,]
     df <- df[df$State != "NA",]
-    saveRDS(df,'data_output/cott_carr_will_xstates.rds')
+    saveRDS(df,'data_output/cott_xstates.rds')
     df
   })
   ## Status Table (StudyX)
@@ -449,7 +449,7 @@ server <- function(input, output, session) {
     }
     df <- df[df$Gene %in% to_display,]
     df <- df[df$State != "NA",]
-    saveRDS(df,'data_output/cott_carr_will_xstates.rds')
+    saveRDS(df,'data_output/carr_will_xstates.rds')
     df
   })
   ## Status Table (Study3)
