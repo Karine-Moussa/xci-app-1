@@ -25,10 +25,6 @@ create_escape_df <- function(gene){
     ref_table <- cott_carr_will_df
     query <- "status_cott"
     status_abr = unique(ref_table[ref_table$gene==gene, query])
-    if(!is.na(status_abr)){
-        if(status_abr == "subject"){status_abr = "inactive"}
-        if(status_abr == "variable escape"){status_abr = "variable"}
-    }
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
     
@@ -37,10 +33,6 @@ create_escape_df <- function(gene){
     ref_table <- cott_carr_will_df
     query <- "status_carrwill"
     status_abr = unique(ref_table[ref_table$gene==gene, query])
-    if(!is.na(status_abr)){
-        if(status_abr == "subject"){status_abr = "inactive"}
-        if(status_abr == "variable escape"){status_abr = "variable"}
-    }
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
 

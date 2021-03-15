@@ -90,6 +90,11 @@ for(i in 1:length(cott_carr_will_df$start)){
 }
 cott_carr_will_df$start_mapped <- as.numeric(cott_carr_will_df$start_mapped)
 
+# Change the nomenclature for Cotton et al. study
+cott_carr_will_df$status_cott <- ifelse(cott_carr_will_df$status_cott == "variable escape", "variable",
+                                        ifelse(cott_carr_will_df$status_cott == "subject", "inactive",
+                                               ifelse(cott_carr_will_df$status_cott == "escape", "escape", "NA")))
+
 # Get color
 col_escape = "purple"
 col_variable = "turquoise3"
@@ -112,9 +117,9 @@ for (i in 1:nrow(cott_carr_will_df)){
     # Cotton colors
     if(cott_carr_will_df$status_cott[i] == "escape"){
         cott_carr_will_df$color_cott[i] = col_escape
-    } else if(cott_carr_will_df$status_cott[i] == "variable escape"){
+    } else if(cott_carr_will_df$status_cott[i] == "variable"){
         cott_carr_will_df$color_cott[i] = col_variable
-    } else if(cott_carr_will_df$status_cott[i] == "subject"){
+    } else if(cott_carr_will_df$status_cott[i] == "inactive"){
         cott_carr_will_df$color_cott[i] = col_inactive
     } else if(cott_carr_will_df$status_cott[i] == "NA"){
         cott_carr_will_df$color_cott[i] = col_na
