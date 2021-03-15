@@ -61,8 +61,6 @@ create_escape_df <- function(gene){
     # clean up
     status <- unlist(status)
     study <- unlist(study)
-    print(study)
-    print(status)
     
     # final
     df <- data.frame(gene = gene,
