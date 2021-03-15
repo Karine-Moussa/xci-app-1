@@ -28,7 +28,7 @@ create_escape_df <- function(gene){
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
     
-    # Study X (CARREL/WILLARD)
+    # Study 3 (CARREL/WILLARD)
     study_name <- "Carrel/Willard (hybrid fibroblast)"
     ref_table <- cott_carr_will_df
     query <- "status_carrwill"
@@ -36,7 +36,7 @@ create_escape_df <- function(gene){
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
 
-    # Study 3 (KATSIR LINIAL LYMPHOBLAST)
+    # Study 4 (KATSIR LINIAL LYMPHOBLAST)
     study_name <- "Katsir + Linial (lymphoblast)"
     ref_table <- kat_lin_df
     query <- "status_lb"
@@ -47,7 +47,7 @@ create_escape_df <- function(gene){
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
     
-    # Study 4 (KATSIR LINIAL FIBROBLAST)
+    # Study 5 (KATSIR LINIAL FIBROBLAST)
     study_name <- "Katsir + Linial (fibroblast)"
     ref_table <- kat_lin_df
     query <- "status_fb"

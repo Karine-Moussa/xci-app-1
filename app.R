@@ -120,9 +120,9 @@ server <- function(input, output, session) {
     VE_threshold = VE_threshold,
     states_filter_study1 = "on",
     states_filter_study2 = "on",
-    states_filter_studyX = "on",
     states_filter_study3 = "on",
-    states_filter_study4 = "on"
+    states_filter_study4 = "on",
+    states_filter_study5 = "on"
   )
   # ObserveEvents Tab 1
   observeEvent(input$geneofinterest1, {
@@ -214,14 +214,14 @@ server <- function(input, output, session) {
   observeEvent(input$states_filter_study2, {
     rv$states_filter_study2 <- input$states_filter_study2
   })
-  observeEvent(input$states_filter_studyX, {
-    rv$states_filter_studyX <- input$states_filter_studyX
-  })
   observeEvent(input$states_filter_study3, {
     rv$states_filter_study3 <- input$states_filter_study3
   })
   observeEvent(input$states_filter_study4, {
     rv$states_filter_study4 <- input$states_filter_study4
+  })
+  observeEvent(input$states_filter_study5, {
+    rv$states_filter_study5 <- input$states_filter_study5
   })
   # ObserveEvents Tab2
   observeEvent(input$geneofinterest2, {
@@ -305,7 +305,7 @@ server <- function(input, output, session) {
       write.csv(mydata, file)
     }
   )
-  output$download_states_studyX <- downloadHandler( # same as cotton et al.
+  output$download_states_study3 <- downloadHandler( # same as cotton et al.
     filename =  function(){
       # Name of created file
       "carr_will_escape_states.csv"
@@ -426,37 +426,11 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/cott_xstates.rds')
     df
   })
-  ## Status Table (StudyX)
-  output$status_table_studyX <- renderDataTable({
+  ## Status Table (study3)
+  output$status_table_study3 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
                      State = cott_carr_will_df$status_carrwill,
-                     check.names = FALSE
-    )
-    # Filter the df based on what genes are being displayed
-    # (only filter if the "filter" check box is true)
-    # a. By default, it displays ALL genes
-    to_display = df$Gene
-    if (isTruthy(rv$states_filter_studyX)){
-      # b. If the study search is 'gene' use 'geneofinterest' reactive value
-      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
-        to_display <- rv$geneofinterest1
-      }
-      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
-        to_display <- rv$returned_genes_list
-      }
-    }
-    df <- df[df$Gene %in% to_display,]
-    df <- df[df$State != "NA",]
-    saveRDS(df,'data_output/carr_will_xstates.rds')
-    df
-  })
-  ## Status Table (Study3)
-  output$status_table_study3 <- renderDataTable({
-    df <- data.frame(Gene = kat_lin_df_lb$gene,
-                     "Start (bp) [hg38]" = kat_lin_df_lb$start_mapped,
-                     State = kat_lin_df_lb$status_lb,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -474,11 +448,37 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
+    df <- df[df$State != "NA",]
+    saveRDS(df,'data_output/carr_will_xstates.rds')
+    df
+  })
+  ## Status Table (study4)
+  output$status_table_study4 <- renderDataTable({
+    df <- data.frame(Gene = kat_lin_df_lb$gene,
+                     "Start (bp) [hg38]" = kat_lin_df_lb$start_mapped,
+                     State = kat_lin_df_lb$status_lb,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study4)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
     saveRDS(df,'data_output/katsir_linial_lymphoblast_xstates.rds')
     df
   })
-  ## Status Table (Study4)
-  output$status_table_study4 <- renderDataTable({
+  ## Status Table (study5)
+  output$status_table_study5 <- renderDataTable({
     df <- data.frame(Gene = kat_lin_df_fb$gene,
                      "Start (bp) [hg38]" = kat_lin_df_fb$start_mapped,
                      State = kat_lin_df_fb$status_fb,
@@ -488,7 +488,7 @@ server <- function(input, output, session) {
     # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df$Gene
-    if (isTruthy(rv$states_filter_study4)){
+    if (isTruthy(rv$states_filter_study5)){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
       if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
@@ -707,21 +707,21 @@ server <- function(input, output, session) {
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color_cott"])
     }
-    if(rv$addStudies == 'studyX'){
+    if(rv$addStudies == 'study3'){
       genepvalue <- genepvalue +
         annotate("segment", x=cott_carr_will_df[, "start_mapped"],
                  xend=cott_carr_will_df[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color_carrwill"])
     }
-    if(rv$addStudies == 'study3'){
+    if(rv$addStudies == 'study4'){
       genepvalue <- genepvalue +
         annotate("segment", x=kat_lin_df_lb[, "start_mapped"],
                  xend=kat_lin_df_lb[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=kat_lin_df_lb[, "color_lb"])
     }
-    if(rv$addStudies == 'study4'){
+    if(rv$addStudies == 'study5'){
       genepvalue <- genepvalue +
         annotate("segment", x=kat_lin_df_fb[, "start_mapped"],
                  xend=kat_lin_df_fb[, "start_mapped"],
