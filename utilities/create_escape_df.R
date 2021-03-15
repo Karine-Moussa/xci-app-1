@@ -9,7 +9,7 @@ create_escape_df <- function(gene){
     status = list()
     study = list()
     # Study 1 (GEUVIDAS)
-    study_name <- "GEUVADIS lymphoblast"
+    study_name <- "GEUVADIS (lymphoblast)"
     ref_table <- x_expr_mod
     query <- "status_adv"
     status_abr = unique(ref_table[ref_table$GENE==gene, query])
@@ -20,33 +20,57 @@ create_escape_df <- function(gene){
         study <- list.append(study, study_name)
     }
     
-    # Study 2 (COTTON AND CARREL)
-    study_name <- "Cotton et al. + Carrel/Willard"
+    # Study 2 (COTTON)
+    study_name <- "Cotton et al. (multi-tissue)"
     ref_table <- cott_carr_will_df
-    query <- "status"
+    query <- "status_cott"
     status_abr = unique(ref_table[ref_table$gene==gene, query])
+    if(!is.na(status_abr)){
+        if(status_abr == "subject"){status_abr = "inactive"}
+        if(status_abr == "variable escape"){status_abr = "variable"}
+    }
+    status <- list.append(status, status_abr) 
+    study <- list.append(study, study_name)
+    
+    # Study X (CARREL/WILLARD)
+    study_name <- "Carrel/Willard (hybrid fibroblast)"
+    ref_table <- cott_carr_will_df
+    query <- "status_carrwill"
+    status_abr = unique(ref_table[ref_table$gene==gene, query])
+    if(!is.na(status_abr)){
+        if(status_abr == "subject"){status_abr = "inactive"}
+        if(status_abr == "variable escape"){status_abr = "variable"}
+    }
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
 
     # Study 3 (KATSIR LINIAL LYMPHOBLAST)
-    study_name <- "Katsir + Linial lymphoblast"
+    study_name <- "Katsir + Linial (lymphoblast)"
     ref_table <- kat_lin_df
     query <- "status_lb"
     status_abr = unique(ref_table[ref_table$gene==gene, query])
+    if(length(status_abr) == 0){
+        status_abr = "NA"
+    }
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
     
     # Study 4 (KATSIR LINIAL FIBROBLAST)
-    study_name <- "Katsir + Linial fibroblast"
+    study_name <- "Katsir + Linial (fibroblast)"
     ref_table <- kat_lin_df
     query <- "status_fb"
     status_abr = unique(ref_table[ref_table$gene==gene, query])
+    if(length(status_abr) == 0){
+        status_abr = "NA"
+    }
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
     
     # clean up
     status <- unlist(status)
     study <- unlist(study)
+    print(study)
+    print(status)
     
     # final
     df <- data.frame(gene = gene,
