@@ -133,7 +133,7 @@ server <- function(input, output, session) {
   observeEvent(input$diseaseofinterest1, {
     rv$diseaseofinterest1 <- input$diseaseofinterest1
     if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS (main study genes only)"){
-      rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.RData")
+      rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.rds")
     }
     rv$searchType <- input$searchType
   })
@@ -687,9 +687,9 @@ server <- function(input, output, session) {
                vjust = 2, group = 5) +
       # Data points added by user reactive values: Disease of Interest
       geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-                 fill='green', size=3, group=2) +
+                 fill='red', size=3, group=2) +
       annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = y_disease_annot,
-               color = "forestgreen", vjust = 2, group = 5) +
+               color = "red", vjust = 2, group = 5) +
       # Scale shape manual (though right now this is disabled)
       scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
     if(rv$addStudies == 'study1'){
