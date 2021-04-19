@@ -40,7 +40,7 @@ df <- data.frame(GWAS_NAME = tolower(pheno_conv_NELSON2_list$`DISEASE/TRAIT`),
 cols <- c("NELS2_NAME","UKBIO_NAME")
 colnames(df) <- cols
 LIST_OF_TRAITS_NELSON_2 <- df
-rm(df)
+rm(cols, df)
 
 # Katsir + Linial 2019 scRNA-seq study
 path <- "resources_studies/KatsirLinial2019/table_s3_mod.xlsx"
@@ -139,7 +139,7 @@ for (i in 1:nrow(cott_carr_will_df)){
         cott_carr_will_df$color_carrwill[i] = col_check
     }
 }
-
+rm()
 
 # Katsir + Linial 2019
 kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,
@@ -157,9 +157,9 @@ kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,
                                                    "inactive","")),
                          status_lb_raw = katsir_linail_s3$`overall_Identification`,
                          status_lb = rep("",length(katsir_linail_s3$`overall_Identification`)),
-                         color_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", "purple",
+                         color_fb = ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Escaper", col_escape,
                                            ifelse(katsir_linail_s3$`iSNP_Protocol_Identification.fib` == "Inactivated",
-                                                  "lightsteelblue3",NA)),
+                                                  col_inactive,NA)),
                          color_lb = rep("",length(katsir_linail_s3$`geneSymbol`)))
 
 # get status_lb and color_lb
@@ -168,11 +168,11 @@ for (i in 1:nrow(kat_lin_df)){
     color = NA
     if(grepl("Escaper",kat_lin_df$status_lb_raw[i])){
         status <- "escape"
-        color <- "purple"
+        color <- col_escape
     }
     if(grepl("Inactivated",kat_lin_df$status_lb_raw[i])){
         status <- "inactive"
-        color <- "lightsteelblue3"
+        color <- col_inactive
     }
     kat_lin_df$status_lb[i] <- status
     kat_lin_df$color_lb[i] <- color
@@ -192,3 +192,17 @@ kat_lin_df$end_mapped <- as.numeric(kat_lin_df$end_mapped)
 # Split table based on cell type, and remove fb_snp or lb_snp column
 kat_lin_df_fb <- subset(kat_lin_df, snp_fb != "NA")
 kat_lin_df_lb <- subset(kat_lin_df, snp_lb != "NA")
+
+# Cleanup
+rm(col_check, col_escape, col_variable, col_inactive, col_na)
+
+# Save as RDS for easy compiling
+saveRDS(NELSON_ASSOCIATIONS_1, "rds/NELSON_ASSOCIATIONS_1.rds")
+saveRDS(NELSON_ASSOCIATIONS_2, "rds/NELSON_ASSOCIATIONS_2.rds")
+saveRDS(LIST_OF_TRAITS_NELSON_1, "rds/LIST_OF_TRAITS_NELSON_1.rds")
+saveRDS(LIST_OF_TRAITS_NELSON_2, "rds/LIST_OF_TRAITS_NELSON_2.rds")
+saveRDS(MANUAL_STUDIES, "rds/MANUAL_STUDIES.rds")
+saveRDS(cott_carr_will_df, "rds/cott_carr_will_df.rds")
+saveRDS(kat_lin_df, "rds/kat_lin_df.rds")
+saveRDS(kat_lin_df_fb, "rds/kat_lin_df_fb.rds")
+saveRDS(kat_lin_df_lb, "rds/kat_lin_df_lb.rds")

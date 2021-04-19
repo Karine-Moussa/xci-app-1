@@ -6,9 +6,7 @@ GENE <- as.factor(x_expr$GENE)
 SAMPLE_NAMES <- c(unique(x_expr[,"sample"]))
 LIST_OF_GENES <- c(unique(x_expr[,"GENE"]))
 
-# P-value significance Bonferroni
-# P_SIG <- 0.05/(length(unique(GENE)))
-# P_SIG <- 1.87e-4
+# P-value significance 
 P_MIN <- 2.845412e-304
 
 # P-value based on XCIR app
@@ -17,3 +15,16 @@ P_SIG <- 0.05
 # Escape thresholds (which can be updated)
 SV_threshold = 0.25  # suppressed to variable threshold
 VE_threshold = 0.75  # variable to escape threshold
+
+# Save as RDS for easier compiling
+saveRDS(STATUS, "rds/STATUS.rds")
+saveRDS(GENE, "rds/GENE.rds")
+saveRDS(SAMPLE_NAMES, "rds/SAMPLE_NAMES.rds")
+saveRDS(LIST_OF_GENES, "rds/LIST_OF_GENES.rds")
+saveRDS(P_MIN, "rds/P_MIN.rds")
+saveRDS(P_SIG, "rds/P_SIG.rds")
+saveRDS(SV_threshold, "rds/SV_threshold.rds")
+saveRDS(VE_threshold, "rds/VE_threshold.rds")
+
+# Cleanup
+rm()

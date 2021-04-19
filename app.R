@@ -19,19 +19,8 @@ library(cowplot, warn.conflicts = FALSE)
 library(rlist, warn.conflicts = FALSE)
 library(data.table, warn.conflicts = FALSE)
 
-### Source Data and Functions ###
-source("utilities/format_input_data.R", local = TRUE)
-source("utilities/create_global_variables.R", local = TRUE)
-source("utilities/x_expr_mods.R", local = TRUE)
-source("utilities/format_additional_studies.R", local = TRUE)
-source("utilities/create_association_df.R", local = TRUE)
-source("utilities/create_trait_objects.R", local = TRUE)
-source("utilities/create_gene_objects.R", local = TRUE)
-source("utilities/create_escape_df.R", local = TRUE)
-source("utilities/format_plot_aesthetics.R", local = TRUE)
-
-### Load files and pre-processed data
-gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
+### Source Data/Functions ###
+source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
 publication_date <- "2021-03-15 15:36:13 EDT" # Sys.time()

@@ -22,7 +22,7 @@ df <- data.frame(GWAS_NAME = tolower(pheno_conv_GWAS_list$`DISEASE/TRAIT`),
 cols <- c("GWAS_NAME","UKBIO_NAME")
 colnames(df) <- cols
 LIST_OF_TRAITS_GWAS <- df
-rm(df)
+rm(df, cols)
 
 ## Phenotype Occurrence Rates from UK Biobank
 PHENO_RATES_UKBIO <- read.delim("data_sources/phenotypes_anno.tsv",header=T,sep="\t",na.strings="?")
@@ -37,3 +37,23 @@ xchrom_map_colored <- read.delim("data_intermediate/xchrom_map_colored",header=T
 ## Table of genes and escape status
 gene_stat_table <- read.csv("data_intermediate/gene_stat_table.csv",header=T)
 
+# Save everything as RDS for easier compiling 
+saveRDS(x_expr, "rds/x_expr.rds")
+saveRDS(x_expr_tauplus, "rds/x_expr_tauplus.rds")
+saveRDS(pheno_conv_UKBIO_list, "rds/pheno_conv_UKBIO_list.rds")
+saveRDS(pheno_conv_GWAS_list, "rds/pheno_conv_GWAS_list.rds")
+saveRDS(pheno_conv_NELSON1_list, "rds/pheno_conv_NELSON1_list.rds")
+saveRDS(pheno_conv_NELSON2_list, "rds/pheno_conv_NELSON2_list.rds")
+saveRDS(GWAS_ASSOCIATIONS, "rds/GWAS_ASSOCIATIONS.rds")
+saveRDS(LIST_OF_TRAITS_GWAS, "rds/LIST_OF_TRAITS_GWAS.rds")
+saveRDS(PHENO_RATES_UKBIO, "rds/PHENO_RATES_UKBIO.rds")
+saveRDS(LIST_OF_TRAITS_UKBIO, "rds/LIST_OF_TRAITS_UKBIO.rds")
+saveRDS(GWAS_UKBIO_MAPPING, "rds/GWAS_UKBIO_MAPPING.rds")
+saveRDS(xchrom_map_colored, "rds/xchrom_map_colored.rds")
+saveRDS(gene_stat_table, "rds/gene_stat_table.rds")
+#rm(x_expr, x_expr_tauplus, pheno_conv_UKBIO_list,
+#   pheno_conv_GWAS_list, pheno_conv_NELSON1_list,
+#   pheno_conv_NELSON2_list, GWAS_ASSOCIATIONS,
+#   LIST_OF_TRAITS_GWAS, PHENO_RATES_UKBIO,
+#   LIST_OF_TRAITS_UKBIO, GWAS_UKBIO_MAPPING,
+#   xchrom_map_colored, gene_stat_table)

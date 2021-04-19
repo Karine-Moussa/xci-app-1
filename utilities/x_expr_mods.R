@@ -83,3 +83,6 @@ rm(perc)
 rm(perc_samples_esc)
 rm(perc_samples_esc_tauplus)
 rm(color)
+
+# save as RDS for easier compiling
+saveRDS(x_expr_mod, "rds/x_expr_mod.rds")
