@@ -1,4 +1,6 @@
 #### Create gene class: attributes for each gene ######
+library(dplyr, warn.conflicts = FALSE)
+library(shiny, warn.conflicts = FALSE)
 create_single_gene_stats <- function(gene, ref_table)
     ### User passes in a gene name from the ref_table list
     ### Function returns the object "<gene>_stats" with attributes of gene

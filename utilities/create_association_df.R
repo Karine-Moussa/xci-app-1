@@ -34,12 +34,21 @@ create_gwas_association_df <- function(gene){
     # 3. Clean up
     # Remove duplicate rows.
     df_final <- unique(df_final)
+    # for testing
+    #View(df_final)
     # Remove blank rows (if the df_final exists)
     if(length(nrow(df_final)) != 0){
         to_remove = c()
         for(i in 1:nrow(df_final)){
-            # Check if each entry of a row is blank
-            if(sum(df_final[i,] == "") == ncol(df_final)){
+            # for testing
+            #print(paste("sum(df_final[i,] == '')", sum(df_final[i,] == "")))
+            #print(paste("ncol(df_final)", ncol(df_final)))
+            # First check if there's an NA in the row. If so, keep it.
+            if(is.na(sum(df_final[i,] == ""))){
+                to_remove = to_remove
+            }
+            # THEN, check if each entry of a row is blank
+            else if (sum(df_final[i,] == "") == ncol(df_final)){
                 to_remove = c(to_remove, i)
             }
         }

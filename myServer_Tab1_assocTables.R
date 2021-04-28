@@ -29,7 +29,13 @@ getAssocObjGene <- function(db){
             df <- select(df, -"Hyperlink") # remove Hyperlink column
             to_remove <- c()  # if all entries of a column are blank, then remove the column
             for(i in 1:ncol(df)){
-                if(sum((df[,i]) == "") == nrow(df)){
+                # First check if there's an NA in the row. If so, keep row.
+                NAflag = is.na(sum((df[,i]) == "") == nrow(df))
+                if(NAflag == TRUE) {
+                    to_remove = to_remove
+                }
+                # OTHERWISE, check if each entry of a row is blank
+                else if (sum((df[,i]) == "") == ncol(df)){
                     to_remove <- c(to_remove,i)
                 }
             }
@@ -93,13 +99,18 @@ getAssocObjDisease <- function(db){
             df <- select(df, -"Hyperlink") # remove Hyperlink column 
             to_remove <- "" # if all rows in a column are blank, then remove the column
             for(i in 1:ncol(df)){
-                if(sum((df[,i]) == "") == nrow(df)){
-                    ifelse(to_remove == "", to_remove <- i, to_remove <- c(to_remove, i))
+                # First check if there's an NA in the row. If so, keep row.
+                NAflag = is.na(sum((df[,i]) == "") == nrow(df))
+                if(NAflag == TRUE){
+                    to_remove = to_remove
+                }
+                # THEN, check if each entry of a row is blank
+                else if (sum((df[,i]) == "") == nrow(df)){
+                    to_remove <- c(to_remove,i)
                 }
             }
             # make sure to_remove actually exists before removing it from df
             ifelse(to_remove != "", df <- select(df, -c(all_of(to_remove))),"")
-            
         } 
         #### done ########################################################
         df <- unique(df)  # remove duplicate rows

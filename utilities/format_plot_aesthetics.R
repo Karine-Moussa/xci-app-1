@@ -1,4 +1,6 @@
 # Formatting plotting labels
+library(png, warn.conflicts = FALSE)
+
 # Tab 1 Plot X Axis 
 # x_labels_genes_start - the first gene for each region
 x_labels_genes_start <- c("PLCXD1", "WWC3", "PHKA2", "PDHA1", "SMS", "TBCAP1", "DYNLT3", "FUNDC1", "CFP", 
