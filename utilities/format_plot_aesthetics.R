@@ -63,7 +63,7 @@ chrom_segments$end <- geom_segment(aes(x = colormap_df$bp_start[length(colormap_
                                          xend = colormap_df$bp_stop[length(colormap_df$bp_stop)], yend = y_place),
                                      size = chrom_size, color = colormap_df$BandColor[length(colormap_df$BandColor)])
 
-# Create middle segements
+# Create middle segments
 i = 1
 for(i in 2:dim(colormap_df)[1]-2){
     i <- i + 1
@@ -86,3 +86,20 @@ chrom_segments_colored$par2 <- geom_segment(aes(x = par2_boundaries[1], y = y_pl
                                      size = chrom_size, color = "lightblue", alpha=0.25)
 chrom_segments_colored$centre <- geom_segment(aes(x = centre_boundaries[1], y = y_place, xend = centre_boundaries[2], yend = y_place),
                                      size = chrom_size, color = "pink", alpha=0.25)
+
+# Save RDS Objects
+saveRDS(x_labels_genes_start, "rds/x_labels_genes_start.rds")
+saveRDS(x_labels_genes_mid, "rds/x_labels_genes_mid.rds")
+saveRDS(x_labels_genes, "rds/x_labels_genes.rds")
+saveRDS(x_labels_pos, "rds/x_labels_pos.rds")
+saveRDS(x_labels_bp, "rds/x_labels_bp.rds")
+saveRDS(x_labels_genes, "rds/x_labels_genes.rds")
+saveRDS(x_labels_pos, "rds/x_labels_pos.rds")
+saveRDS(x_region_breaks, "rds/x_region_breaks.rds")
+saveRDS(x_region_labels, "rds/x_region_labels.rds")
+saveRDS(par1_boundaries, "rds/par1_boundaries.rds")
+saveRDS(par2_boundaries, "rds/par2_boundaries.rds")
+saveRDS(centre_boundaries, "rds/centre_boundaries.rds")
+#saveRDS(xchrom_png, "rds/xchrom_png.rds") # test commenting this out
+saveRDS(chrom_segments, "rds/chrom_segments.rds")
+saveRDS(chrom_segments_colored, "rds/chrom_segments_colored.rds")
