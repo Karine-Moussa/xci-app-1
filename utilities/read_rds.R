@@ -38,6 +38,7 @@ cott_carr_will_df <- readRDS("rds/cott_carr_will_df.rds")
 kat_lin_df <- readRDS("rds/kat_lin_df.rds")
 kat_lin_df_fb <- readRDS("rds/kat_lin_df_fb.rds")
 kat_lin_df_lb <- readRDS("rds/kat_lin_df_lb.rds")
+TukGTExMod <- readRDS("rds/TukGTExMod.rds")
 
 # format_plot_aesthetics.R
 x_labels_genes_start <- readRDS("rds/x_labels_genes_start.rds")
@@ -54,4 +55,3 @@ par2_boundaries <- readRDS("rds/par2_boundaries.rds")
 centre_boundaries <- readRDS("rds/centre_boundaries.rds")
 chrom_segments <- readRDS("rds/chrom_segments.rds")
 chrom_segments_colored <- readRDS("rds/chrom_segments_colored.rds")
-

@@ -20,6 +20,12 @@ rm(tuketal_suppl_table_1)   # remove full tuketal_suppl_table_1
 hg19_to_hg38_cotcar <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38.csv")
 hg19_to_hg38_cotcar <- hg19_to_hg38_cotcar[hg19_to_hg38_cotcar$recip != "Second Pass",] # for now remove repeated mapping
 
+# TUK ET AL 2017 (Tuk et al study GTEx findings)
+TukGTEx <- read_xlsx("resources_studies/Tuketal2017/TukSupTables/Suppl.Table.5.xlsx")
+saveRDS(TukGTEx, "rds/TukGTEx.rds")
+TukGTEx <- readRDS("rds/TukGTEx.rds")
+TukGTExMod <- TukGTEx
+
 # MERIT ET AL 2020 (the GTEx papers)
 path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
 meritetal_suppl_table_3_top30 <- read_excel(path, sheet = "Top30_autosomal_predictive_gene")
@@ -55,7 +61,7 @@ MANUAL_STUDIES <- read_excel("data_intermediate/additional_findings.xlsx", sheet
 ##################################
 ### PREPARE FILES FOR USE IN CODE
 ##################################
-# TUK ET AL 2017 (which combined cotton et al and carrel/willard)
+# TUK ET AL 2017 (the combind cotton et al and carrel/willard dataset)
 # first need to map the start positions from hg19 to hg38
 cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name`,
                                 gene_mapped = rep("",length(tuketal_suppl_table_1_combined$`Gene name`)),
@@ -139,7 +145,25 @@ for (i in 1:nrow(cott_carr_will_df)){
         cott_carr_will_df$color_carrwill[i] = col_check
     }
 }
-rm()
+
+# Tuk et al 2017 (GTEx data)
+# reformat the IDs
+split_ids <- function(id) {
+    return(unlist(strsplit(id, "[.]"))[1])
+}
+geneid_clean <- unlist(lapply(TukGTEx$`Gene ID`, split_ids))
+TukGTExMod$`Gene ID clean` <- geneid_clean
+
+# reformat the positions
+split_pos <- function(pos) {
+    return(unlist(strsplit(pos, "[:]"))[2])
+}
+pos_clean <- unlist(lapply(TukGTEx$`chr:pos`, split_pos))
+TukGTExMod$`Pos clean` <- pos_clean
+
+# escape frequencies (set to 0.5 for testing)
+TukGTExMod$`Escape Frequency` <- rep(0.5, nrow(TukGTExMod))
+
 
 # Katsir + Linial 2019
 kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,
@@ -206,3 +230,4 @@ saveRDS(cott_carr_will_df, "rds/cott_carr_will_df.rds")
 saveRDS(kat_lin_df, "rds/kat_lin_df.rds")
 saveRDS(kat_lin_df_fb, "rds/kat_lin_df_fb.rds")
 saveRDS(kat_lin_df_lb, "rds/kat_lin_df_lb.rds")
+saveRDS(TukGTExMod, "rds/TukGTExMod.rds")

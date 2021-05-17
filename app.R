@@ -21,7 +21,7 @@ library(data.table, warn.conflicts = FALSE)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
-publication_date <- "2021-03-15 15:36:13 EDT" # Sys.time()
+publication_date <- "2021-05-17 08:47:35 EDT" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -106,6 +106,7 @@ server <- function(input, output, session) {
     SV_threshold = SV_threshold,
     VE_threshold = VE_threshold,
     states_filter_study1 = "on",
+    states_filter_study6 = "on",
     states_filter_study2 = "on",
     states_filter_study3 = "on",
     states_filter_study4 = "on",
@@ -198,6 +199,9 @@ server <- function(input, output, session) {
   observeEvent(input$states_filter_study1, {
     rv$states_filter_study1 <- input$states_filter_study1
   })
+  observeEvent(input$states_filter_study6, {
+    rv$states_filter_study6 <- input$states_filter_study6
+  })
   observeEvent(input$states_filter_study2, {
     rv$states_filter_study2 <- input$states_filter_study2
   })
@@ -278,6 +282,17 @@ server <- function(input, output, session) {
     content = function(file){
       # Get the data source
       mydata <- readRDS('data_output/geuvadis_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_study6 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "gtex_vp6_escape_states.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/gtex_v6p_xstates.rds')
       write.csv(mydata, file)
     }
   )
@@ -385,6 +400,52 @@ server <- function(input, output, session) {
       df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
     }
     saveRDS(df,'data_output/geuvadis_xstates.rds')
+    df
+  })
+  ## Status Table (Study6)
+  output$status_table_study6 <- renderDataTable({
+    df <- data.frame("Gene" = TukGTExMod$`Gene name`,
+                     "Start (bp) [hg19]" = TukGTExMod$`Pos clean`,
+                     "Escape Freq" = TukGTExMod$`Escape Frequency`,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study6)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    # The rest can only be performed if the data table is populated
+    if(nrow(df) != 0){
+      # State is going to be a little complex because it now
+      # depends on the slider inputs.
+      # If mean(status == 'E' <= SV_threshold), 'inactive'
+      # If mean(status == 'E < SV_threshold <= VE_threshold), 'variable'
+      # If mean(status == 'E' > VE-threshold), 'escape'
+      for(i in 1:nrow(df)) {
+        if(df$`Escape Freq`[i] <= rv$SV_threshold){
+          df$State[i] <- 'inactive'
+        }
+        if(df$`Escape Freq`[i] > rv$SV_threshold & df$`Escape Freq`[i] <= rv$VE_threshold){
+          df$State[i] <- 'variable'
+        }
+        if(df$`Escape Freq`[i] > rv$VE_threshold){
+          df$State[i] <- 'escape'
+        }
+      }
+      # Also update format of frequency column
+      df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
+    }
+    saveRDS(df,'data_output/gtex_v6p_xstates.rds')
     df
   })
   ## Status Table (Study2)
