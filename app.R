@@ -107,6 +107,7 @@ server <- function(input, output, session) {
     VE_threshold = VE_threshold,
     states_filter_study1 = "on",
     states_filter_study6 = "on",
+    tissues_filter_study6 = "on",
     states_filter_study2 = "on",
     states_filter_study3 = "on",
     states_filter_study4 = "on",
@@ -201,6 +202,9 @@ server <- function(input, output, session) {
   })
   observeEvent(input$states_filter_study6, {
     rv$states_filter_study6 <- input$states_filter_study6
+  })
+  observeEvent(input$tissues_filter_study6, {
+    rv$tissues_filter_study6 <- input$tissues_filter_study6
   })
   observeEvent(input$states_filter_study2, {
     rv$states_filter_study2 <- input$states_filter_study2
@@ -406,7 +410,8 @@ server <- function(input, output, session) {
   output$status_table_study6 <- renderDataTable({
     df <- data.frame("Gene" = TukGTExMod$`Gene name`,
                      "Start (bp) [hg19]" = TukGTExMod$`Pos clean`,
-                     "Escape Freq" = TukGTExMod$`Escape Frequency`,
+                     "Tissue" = TukGTExMod$Tissue,
+                     "Escape Freq" = TukGTExMod$perc_tissues_esc,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -424,6 +429,11 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
+    # Filter out the Tissue column if only a summary is needed
+    if (!isTruthy(rv$tissues_filter_study6)){
+      df <- df[,-3]
+      df <- unique(df)
+    }
     # The rest can only be performed if the data table is populated
     if(nrow(df) != 0){
       # State is going to be a little complex because it now

@@ -1,4 +1,6 @@
 # All genes, main plot
+all_genes <- unique(unique(c(x_expr_mod$GENE, TukGTExMod$`Gene name`,cott_carr_will_df$gene),
+                           kat_lin_df$gene))
 TAB1 <- tabPanel(title = "All Escape Expressions",
                #  tags$script(src = "lazy_slider.js"),
                  # Create a layout with a sidebar and main area ----
@@ -12,7 +14,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          conditionalPanel(
                              condition = "input.searchType == 'gene'",
                             # selectizeInput("geneofinterest1", "Gene of Interest:", c("DUMMY",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
-                            selectizeInput("geneofinterest1", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), multiple = TRUE),
+                            selectizeInput("geneofinterest1", "Gene of Interest:", all_genes, multiple = TRUE),
                             p("(Click on individual data points to add more genes)", style = "font-size:14px")
                          ),
                          #checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
@@ -136,6 +138,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                downloadLink('download_states_study6', '[download table]', style = "font-size:14px")),
                                              checkboxInput("states_filter_study6", 
                                                            "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
+                                                           value = TRUE),
+                                             checkboxInput("tissues_filter_study6", 
+                                                           "View individual tissue states", 
                                                            value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study6"))

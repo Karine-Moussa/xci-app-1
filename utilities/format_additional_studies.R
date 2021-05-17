@@ -161,11 +161,33 @@ split_pos <- function(pos) {
 pos_clean <- unlist(lapply(TukGTEx$`chr:pos`, split_pos))
 TukGTExMod$`Pos clean` <- pos_clean
 
-# escape frequencies (set to 0.5 for testing)
-TukGTExMod$`Escape Frequency` <- rep(0.5, nrow(TukGTExMod))
+# Determine the "variable" state of genes in gtex data set
+# First get percent of samples for which gene escaped
+TukGTExMod$status_adv <- rep("",nrow(TukGTExMod))
+TukGTExMod$color <- rep("",nrow(TukGTExMod))
+TukGTExMod$perc_tissues_esc <- rep("",nrow(TukGTExMod))
+for(gene in unique(TukGTExMod$`Gene name`)){
+    perc_tissues_esc = mean(TukGTExMod[TukGTExMod$`Gene name` == gene, "Incomplete XCI"] == "TRUE")
+    if(perc_tissues_esc < SV_threshold){
+        st = "S"
+        color = "lightsteelblue3"
+    } else if (perc_tissues_esc >= SV_threshold & perc_tissues_esc < VE_threshold) {
+        st = "V"
+        color = "turquoise3"
+    } else if (perc_tissues_esc >= VE_threshold){
+        st = "E"
+        color = "purple"
+    }
+    # Add as columns to TukGTExMod
+    for(i in 1:nrow(TukGTExMod)){
+        if(TukGTExMod$`Gene name`[i] == gene){
+            TukGTExMod$status_adv[i] <- st
+            TukGTExMod$color[i] <- color
+            TukGTExMod$perc_tissues_esc[i] <- perc_tissues_esc
+        }
+    }
 
-
-# Katsir + Linial 2019
+## Katsir + Linial 2019
 kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,
                          gene_mapped = rep("",length(katsir_linail_s3$`geneSymbol`)),
                          snp_fb = katsir_linail_s3$SNPs_per_Gene.fib,

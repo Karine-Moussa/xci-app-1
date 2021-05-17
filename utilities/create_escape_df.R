@@ -20,6 +20,20 @@ create_escape_df <- function(gene){
         study <- list.append(study, study_name)
     }
     
+    # Study 6 (GTEx) (very similar to Study1 format)
+    study_name <- "GTEx (multi-tissue)"
+    ref_table <- unique(TukGTExMod[,-4]) # don't use Tissue column, make unique
+    query <- "status_adv"
+    if (gene %in% ref_table$`Gene name`){
+        status_abr = unique(ref_table[ref_table$`Gene name`==gene, query])
+        if(status_abr == "E"){status <- list.append(status,"escape")}
+        if(status_abr == "V"){status <- list.append(status,"variable")}
+        if(status_abr == "S"){status <- list.append(status,"inactive")}
+    } else {
+        status <- list.append(status,"NA")
+    }
+    study <- list.append(study, study_name)
+    
     # Study 2 (COTTON)
     study_name <- "Cotton et al. (multi-tissue)"
     ref_table <- cott_carr_will_df
@@ -41,7 +55,7 @@ create_escape_df <- function(gene){
     ref_table <- kat_lin_df
     query <- "status_lb"
     status_abr = unique(ref_table[ref_table$gene==gene, query])
-    if(length(status_abr) == 0){
+    if(length(status_abr) == 0 || status_abr == ""){
         status_abr = "NA"
     }
     status <- list.append(status, status_abr) 
@@ -52,7 +66,7 @@ create_escape_df <- function(gene){
     ref_table <- kat_lin_df
     query <- "status_fb"
     status_abr = unique(ref_table[ref_table$gene==gene, query])
-    if(length(status_abr) == 0){
+    if(length(status_abr) == 0 || status_abr == ""){
         status_abr = "NA"
     }
     status <- list.append(status, status_abr) 

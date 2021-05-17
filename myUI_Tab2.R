@@ -1,10 +1,12 @@
 # Invidivual Gene Search
+all_genes <- unique(unique(c(x_expr_mod$GENE, TukGTExMod$`Gene name`,cott_carr_will_df$gene),
+                    kat_lin_df$gene))
 TAB2 <- tabPanel(title = "Individual Gene Search",
                  # Create a layout with a sidebar and main area
                  sidebarLayout(
                      sidebarPanel(
                          h3("Observing XCI escape calls per Gene"),
-                         autocomplete_input("geneofinterest2", "Gene of Interest:", c(unique(x_expr_mod[,"GENE"])), value = ""),
+                         autocomplete_input("geneofinterest2", "Gene of Interest:", all_genes, value = ""),
                          br(),
                          strong("Directions for Use", style = "font-size:12px"),br(),
                          em("---Input an X-gene of interest", style = "font-size:12px"),br(),
