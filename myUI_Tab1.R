@@ -8,6 +8,15 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      # Create a sidebar panel containing input controls ----
                      sidebarPanel(
                          h3("Observing XCI Escape Calls"),
+                         selectInput("addStudies", "Select a Study",
+                                     c(" " = "empty",
+                                       "GEUVADIS: lymphoblast" = "study1",
+                                       "GTEx (v6p) Tukiainen et al: multi-tissue" = "study6",
+                                       "Cotton et al: multi-tissue" = "study2",
+                                       "Carrel + Willard: hybrid fibroblast" = "study3",
+                                       "Katsir + Linial: scRNA-seq lymphoblast" = "study4",
+                                       "Katsir + Linial: scRNA-seq fibroblast" = "study5")
+                         ),
                          selectInput("searchType", "Search Type",
                                      c(Gene = "gene", "Disease/Trait" = "disease")
                          ),
@@ -35,15 +44,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          strong("Displayed Genes:", style = "font-size:14px"),br(),
                          verbatimTextOutput("displayedGenes"),
                          br(),
-                         selectInput("addStudies", "View Escape States",
-                                     c(" " = "empty",
-                                       "GEUVADIS: lymphoblast (displayed study)" = "study1",
-                                       "GTEx (v6p) Tukiainen et al: multi-tissue" = "study6",
-                                       "Cotton et al: multi-tissue" = "study2",
-                                       "Carrel + Willard: hybrid fibroblast" = "study3",
-                                       "Katsir + Linial: scRNA-seq lymphoblast" = "study4",
-                                       "Katsir + Linial: scRNA-seq fibroblast" = "study5")
-                         ),
                          conditionalPanel(
                              condition = "output.sliderWarning",
                              #   verbatimTextOutput("sliderWarningMessage"),
@@ -71,19 +71,26 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      ),
                      # Create plot and Action Buttons in Main Panel
                      mainPanel(
-                         withSpinner(plotOutput(outputId = "gene_pvalue_1", height = "500px", click = "myclick", hover = "myhover"), type = 2),
-                         plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study1'",
+                             withSpinner(plotOutput(outputId = "plot_study1", height = "500px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study2'",
+                             withSpinner(plotOutput(outputId = "plot_study2", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
+                         withSpinner(plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"), type = 1, size = 1),
                          # LEGENDS
                          # Show the baseline legend if we're not looking at escape states:
-                         conditionalPanel(
-                             condition = "input.addStudies == 'empty'",
-                             p("", style = "font-size:4px"),
-                             fluidRow(
-                                 column(4, offset = 1,
-                                        img(src = "mainplot_legend_horizontal.png", height = 23))
-                             ),
-                             p("", style = "font-size:4px"),
-                         ),
+                         #conditionalPanel(
+                         #    condition = "input.addStudies == 'empty'",
+                         #    p("", style = "font-size:4px"),
+                         #    fluidRow(
+                         #        column(4, offset = 1,
+                         #               img(src = "mainplot_legend_horizontal.png", height = 23))
+                         #    ),
+                         #    p("", style = "font-size:4px"),
+                         #),
                          # LEGENDS
                          # Only show this panel if we're looking at escape states
                          # Also update the legend here if that's the case
@@ -123,7 +130,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'empty' || input.addStudies == 'study1'",
                                              p("", style = "font-size:14px"),
-                                             p("GEUVADIS lymphoblast (displayed study)  ", style = "font-size:18px", 
+                                             p("GEUVADIS lymphoblast  ", style = "font-size:18px", 
                                                downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
                                              checkboxInput("states_filter_study1", 
                                                            "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 

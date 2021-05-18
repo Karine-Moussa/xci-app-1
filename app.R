@@ -21,7 +21,7 @@ library(data.table, warn.conflicts = FALSE)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
-publication_date <- "2021-05-17 08:47:35 EDT" # Sys.time()
+publication_date <- "2021-05-18 12:47:08 EDT" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -603,7 +603,7 @@ server <- function(input, output, session) {
   plot1_xmin = 0
   plot1_xmax = max(x_expr$start) + 1.3e7
   # Output object
-  output$gene_pvalue_1 <- renderPlot({
+  output$plot_study1 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints
@@ -805,6 +805,45 @@ server <- function(input, output, session) {
                  color=unlist(TukGTExMod[, "color"]))
     }
     genepvalue_1
+  })
+  output$plot_study2 <- renderPlot({
+    # Range of plot
+    ymin = -5
+    #ifelse(returned_genes_list_length > 1, ymin <- min(y_disease_annot),'')
+    #ifelse(length(geneofinterest) > 1, ymin <- min(y_gene_annot),'')
+    ymax = 5
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     #legend.position = "right", # removing legend
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     #axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.y = element_blank(),  # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p2 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = cott_carr_will_df, 
+                   aes(x=cott_carr_will_df[, "start"], y=ymin,
+                       xend=cott_carr_will_df[, "start"], yend=ymax-1),
+                   color=cott_carr_will_df[, "color_cott"]) + 
+    # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax))
+    p2
   })
   ## X chromosome "image"
   output$gene_pvalue_xchromosome <- renderPlot({
