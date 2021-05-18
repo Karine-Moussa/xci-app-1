@@ -159,7 +159,7 @@ split_pos <- function(pos) {
     return(unlist(strsplit(pos, "[:]"))[2])
 }
 pos_clean <- unlist(lapply(TukGTEx$`chr:pos`, split_pos))
-TukGTExMod$`Pos clean` <- pos_clean
+TukGTExMod$`Pos clean` <- as.numeric(pos_clean)
 
 # Determine the "variable" state of genes in gtex data set
 # First get percent of samples for which gene escaped
@@ -186,6 +186,7 @@ for(gene in unique(TukGTExMod$`Gene name`)){
             TukGTExMod$perc_tissues_esc[i] <- perc_tissues_esc
         }
     }
+}
 
 ## Katsir + Linial 2019
 kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,

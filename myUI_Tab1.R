@@ -71,7 +71,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      ),
                      # Create plot and Action Buttons in Main Panel
                      mainPanel(
-                         withSpinner(plotOutput(outputId = "gene_pvalue", height = "500px", click = "myclick", hover = "myhover"), type = 2),
+                         withSpinner(plotOutput(outputId = "gene_pvalue_1", height = "500px", click = "myclick", hover = "myhover"), type = 2),
                          plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"),
                          # LEGENDS
                          # Show the baseline legend if we're not looking at escape states:

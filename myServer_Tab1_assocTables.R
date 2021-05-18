@@ -5,7 +5,6 @@
 #     is obtained, creates an association table by querying those genes. 
 #     It also takes care of subsetting the returned table to make sure
 #     only the disease/trait of interest is included. 
-
 getAssocObjGene <- function(db){
     # db options are "gwas" and "nels"
     obj <- renderDataTable({
@@ -26,7 +25,7 @@ getAssocObjGene <- function(db){
         ### this cleans up selection to remove columns that are empty ####
         if(nrow(df) != 0){
             df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
-            df <- select(df, -"Hyperlink") # remove Hyperlink column
+            df <- df[, -6] # remove Hyperlink column
             to_remove <- c()  # if all entries of a column are blank, then remove the column
             for(i in 1:ncol(df)){
                 # First check if there's an NA in the row. If so, keep row.
@@ -40,7 +39,7 @@ getAssocObjGene <- function(db){
                 }
             }
             # make sure to_remove actually exists before removing it from df
-            ifelse(to_remove != "", df <- select(df, -c(all_of(to_remove))),"")
+            ifelse(to_remove != "", df <- df[, -c(all_of(to_remove))])
         }
         #### done ########################################################
         df <- unique(df)    # remove duplicate rows
@@ -96,7 +95,7 @@ getAssocObjDisease <- function(db){
         ### this cleans up selection to remove columns that are empty ####
         if(nrow(df) != 0){
             df$Link <- paste0('<a href="https://', df$Hyperlink,'" target="_blank">', df$Hyperlink, '</a>')
-            df <- select(df, -"Hyperlink") # remove Hyperlink column 
+            df <- df[, -6] # remove Hyperlink column 
             to_remove <- "" # if all rows in a column are blank, then remove the column
             for(i in 1:ncol(df)){
                 # First check if there's an NA in the row. If so, keep row.
@@ -110,7 +109,7 @@ getAssocObjDisease <- function(db){
                 }
             }
             # make sure to_remove actually exists before removing it from df
-            ifelse(to_remove != "", df <- select(df, -c(all_of(to_remove))),"")
+            ifelse(to_remove != "", df <- df[, -c(all_of(to_remove))])
         } 
         #### done ########################################################
         df <- unique(df)  # remove duplicate rows

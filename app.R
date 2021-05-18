@@ -603,7 +603,7 @@ server <- function(input, output, session) {
   plot1_xmin = 0
   plot1_xmax = max(x_expr$start) + 1.3e7
   # Output object
-  output$gene_pvalue <- renderPlot({
+  output$gene_pvalue_1 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints
@@ -714,7 +714,7 @@ server <- function(input, output, session) {
                                                 face = "bold", angle=0, hjust=0.5),
                      panel.background = element_rect(fill = "white"))
     # Create plot
-    genepvalue <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
+    genepvalue_1 <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
                                                 shape=p_mod_flag, label=GENE, label2=end,
                                                 group=1)) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
@@ -726,7 +726,7 @@ server <- function(input, output, session) {
                 fill="lightblue", alpha=0.25) +
       geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330),
                 fill="pink", alpha=0.25)
-    genepvalue <- genepvalue +
+    genepvalue_1 <- genepvalue_1 +
       # Main Data Points
       geom_point(fill = p_less_300$BandColor, size = 2) +
       geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
@@ -762,7 +762,7 @@ server <- function(input, output, session) {
       # Scale shape manual (though right now this is disabled)
       scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
     if(rv$addStudies == 'study1'){
-      genepvalue <- genepvalue +
+      genepvalue_1 <- genepvalue_1 +
         # Add Escape State information after Main Data Points
         geom_point(escape_states, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
                    fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, "lightsteelblue3",
@@ -770,34 +770,41 @@ server <- function(input, output, session) {
                    size=3, group=2)
     }
     if(rv$addStudies == 'study2'){
-      genepvalue <- genepvalue +
+      genepvalue_1 <- genepvalue_1 +
         annotate("segment", x=cott_carr_will_df[, "start_mapped"],
                  xend=cott_carr_will_df[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color_cott"])
     }
     if(rv$addStudies == 'study3'){
-      genepvalue <- genepvalue +
+      genepvalue_1 <- genepvalue_1 +
         annotate("segment", x=cott_carr_will_df[, "start_mapped"],
                  xend=cott_carr_will_df[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=cott_carr_will_df[, "color_carrwill"])
     }
     if(rv$addStudies == 'study4'){
-      genepvalue <- genepvalue +
+      genepvalue_1 <- genepvalue_1 +
         annotate("segment", x=kat_lin_df_lb[, "start_mapped"],
                  xend=kat_lin_df_lb[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=kat_lin_df_lb[, "color_lb"])
     }
     if(rv$addStudies == 'study5'){
-      genepvalue <- genepvalue +
+      genepvalue_1 <- genepvalue_1 +
         annotate("segment", x=kat_lin_df_fb[, "start_mapped"],
                  xend=kat_lin_df_fb[, "start_mapped"],
                  y=-.6, yend=-.2, size=1, alpha=0.8,
                  color=kat_lin_df_fb[, "color_fb"])
     }
-    genepvalue
+    if(rv$addStudies == 'study6'){
+      genepvalue_1 <- genepvalue_1 +
+        annotate("segment", x=as.numeric(unlist(TukGTExMod[, "Pos clean"])),
+                 xend=as.numeric(unlist(TukGTExMod[, "Pos clean"])),
+                 y=-.6, yend=-.2, size=1, alpha=0.8,
+                 color=unlist(TukGTExMod[, "color"]))
+    }
+    genepvalue_1
   })
   ## X chromosome "image"
   output$gene_pvalue_xchromosome <- renderPlot({
