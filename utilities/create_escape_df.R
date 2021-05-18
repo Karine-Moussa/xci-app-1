@@ -80,6 +80,5 @@ create_escape_df <- function(gene){
     df <- data.frame(gene = gene,
                      study = study,
                      state = status)
-    
     return(df)
 }

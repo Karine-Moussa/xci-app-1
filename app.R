@@ -411,6 +411,7 @@ server <- function(input, output, session) {
     df <- data.frame("Gene" = TukGTExMod$`Gene name`,
                      "Start (bp) [hg19]" = TukGTExMod$`Pos clean`,
                      "Tissue" = TukGTExMod$Tissue,
+                     "Tissue State" = TukGTExMod$`Incomplete XCI`,
                      "Escape Freq" = TukGTExMod$perc_tissues_esc,
                      check.names = FALSE
     )
@@ -431,7 +432,7 @@ server <- function(input, output, session) {
     df <- df[df$Gene %in% to_display,]
     # Filter out the Tissue column if only a summary is needed
     if (!isTruthy(rv$tissues_filter_study6)){
-      df <- df[,-3]
+      df <- df[,-c(3,4)]
       df <- unique(df)
     }
     # The rest can only be performed if the data table is populated
@@ -451,9 +452,19 @@ server <- function(input, output, session) {
         if(df$`Escape Freq`[i] > rv$VE_threshold){
           df$State[i] <- 'escape'
         }
+        if(isTruthy(rv$tissues_filter_study6)){ # only do this if the column still exists
+          if(df$`Tissue State`[i] == "FALSE"){
+            df$`Tissue State`[i] = "inactive"
+          }
+          if(df$`Tissue State`[i] == "TRUE"){
+            df$`Tissue State`[i] = "escape"
+          }
+        }
       }
-      # Also update format of frequency column
+      # Update format of frequency column
       df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
+      # Update name of state column
+      colnames(df) <- c(colnames(df)[-ncol(df)], "State (based on esc freq)")
     }
     saveRDS(df,'data_output/gtex_v6p_xstates.rds')
     df
