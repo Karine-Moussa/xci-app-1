@@ -109,7 +109,7 @@ getAssocObjDisease <- function(db){
                 }
             }
             # make sure to_remove actually exists before removing it from df
-            ifelse(to_remove != "", df <- df[, -c(all_of(to_remove))])
+            ifelse(to_remove != "", df <- df[, -c(all_of(to_remove))],'')
         } 
         #### done ########################################################
         df <- unique(df)  # remove duplicate rows

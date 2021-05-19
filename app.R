@@ -29,8 +29,6 @@ options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.siz
 #############################################################
 ######### MAIN SHINYAPP STARTS HERE #########################
 #############################################################
-#source("myUI.R", local = TRUE) # view myUI.R for code
-#ui <- myUI
 source("myUI_Tab1.R", local = TRUE)
 source("myUI_Tab2.R", local = TRUE)
 ui <- fluidPage(title = "XCI Data",
@@ -117,6 +115,21 @@ server <- function(input, output, session) {
   observeEvent(input$geneofinterest1, {
     rv$geneofinterest1 <- unique(c(input$geneofinterest1, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    # Make sure genes of interest are relevant to displayed study
+    if(rv$addStudies == "study1"){
+      TF_vector = x_expr$GENE %in% rv$geneofinterest1
+      rv$geneofinterest1 = rv$geneofinterest1[TF_vector]
+    }
+    if(rv$addStudies == "study2"){
+      cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
+      TF_vector = cott_df$gene %in% rv$geneofinterest1
+      rv$geneofinterest1 = rv$geneofinterest1[TF_vector]
+    }
+    if(rv$addStudies == "study3"){
+      carrwill_df <- cott_carr_will_df[cott_carr_will_df$status_carrwill != "NA",]
+      TF_vector = carrwill_df$gene %in% rv$geneofinterest1
+      rv$geneofinterest1 = rv$geneofinterest1[TF_vector]
+    }
     rv$searchType <- input$searchType
   })
   observeEvent(input$diseaseofinterest1, {
@@ -155,12 +168,63 @@ server <- function(input, output, session) {
     if(rv$searchType == 'gene'){
       rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
       rv$plot_coord_y = c(rv$plot_coord_y, input$myclick$y)
-      for(i in 1:length(rv$plot_coord_x)){
-        index <- which.min(abs(x_expr$start - rv$plot_coord_x[i]))
-        rv$closest_expr_index[i] <- index
+      # Query study 1
+      if(rv$addStudies == "study1"){
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(x_expr$start - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
       }
-      rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-      rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
+      # Query study 2
+      if(rv$addStudies == "study2"){
+        for(i in 1:length(rv$plot_coord_x)){
+          cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
+          index <- which.min(abs(cott_df$start_mapped - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = cott_df$gene[as.numeric(rv$closest_expr_index)]
+      }
+      # Query study 3
+      if(rv$addStudies == "study3"){
+        for(i in 1:length(rv$plot_coord_x)){
+          carrwill_df <- cott_carr_will_df[cott_carr_will_df$status_carrwill != "NA",]
+          index <- which.min(abs(carrwill_df$start_mapped - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = carrwill_df$gene[as.numeric(rv$closest_expr_index)]
+      }
+      # Query study 4
+      if(rv$addStudies == "study4"){
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(kat_lin_df_lb$start_mapped - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = kat_lin_df_lb$gene[as.numeric(rv$closest_expr_index)]
+      }
+      # Query study 5
+      if(rv$addStudies == "study5"){
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(kat_lin_df_fb$start_mapped - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = kat_lin_df_fb$gene[as.numeric(rv$closest_expr_index)]
+      }
+      # Query study 6
+      if(rv$addStudies == "study6"){
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(TukGTExMod$`Pos clean` - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = TukGTExMod$`Gene name`[as.numeric(rv$closest_expr_index)]
+      }
+      
       if(rv$geneofinterest1[1] == ""){
         rv$geneofinterest1 = rv$mapped_gene
       } else {
@@ -406,7 +470,109 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/geuvadis_xstates.rds')
     df
   })
-  ## Status Table (Study6)
+  ## Status Table (Study2)
+  output$status_table_study2 <- renderDataTable({
+    df <- data.frame(Gene = cott_carr_will_df$gene,
+                     "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
+                     State = cott_carr_will_df$status_cott,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study2)){
+    # b. If the study search is 'gene' use 'geneofinterest' reactive value
+    # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    df <- df[df$State != "NA",]
+    saveRDS(df,'data_output/cott_xstates.rds')
+    df
+  })
+  ## Status Table (Study3) (similar to Study2)
+  output$status_table_study3 <- renderDataTable({
+    df <- data.frame(Gene = cott_carr_will_df$gene,
+                     "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
+                     State = cott_carr_will_df$status_carrwill,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study3)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    df <- df[df$State != "NA",]
+    saveRDS(df,'data_output/carr_will_xstates.rds')
+    df
+  })
+  ## Status Table (Study4)
+  output$status_table_study4 <- renderDataTable({
+    df <- data.frame(Gene = kat_lin_df_lb$gene,
+                     "Start (bp) [hg38]" = kat_lin_df_lb$start_mapped,
+                     State = kat_lin_df_lb$status_lb,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study4)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    saveRDS(df,'data_output/katsir_linial_lymphoblast_xstates.rds')
+    df
+  })
+  ## Status Table (Study5) (similar to Study4)
+  output$status_table_study5 <- renderDataTable({
+    df <- data.frame(Gene = kat_lin_df_fb$gene,
+                     "Start (bp) [hg38]" = kat_lin_df_fb$start_mapped,
+                     State = kat_lin_df_fb$status_fb,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study5)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    saveRDS(df,'data_output/katsir_linial_fibroblast_xstates.rds')
+    df
+  })
+  ## Status Table (Study6) (similar to Study1)
   output$status_table_study6 <- renderDataTable({
     df <- data.frame("Gene" = TukGTExMod$`Gene name`,
                      "Start (bp) [hg19]" = TukGTExMod$`Pos clean`,
@@ -469,108 +635,6 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/gtex_v6p_xstates.rds')
     df
   })
-  ## Status Table (Study2)
-  output$status_table_study2 <- renderDataTable({
-    df <- data.frame(Gene = cott_carr_will_df$gene,
-                     "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
-                     State = cott_carr_will_df$status_cott,
-                     check.names = FALSE
-    )
-    # Filter the df based on what genes are being displayed
-    # (only filter if the "filter" check box is true)
-    # a. By default, it displays ALL genes
-    to_display = df$Gene
-    if (isTruthy(rv$states_filter_study2)){
-    # b. If the study search is 'gene' use 'geneofinterest' reactive value
-    # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
-        to_display <- rv$geneofinterest1
-      }
-      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
-        to_display <- rv$returned_genes_list
-      }
-    }
-    df <- df[df$Gene %in% to_display,]
-    df <- df[df$State != "NA",]
-    saveRDS(df,'data_output/cott_xstates.rds')
-    df
-  })
-  ## Status Table (study3)
-  output$status_table_study3 <- renderDataTable({
-    df <- data.frame(Gene = cott_carr_will_df$gene,
-                     "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
-                     State = cott_carr_will_df$status_carrwill,
-                     check.names = FALSE
-    )
-    # Filter the df based on what genes are being displayed
-    # (only filter if the "filter" check box is true)
-    # a. By default, it displays ALL genes
-    to_display = df$Gene
-    if (isTruthy(rv$states_filter_study3)){
-      # b. If the study search is 'gene' use 'geneofinterest' reactive value
-      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
-        to_display <- rv$geneofinterest1
-      }
-      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
-        to_display <- rv$returned_genes_list
-      }
-    }
-    df <- df[df$Gene %in% to_display,]
-    df <- df[df$State != "NA",]
-    saveRDS(df,'data_output/carr_will_xstates.rds')
-    df
-  })
-  ## Status Table (study4)
-  output$status_table_study4 <- renderDataTable({
-    df <- data.frame(Gene = kat_lin_df_lb$gene,
-                     "Start (bp) [hg38]" = kat_lin_df_lb$start_mapped,
-                     State = kat_lin_df_lb$status_lb,
-                     check.names = FALSE
-    )
-    # Filter the df based on what genes are being displayed
-    # (only filter if the "filter" check box is true)
-    # a. By default, it displays ALL genes
-    to_display = df$Gene
-    if (isTruthy(rv$states_filter_study4)){
-      # b. If the study search is 'gene' use 'geneofinterest' reactive value
-      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
-        to_display <- rv$geneofinterest1
-      }
-      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
-        to_display <- rv$returned_genes_list
-      }
-    }
-    df <- df[df$Gene %in% to_display,]
-    saveRDS(df,'data_output/katsir_linial_lymphoblast_xstates.rds')
-    df
-  })
-  ## Status Table (study5)
-  output$status_table_study5 <- renderDataTable({
-    df <- data.frame(Gene = kat_lin_df_fb$gene,
-                     "Start (bp) [hg38]" = kat_lin_df_fb$start_mapped,
-                     State = kat_lin_df_fb$status_fb,
-                     check.names = FALSE
-    )
-    # Filter the df based on what genes are being displayed
-    # (only filter if the "filter" check box is true)
-    # a. By default, it displays ALL genes
-    to_display = df$Gene
-    if (isTruthy(rv$states_filter_study5)){
-      # b. If the study search is 'gene' use 'geneofinterest' reactive value
-      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
-      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
-        to_display <- rv$geneofinterest1
-      }
-      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
-        to_display <- rv$returned_genes_list
-      }
-    }
-    df <- df[df$Gene %in% to_display,]
-    saveRDS(df,'data_output/katsir_linial_fibroblast_xstates.rds')
-    df
-  })
   ### TAB 2
   # TAU Table
   output$gene_detail_table <- renderDataTable({
@@ -587,6 +651,7 @@ server <- function(input, output, session) {
     saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
     genestatdf
   })
+  # Individual Escape Table
   output$ind_escape_states_table <- renderDataTable({
     validate(need(input$geneofinterest2,""))
     geneofinterest <- rv$geneofinterest2
@@ -758,7 +823,7 @@ server <- function(input, output, session) {
       geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
                  fill='red', size=3, group=2) +
       annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = y_disease_annot,
-               color = "red", vjust = 2, group = 5) +
+               color = "red", vjust = 2, group = 5) + 
       # Scale shape manual (though right now this is disabled)
       scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
     if(rv$addStudies == 'study1'){
@@ -768,13 +833,6 @@ server <- function(input, output, session) {
                    fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, "lightsteelblue3",
                                ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
                    size=3, group=2)
-    }
-    if(rv$addStudies == 'study2'){
-      genepvalue_1 <- genepvalue_1 +
-        annotate("segment", x=cott_carr_will_df[, "start_mapped"],
-                 xend=cott_carr_will_df[, "start_mapped"],
-                 y=-.6, yend=-.2, size=1, alpha=0.8,
-                 color=cott_carr_will_df[, "color_cott"])
     }
     if(rv$addStudies == 'study3'){
       genepvalue_1 <- genepvalue_1 +
@@ -807,11 +865,40 @@ server <- function(input, output, session) {
     genepvalue_1
   })
   output$plot_study2 <- renderPlot({
-    # Range of plot
-    ymin = -5
-    #ifelse(returned_genes_list_length > 1, ymin <- min(y_disease_annot),'')
-    #ifelse(length(geneofinterest) > 1, ymin <- min(y_gene_annot),'')
-    ymax = 5
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Create gene of interest data frame
+    cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
+    geneofinterest_df <- cott_df[cott_df$gene %in% geneofinterest,]
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    mapped_genes_nels <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+      if(!identical(mg_nels, character(0))){
+        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
+      }
+    }
+    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    returned_genes_list <- c()
+    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- cott_df[cott_df$gene %in% returned_genes_list,]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
     # Get axis breaks
     x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
     first_label <- x_breaks[1]
@@ -822,7 +909,6 @@ server <- function(input, output, session) {
     mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
                      legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
-                     #legend.position = "right", # removing legend
                      legend.position = "none",
                      axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
                      axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
@@ -836,14 +922,356 @@ server <- function(input, output, session) {
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome Position") + ylab("") + 
       # Add points
-      geom_segment(data = cott_carr_will_df, 
-                   aes(x=cott_carr_will_df[, "start"], y=ymin,
-                       xend=cott_carr_will_df[, "start"], yend=ymax-1),
-                   color=cott_carr_will_df[, "color_cott"]) + 
-    # Scaling and Legends
+      geom_segment(data = cott_df, 
+                   aes(x=cott_df[, "start_mapped"], y=0,
+                       xend=cott_df[, "start_mapped"], yend=ymax-1),
+                   color=cott_df[, "color_cott"]) + 
+      # Scaling and Legends
       scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
       scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p2 <- p2 + geom_segment(data = geneofinterest_df, 
+                              aes(x=geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p2 <- p2 + geom_segment(data = disease_geneofinterest_df, 
+                              aes(x=disease_geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=disease_geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
     p2
+  })
+  output$plot_study3 <- renderPlot({
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Create gene of interest data frame
+    carrwill_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
+    geneofinterest_df <- carrwill_df[carrwill_df$gene %in% geneofinterest,]
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    mapped_genes_nels <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+      if(!identical(mg_nels, character(0))){
+        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
+      }
+    }
+    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    returned_genes_list <- c()
+    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- carrwill_df[carrwill_df$gene %in% returned_genes_list,]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p3 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = carrwill_df, 
+                   aes(x=carrwill_df[, "start_mapped"], y=0,
+                       xend=carrwill_df[, "start_mapped"], yend=ymax-1),
+                   color=carrwill_df[, "color_carrwill"]) + 
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p3 <- p3 + geom_segment(data = geneofinterest_df, 
+                              aes(x=geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p3 <- p3 + geom_segment(data = disease_geneofinterest_df, 
+                              aes(x=disease_geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=disease_geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
+    p3
+  })
+  output$plot_study4 <- renderPlot({
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Create gene of interest data frame
+    geneofinterest_df <- kat_lin_df_lb[kat_lin_df_lb$gene %in% geneofinterest,]
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    mapped_genes_nels <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+      if(!identical(mg_nels, character(0))){
+        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
+      }
+    }
+    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    returned_genes_list <- c()
+    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- kat_lin_df_lb[kat_lin_df_lb$gene %in% returned_genes_list,]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p4 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = kat_lin_df_lb, 
+                   aes(x=kat_lin_df_lb[, "start_mapped"], y=0,
+                       xend=kat_lin_df_lb[, "start_mapped"], yend=ymax-1),
+                   color=kat_lin_df_lb[, "color_lb"]) + 
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p4 <- p4 + geom_segment(data = geneofinterest_df, 
+                              aes(x=geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p4 <- p4 + geom_segment(data = disease_geneofinterest_df, 
+                              aes(x=disease_geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=disease_geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
+    p4
+  })
+  output$plot_study5 <- renderPlot({
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Create gene of interest data frame
+    geneofinterest_df <- kat_lin_df_fb[kat_lin_df_fb$gene %in% geneofinterest,]
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    mapped_genes_nels <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+      if(!identical(mg_nels, character(0))){
+        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
+      }
+    }
+    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    returned_genes_list <- c()
+    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- kat_lin_df_fb[kat_lin_df_fb$gene %in% returned_genes_list,]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p5 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = kat_lin_df_fb, 
+                   aes(x=kat_lin_df_fb[, "start_mapped"], y=0,
+                       xend=kat_lin_df_fb[, "start_mapped"], yend=ymax-1),
+                   color=kat_lin_df_fb[, "color_fb"]) + 
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p5 <- p5 + geom_segment(data = geneofinterest_df, 
+                              aes(x=geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p5 <- p5 + geom_segment(data = disease_geneofinterest_df, 
+                              aes(x=disease_geneofinterest_df[, "start_mapped"], y=ymin,
+                                  xend=disease_geneofinterest_df[, "start_mapped"], yend=ymax-1),
+                              color='red')
+    }
+    p5
+  })
+  output$plot_study6 <- renderPlot({
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Save threshold information for colorizing
+    SV_threshold <- rv$SV_threshold
+    VE_threshold <- rv$VE_threshold
+    # Create gene of interest data frame
+    geneofinterest_df <- TukGTExMod[TukGTExMod$`Gene name` %in% geneofinterest,]
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$`Pos clean`),]
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    mapped_genes_nels <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+      if(!identical(mg_nels, character(0))){
+        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
+      }
+    }
+    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    returned_genes_list <- c()
+    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- kat_lin_df_fb[kat_lin_df_fb$gene %in% returned_genes_list,]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p6 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = TukGTExMod, 
+                   aes(x=as.numeric(unlist(TukGTExMod[, "Pos clean"])), y=0,
+                       xend=as.numeric(unlist(TukGTExMod[, "Pos clean"])), yend=ymax-1),
+                   color=ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= SV_threshold, 
+                                "lightsteelblue3",
+                                ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) > SV_threshold & as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= VE_threshold, 
+                                       "turquoise3", "purple"))) + 
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p6 <- p6 + geom_segment(data = geneofinterest_df, 
+                              aes(x=as.numeric(unlist(geneofinterest_df[, "Pos clean"])), y=ymin,
+                                  xend=as.numeric(unlist(geneofinterest_df[, "Pos clean"])), yend=ymax-1),
+                              color='red')
+      
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p6 <- p6 + geom_segment(data = disease_geneofinterest_df, 
+                              aes(x=disease_geneofinterest_df[, "Pos clean"], y=ymin,
+                                  xend=disease_geneofinterest_df[, "Pos clean"], yend=ymax-1),
+                              color='red')
+    }
+    p6
   })
   ## X chromosome "image"
   output$gene_pvalue_xchromosome <- renderPlot({

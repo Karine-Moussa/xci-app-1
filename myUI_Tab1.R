@@ -79,6 +79,22 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              condition = "input.addStudies == 'study2'",
                              withSpinner(plotOutput(outputId = "plot_study2", height = "100px", click = "myclick", hover = "myhover"), type = 2)
                          ),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study3'",
+                             withSpinner(plotOutput(outputId = "plot_study3", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study4'",
+                             withSpinner(plotOutput(outputId = "plot_study4", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study5'",
+                             withSpinner(plotOutput(outputId = "plot_study5", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study6'",
+                             withSpinner(plotOutput(outputId = "plot_study6", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
                          withSpinner(plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"), type = 1, size = 1),
                          # LEGENDS
                          # Show this panel if we're looking at escape states
@@ -147,7 +163,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                            "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
                                                            value = TRUE),
                                              checkboxInput("tissues_filter_study6", 
-                                                           "View individual tissue states", 
+                                                           "View all tissue states", 
                                                            value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study6"))
