@@ -94,8 +94,8 @@ server <- function(input, output, session) {
     checkbox_input1 = "",
     myclick = "",
     myhover= "",
-    plot1_coord_x = c(),
-    plot1_coord_y = c(),
+    plot_coord_x = c(),
+    plot_coord_y = c(),
     mapped_gene = "",
     closest_expr_index = "",
     returned_genes_list = "",
@@ -133,8 +133,8 @@ server <- function(input, output, session) {
       rv$mapped_gene = ""
       rv$geneofinterest1 = ""
       rv$diseaseofinterest1 = ""
-      rv$plot1_coord_x = c()
-      rv$plot1_coord_y = c()
+      rv$plot_coord_x = c()
+      rv$plot_coord_y = c()
       rv$closest_expr_index = ""
       rv$returned_genes_list = ""
     }
@@ -153,10 +153,10 @@ server <- function(input, output, session) {
   })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
-      rv$plot1_coord_x = c(rv$plot1_coord_x, input$myclick$x)
-      rv$plot1_coord_y = c(rv$plot1_coord_y, input$myclick$y)
-      for(i in 1:length(rv$plot1_coord_x)){
-        index <- which.min(abs(x_expr$start - rv$plot1_coord_x[i]))
+      rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
+      rv$plot_coord_y = c(rv$plot_coord_y, input$myclick$y)
+      for(i in 1:length(rv$plot_coord_x)){
+        index <- which.min(abs(x_expr$start - rv$plot_coord_x[i]))
         rv$closest_expr_index[i] <- index
       }
       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
@@ -172,8 +172,8 @@ server <- function(input, output, session) {
     rv$mapped_gene = ""
     rv$geneofinterest1 = ""
     rv$diseaseofinterest1 = ""
-    rv$plot1_coord_x = c()
-    rv$plot1_coord_y = c()
+    rv$plot_coord_x = c()
+    rv$plot_coord_y = c()
     rv$closest_expr_index = ""
     rv$returned_genes_list = ""
   })
@@ -825,11 +825,11 @@ server <- function(input, output, session) {
                      #legend.position = "right", # removing legend
                      legend.position = "none",
                      axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
-                     #axis.title.x = element_text(family = "Helvetica", size = (18), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
                      axis.title.x = element_blank(), # Removing X-title
-                     axis.text.y = element_blank(),  # Removing X-title
                      axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
                                                 face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
                      panel.background = element_rect(fill = "white"))
     # Create plot
     p2 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
@@ -842,7 +842,7 @@ server <- function(input, output, session) {
                    color=cott_carr_will_df[, "color_cott"]) + 
     # Scaling and Legends
       scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-      scale_y_continuous(limits = c(ymin,ymax))
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
     p2
   })
   ## X chromosome "image"

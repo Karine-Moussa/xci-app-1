@@ -81,21 +81,21 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          withSpinner(plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"), type = 1, size = 1),
                          # LEGENDS
-                         # Show the baseline legend if we're not looking at escape states:
-                         #conditionalPanel(
-                         #    condition = "input.addStudies == 'empty'",
-                         #    p("", style = "font-size:4px"),
-                         #    fluidRow(
-                         #        column(4, offset = 1,
-                         #               img(src = "mainplot_legend_horizontal.png", height = 23))
-                         #    ),
-                         #    p("", style = "font-size:4px"),
-                         #),
-                         # LEGENDS
-                         # Only show this panel if we're looking at escape states
-                         # Also update the legend here if that's the case
+                         # Show this panel if we're looking at escape states
+                         # for non-GEUVADIS studies
                          conditionalPanel(
-                             condition = "input.addStudies != 'empty'",
+                             condition = "input.addStudies != 'empty' & input.addStudies != 'study1' ",
+                             p("", style = "font-size:4px"),
+                             fluidRow(
+                                 column(4, offset = 1,
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", height = 23))
+                             ),
+                             br(),
+                         ),
+                         # Show this panel if we're looking at escape states
+                         # for GEUVADIS study
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study1'",
                              p("", style = "font-size:4px"),
                              fluidRow(
                                  column(4, offset = 1,
