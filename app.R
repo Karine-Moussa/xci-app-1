@@ -868,7 +868,6 @@ server <- function(input, output, session) {
   output$plot_study2 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
-    print(rv$geneofinterest1) # for testing
     # Save disease of interest datapoints
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
