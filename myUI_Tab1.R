@@ -27,37 +27,37 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study1'",
                                  # selectizeInput("geneofinterest1", "Gene of Interest:", c("DUMMY",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
-                                 selectizeInput("geneofinterest1", "Gene of Interest:", study1_genes, multiple = TRUE),
+                                 selectizeInput("geneofinterest1_1", "Gene of Interest:", study1_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 2
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study2'",
-                                 selectizeInput("geneofinterest1", "Gene of Interest:", study2_genes, multiple = TRUE),
+                                 selectizeInput("geneofinterest1_2", "Gene of Interest:", study2_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 3
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study3'",
-                                 selectizeInput("geneofinterest1", "Gene of Interest:", study3_genes, multiple = TRUE),
+                                 selectizeInput("geneofinterest1_3", "Gene of Interest:", study3_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 4
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study4'",
-                                 selectizeInput("geneofinterest1", "Gene of Interest:", study4_genes, multiple = TRUE),
+                                 selectizeInput("geneofinterest1_4", "Gene of Interest:", study4_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 5
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study5'",
-                                 selectizeInput("geneofinterest1", "Gene of Interest:", study5_genes, multiple = TRUE),
+                                 selectizeInput("geneofinterest1_5", "Gene of Interest:", study5_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 6
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study6'",
-                                 selectizeInput("geneofinterest1", "Gene of Interest:", study6_genes, multiple = TRUE),
+                                 selectizeInput("geneofinterest1_6", "Gene of Interest:", study6_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # Disease search if the SearchType box exists

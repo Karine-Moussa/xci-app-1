@@ -85,6 +85,7 @@ server <- function(input, output, session) {
   # Reactive values
   rv <- reactiveValues(
     geneofinterest1 = "",
+    geneofinterest1b = "",
     geneofinterest2 = "",
     diseaseofinterest1 = "",
     searchType = "gene",
@@ -112,27 +113,38 @@ server <- function(input, output, session) {
     states_filter_study5 = "on"
   )
   # ObserveEvents Tab 1
-  observeEvent(input$geneofinterest1, {
-    rv$geneofinterest1 <- unique(c(input$geneofinterest1, rv$mapped_gene))
+  
+  observeEvent(input$geneofinterest1_1, { # conditional panel for study 1
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_1, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
-    # Make sure genes of interest are relevant to displayed study
-    if(rv$addStudies == "study1"){
-      TF_vector = x_expr$GENE %in% rv$geneofinterest1
-      rv$geneofinterest1 = rv$geneofinterest1[TF_vector]
-    }
-    if(rv$addStudies == "study2"){
-      cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
-      TF_vector = cott_df$gene %in% rv$geneofinterest1
-      rv$geneofinterest1 = rv$geneofinterest1[TF_vector]
-    }
-    if(rv$addStudies == "study3"){
-      carrwill_df <- cott_carr_will_df[cott_carr_will_df$status_carrwill != "NA",]
-      TF_vector = carrwill_df$gene %in% rv$geneofinterest1
-      rv$geneofinterest1 = rv$geneofinterest1[TF_vector]
-    }
     rv$searchType <- input$searchType
   })
-  observeEvent(input$diseaseofinterest1, {
+  observeEvent(input$geneofinterest1_2, { # conditional panel for study 2
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_2, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+  })
+  observeEvent(input$geneofinterest1_3, { # conditional panel for study 3
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_3, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+  })
+  observeEvent(input$geneofinterest1_4, { # conditional panel for study 4
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_4, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+  })
+  observeEvent(input$geneofinterest1_5, { # conditional panel for study 5
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_5, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+  })
+  observeEvent(input$geneofinterest1_6, { # conditional panel for study 6
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_6, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+  })
+  observeEvent(input$diseaseofinterest1, { 
     rv$diseaseofinterest1 <- input$diseaseofinterest1
     if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS (main study genes only)"){
       rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.rds")
@@ -162,7 +174,18 @@ server <- function(input, output, session) {
            rv$geneofinterest1 <- "")
   })
   observeEvent(input$addStudies, {
+    previous_study <- rv$addStudies
     rv$addStudies <- input$addStudies
+    if(previous_study != rv$addStudies) {
+      rv$mapped_gene = ""
+      rv$geneofinterest1 = ""
+      rv$diseaseofinterest1 = ""
+      rv$plot_coord_x = c()
+      rv$plot_coord_y = c()
+      rv$closest_expr_index = ""
+      rv$returned_genes_list = ""
+    }
+    #rv$addStudies <- input$addStudies
   })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
@@ -327,7 +350,6 @@ server <- function(input, output, session) {
     } else {
       to_display <- rv$returned_genes_list
     }
-    print(to_display)
   })
   # "please enter" message
   output$pleaseInput1 <- renderText({
@@ -841,39 +863,12 @@ server <- function(input, output, session) {
                                ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
                    size=3, group=2)
     }
-    if(rv$addStudies == 'study3'){
-      genepvalue_1 <- genepvalue_1 +
-        annotate("segment", x=cott_carr_will_df[, "start_mapped"],
-                 xend=cott_carr_will_df[, "start_mapped"],
-                 y=-.6, yend=-.2, size=1, alpha=0.8,
-                 color=cott_carr_will_df[, "color_carrwill"])
-    }
-    if(rv$addStudies == 'study4'){
-      genepvalue_1 <- genepvalue_1 +
-        annotate("segment", x=kat_lin_df_lb[, "start_mapped"],
-                 xend=kat_lin_df_lb[, "start_mapped"],
-                 y=-.6, yend=-.2, size=1, alpha=0.8,
-                 color=kat_lin_df_lb[, "color_lb"])
-    }
-    if(rv$addStudies == 'study5'){
-      genepvalue_1 <- genepvalue_1 +
-        annotate("segment", x=kat_lin_df_fb[, "start_mapped"],
-                 xend=kat_lin_df_fb[, "start_mapped"],
-                 y=-.6, yend=-.2, size=1, alpha=0.8,
-                 color=kat_lin_df_fb[, "color_fb"])
-    }
-    if(rv$addStudies == 'study6'){
-      genepvalue_1 <- genepvalue_1 +
-        annotate("segment", x=as.numeric(unlist(TukGTExMod[, "Pos clean"])),
-                 xend=as.numeric(unlist(TukGTExMod[, "Pos clean"])),
-                 y=-.6, yend=-.2, size=1, alpha=0.8,
-                 color=unlist(TukGTExMod[, "color"]))
-    }
     genepvalue_1
   })
   output$plot_study2 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
+    print(rv$geneofinterest1) # for testing
     # Save disease of interest datapoints
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
