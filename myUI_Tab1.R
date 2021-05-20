@@ -1,6 +1,3 @@
-# All genes, main plot
-all_genes <- unique(unique(c(x_expr_mod$GENE, TukGTExMod$`Gene name`,cott_carr_will_df$gene),
-                           kat_lin_df$gene))
 TAB1 <- tabPanel(title = "All Escape Expressions",
                #  tags$script(src = "lazy_slider.js"),
                  # Create a layout with a sidebar and main area ----
@@ -17,27 +14,66 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                        "Katsir + Linial: scRNA-seq lymphoblast" = "study4",
                                        "Katsir + Linial: scRNA-seq fibroblast" = "study5")
                          ),
-                         selectInput("searchType", "Search Type",
-                                     c(Gene = "gene", "Disease/Trait" = "disease")
-                         ),
+                         # Only display SearchType if a study is selected
                          conditionalPanel(
-                             condition = "input.searchType == 'gene'",
-                            # selectizeInput("geneofinterest1", "Gene of Interest:", c("DUMMY",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
-                            selectizeInput("geneofinterest1", "Gene of Interest:", all_genes, multiple = TRUE),
-                            p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             condition = "input.addStudies != 'empty'",
+                             selectInput("searchType", "Search Type",
+                                         c(Gene = "gene", "Disease/Trait" = "disease")
+                             ),
+                             # Conditional panels within a conditional panel
+                             # Gene search if the SearchType box exists
+                             # (there is a conditional panel for each study)
+                             # study 1
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study1'",
+                                 # selectizeInput("geneofinterest1", "Gene of Interest:", c("DUMMY",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
+                                 selectizeInput("geneofinterest1", "Gene of Interest:", study1_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # study 2
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study2'",
+                                 selectizeInput("geneofinterest1", "Gene of Interest:", study2_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # study 3
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study3'",
+                                 selectizeInput("geneofinterest1", "Gene of Interest:", study3_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # study 4
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study4'",
+                                 selectizeInput("geneofinterest1", "Gene of Interest:", study4_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # study 5
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study5'",
+                                 selectizeInput("geneofinterest1", "Gene of Interest:", study5_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # study 6
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study6'",
+                                 selectizeInput("geneofinterest1", "Gene of Interest:", study6_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # Disease search if the SearchType box exists
+                             conditionalPanel(
+                                 condition = "input.searchType == 'disease'",
+                                 selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:",
+                                                #    multiple = TRUE,
+                                                ## search in a combined list of GWAS and Nelson traits
+                                                #c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
+                                                ## search in only the GWAS traits
+                                                c("", unique(c("ALL FEMALE BIAS TRAITS (main study genes only)", LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
+                                 p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
+                             )
+                             # end of inner conditional panels
                          ),
-                         #checkboxInput("checkbox_input1", label = "Show all escape genes", value = FALSE),
-                #         verbatimTextOutput("test"),
-                         conditionalPanel(
-                             condition = "input.searchType == 'disease'",
-                             selectizeInput("diseaseofinterest1", "Disease/Trait of Interest:",
-                                            #    multiple = TRUE,
-                                            ## search in a combined list of GWAS and Nelson traits
-                                            #c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
-                                            ## search in only the GWAS traits
-                                            c("", unique(c("ALL FEMALE BIAS TRAITS (main study genes only)", LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
-                             p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
-                         ),
+                         # end of outer condition panel
                          actionButton("resetButton", "Clear Genes"),
                          br(),
                          br(),

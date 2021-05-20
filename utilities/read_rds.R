@@ -55,3 +55,12 @@ par2_boundaries <- readRDS("rds/par2_boundaries.rds")
 centre_boundaries <- readRDS("rds/centre_boundaries.rds")
 chrom_segments <- readRDS("rds/chrom_segments.rds")
 chrom_segments_colored <- readRDS("rds/chrom_segments_colored.rds")
+
+# create_lists_of_genes.R
+all_genes <- readRDS("rds/all_genes.rds")
+study1_genes <- readRDS("rds/study1_genes.rds")
+study2_genes <- readRDS("rds/study2_genes.rds")
+study3_genes <- readRDS("rds/study3_genes.rds")
+study4_genes <- readRDS("rds/study4_genes.rds")
+study5_genes <- readRDS("rds/study5_genes.rds")
+study6_genes <- readRDS("rds/study6_genes.rds")
