@@ -56,13 +56,7 @@ create_single_trait_stats <- function(trait)
                case_male_gwas2ukbio = ukbio_stats$case_male,
                ratio_gwas2ukbio = ukbio_stats$ratio,
                bias_gwas2ukbio = ukbio_stats$bias
-               # NELSON2 to UKBIO stats
-#               trait_nels2ukbio = trait_nels2ukbio,
-#               case_female_nels2ukbio = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nels2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'case'],
-#               case_male_nels2ukbio  = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nels2ukbio & PHENO_RATES_UKBIO$gender == 'male', 'case'],
-#               ratio_nels2ukbio  = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nels2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'ratio'],
-#               bias_nels2ukbio  = PHENO_RATES_UKBIO[PHENO_RATES_UKBIO$des == trait_nels2ukbio & PHENO_RATES_UKBIO$gender == 'female', 'bias']
-                )
+              )
            )
     )
 }

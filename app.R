@@ -146,7 +146,7 @@ server <- function(input, output, session) {
   })
   observeEvent(input$diseaseofinterest1, { 
     rv$diseaseofinterest1 <- input$diseaseofinterest1
-    if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS (main study genes only)"){
+    if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS"){
       rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.rds")
     }
     rv$searchType <- input$searchType
@@ -185,7 +185,6 @@ server <- function(input, output, session) {
       rv$closest_expr_index = ""
       rv$returned_genes_list = ""
     }
-    #rv$addStudies <- input$addStudies
   })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
@@ -446,13 +445,9 @@ server <- function(input, output, session) {
   ### TAB 1
   source("myServer_Tab1_assocTables.R", local = TRUE) # Source for association tables
   ## Gene GWAS table
-  output$gene_gwas_data <- getAssocObjGene("gwas")
-  ## Gene NELSON table (currently commented out in myUI_Tab1.R)
-  output$gene_nelson_data <- getAssocObjGene("nels")
+  output$gene_gwas_data <- getAssocObjGene(rv$addStudies)
   ## Disease GWAS table
-  output$gene_disease_gwas_data <- getAssocObjDisease("gwas")
-  ## Disease Nelson table (currently commented out in myUI_Tab1.R)
-  output$gene_disease_nelson_data <- getAssocObjDisease("nels")
+  output$gene_disease_gwas_data <- getAssocObjDisease(rv$addStudies)
   ## Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
     df <- data.frame("Gene" = distinct(x_expr_mod, GENE),
