@@ -330,10 +330,17 @@ server <- function(input, output, session) {
     print(to_display)
   })
   # "please enter" message
-  output$pleaseInput <- renderText({
+  output$pleaseInput1 <- renderText({
     text <- ""
     if(rv$geneofinterest1[1] == "" & rv$diseaseofinterest1[1] == ""){
-      text <- "Input gene or disease of interest for association data"
+      text <- "Select a study, then input gene or disease of interest for association data"
+    }
+    text
+  })
+  output$pleaseInput2 <- renderText({
+    text <- ""
+    if(rv$addStudies == "empty"){
+      text <- "Select a study for escape states"
     }
     text
   })

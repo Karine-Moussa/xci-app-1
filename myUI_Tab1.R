@@ -125,7 +125,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                 tabPanel("Association Data",
                                          # Only show this message if no genes or diseases are inputted
                                          p("", style="font-size:10px"),
-                                         span(textOutput("pleaseInput"), style="font-size:18px;font-style:italic"),
+                                         span(textOutput("pleaseInput1"), style="font-size:18px;font-style:italic"),
                                          br(),
                                          # Only show this panel if the we're looking at genes or diseases 
                                          conditionalPanel(
@@ -143,8 +143,12 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          )
                                 ),
                                 tabPanel("Escape States",
+                                         # Only show this message if no study is selected
+                                         p("", style="font-size:10px"),
+                                         span(textOutput("pleaseInput2"), style="font-size:18px;font-style:italic"),
+                                         br(),
                                          conditionalPanel( # conditional panel within conditional panel
-                                             condition = "input.addStudies == 'empty' || input.addStudies == 'study1'",
+                                             condition = "input.addStudies == 'study1'",
                                              p("", style = "font-size:14px"),
                                              p("GEUVADIS lymphoblast  ", style = "font-size:18px", 
                                                downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
