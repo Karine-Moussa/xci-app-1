@@ -927,7 +927,7 @@ server <- function(input, output, session) {
     # Create plot
     p2 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
-      xlab("X-Chromosome Position") + ylab("") + 
+      xlab("X-Chromosome") + ylab("") + 
       # Add points
       geom_segment(data = cott_df, 
                    aes(x=cott_df[, "start_mapped"], y=0,
@@ -1251,7 +1251,7 @@ server <- function(input, output, session) {
     # Create plot
     p6 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
-      xlab("X-Chromosome Position") + ylab("") + 
+      xlab("X-Chromosome") + ylab("") + 
       # Add points
       geom_segment(data = TukGTExMod, 
                    aes(x=as.numeric(unlist(TukGTExMod[, "Pos clean"])), y=0,
@@ -1281,7 +1281,7 @@ server <- function(input, output, session) {
     p6
   })
   ## X chromosome "image"
-  output$gene_pvalue_xchromosome <- renderPlot({
+  output$xchromosome <- renderPlot({
     # Create theme for plot
     mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
@@ -1296,7 +1296,7 @@ server <- function(input, output, session) {
                      panel.background = element_rect(fill = "white"))
     xchromosome_plot <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod), group=1)) +
       mytheme +
-      xlab("X-Chromosome Position") + ylab(" ") +
+      xlab("X Chromosome") + ylab(" ") +
       # Scaling and Legends
       scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(plot1_xmin, plot1_xmax)) +
       scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) +

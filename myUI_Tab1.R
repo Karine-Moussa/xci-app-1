@@ -95,7 +95,19 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              condition = "input.addStudies == 'study6'",
                              withSpinner(plotOutput(outputId = "plot_study6", height = "100px", click = "myclick", hover = "myhover"), type = 2)
                          ),
-                         withSpinner(plotOutput(outputId = "gene_pvalue_xchromosome", height = "100px"), type = 1, size = 1),
+                         # Display the chromosome (image) if study is not selected
+                         conditionalPanel(
+                             condition = "input.addStudies == 'empty'",
+                             fluidRow(
+                                 column(4, offset = 1,
+                                        img(src = "x-chrom-img.png", width = "750px"))
+                             ),
+                         ),
+                         # Display the chromosome (graph) if study is selected
+                         conditionalPanel(
+                             condition = "input.addStudies != 'empty'",
+                             withSpinner(plotOutput(outputId = "xchromosome", height = "100px"), type = 1, size = 1)
+                         ),
                          # LEGENDS
                          # Show this panel if we're looking at escape states
                          # for non-GEUVADIS studies
