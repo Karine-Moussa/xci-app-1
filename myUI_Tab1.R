@@ -74,7 +74,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              # end of inner conditional panels
                          ),
                          # end of outer condition panel
-                         actionButton("resetButton", "Clear Genes"),
+                         actionButton("resetButton1", "Clear Genes"),
                          br(),
                          br(),
                          strong("Displayed Genes:", style = "font-size:14px"),br(),
@@ -261,7 +261,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          br(),
                                          # Only show this panel if the we're looking at genes or diseases 
                                          conditionalPanel(
-                                             condition = "output.geneTableStatus",
+                                             condition = "output.geneTableStatus1",
                                              strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
                                              p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                              withSpinner(dataTableOutput(outputId = "gene_gwas_data"), type = 1)

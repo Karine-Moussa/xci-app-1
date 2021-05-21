@@ -254,7 +254,7 @@ server <- function(input, output, session) {
       }
     }
   })
-  observeEvent(input$resetButton, {
+  observeEvent(input$resetButton1, {
     rv$mapped_gene = ""
     rv$geneofinterest1 = ""
     rv$diseaseofinterest1 = ""
@@ -308,6 +308,9 @@ server <- function(input, output, session) {
   observeEvent(input$geneofinterest2, {
     rv$geneofinterest2 <- input$geneofinterest2
   })
+  observeEvent(input$resetButton2, {
+    rv$geneofinterest2 <- ""
+  })
   ##############################
   ## FOR TESTING ###############
   ##############################
@@ -322,16 +325,21 @@ server <- function(input, output, session) {
   ## CONDITIONAL PANEL STATUS ##############
   ##########################################
   # The logic for whether the tables are displayed
-  output$geneTableStatus <- reactive({
+  output$geneTableStatus1 <- reactive({
     rv$geneofinterest1 != ""
   })
-  outputOptions(output, "geneTableStatus", suspendWhenHidden = FALSE)
+  outputOptions(output, "geneTableStatus1", suspendWhenHidden = FALSE)
 
   output$diseaseTableStatus <- reactive({
     rv$diseaseofinterest1 != ""
   })
   outputOptions(output, "diseaseTableStatus", suspendWhenHidden = FALSE)
 
+  output$geneTableStatus2 <- reactive({
+    rv$geneofinterest2 != ""
+  })
+  outputOptions(output, "geneTableStatus2", suspendWhenHidden = FALSE)
+  
   # The logic for the slider warning message
   output$sliderWarning <- reactive({
     rv$slider1 >= rv$slider2
@@ -363,6 +371,13 @@ server <- function(input, output, session) {
     text <- ""
     if(rv$addStudies == "empty"){
       text <- "Select a study for escape states"
+    }
+    text
+  })
+  output$pleaseInput3 <- renderText({
+    text <- ""
+    if(rv$geneofinterest2 == ""){
+      text <- "Select a gene"
     }
     text
   })
@@ -665,14 +680,22 @@ server <- function(input, output, session) {
   output$gene_detail_table <- renderDataTable({
     validate(need(input$geneofinterest2,""))
     geneofinterest <- rv$geneofinterest2
-    assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-    genestatdf <- data.frame(sample = gene_stats$parent_sample,
-                             cell = gene_stats$cell_type,
-                             state = gene_stats$status,
-                             tau = gene_stats$tau,
-                             skew = gene_stats$skew_values,
-                             p = sprintf("%1.3f", gene_stats$p_values),
-                             tau_plus = ifelse(gene_stats$skew_values < 0.25, "yes","no"))
+    for (gene in geneofinterest){
+      assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
+      tmp_genestatdf <- data.frame(sample = gene_stats$parent_sample,
+                               cell = gene_stats$cell_type,
+                               state = gene_stats$status,
+                               tau = gene_stats$tau,
+                               skew = gene_stats$skew_values,
+                               p = sprintf("%1.3f", gene_stats$p_values),
+                               tau_plus = ifelse(gene_stats$skew_values < 0.25, "yes","no"))
+      # Don't bind a new df if this was the first gene on the list
+      if(gene == geneofinterest[1]){
+        genestatdf <- tmp_genestatdf
+      } else {
+        genestatdf <- rbind(genestatdf, tmp_genestatdf)
+      }
+    }
     saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
     genestatdf
   })

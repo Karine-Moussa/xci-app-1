@@ -7,6 +7,7 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                      sidebarPanel(
                          h3("Observing XCI escape calls across studies"),
                          selectizeInput("geneofinterest2", "Gene of Interest:", c("", all_genes)),
+                         actionButton("resetButton2", "Clear Genes"),
                          br(),
                          conditionalPanel(
                              condition = "input.geneofinterest2 != ''",
@@ -30,10 +31,11 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                      ),
                      mainPanel(
+                         # Show message if no genes are displayed 
+                         span(textOutput("pleaseInput3"), style="font-size:18px;font-style:italic"),
                          # Escape States Table
                          conditionalPanel(
-                             br(),
-                             condition = "input.geneofinterest2 != ''",
+                             condition = "output.geneTableStatus2",
                              p("Escape States", style = "font-size:16px;font-weight:bold"), 
                              (downloadButton("individual_gene_escape_download", "Download Escape Data")),
                              br(),
