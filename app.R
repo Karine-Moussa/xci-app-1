@@ -376,7 +376,7 @@ server <- function(input, output, session) {
   })
   output$pleaseInput3 <- renderText({
     text <- ""
-    if(rv$geneofinterest2 == ""){
+    if(rv$geneofinterest2[1] == ""){
       text <- "Select a gene"
     }
     text
@@ -703,7 +703,16 @@ server <- function(input, output, session) {
   output$ind_escape_states_table <- renderDataTable({
     validate(need(input$geneofinterest2,""))
     geneofinterest <- rv$geneofinterest2
-    df <- create_escape_df(geneofinterest)
+    for (gene in geneofinterest){
+      tmp_df <- create_escape_df(gene)
+      if(gene == geneofinterest[1]){
+        df <- tmp_df
+      } else {
+        df <- rbind(df, tmp_df)
+      }
+    }
+    # Don't bind a new df if this was the first gene on the list
+    #df <- df[order(df$gene),]
     saveRDS(df,'data_output/individual_escape_table.rds')
     df
   })
