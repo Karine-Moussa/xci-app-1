@@ -5,7 +5,8 @@ create_gwas_association_df <- function(gene){
     mapped_genes = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"MAPPED_GENE"]
     mapped_traits = tolower(GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DISEASE.TRAIT"])
     links = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"LINK"]
-    dates = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DATE.ADDED.TO.CATALOG"]
+    #dates = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,"DATE.ADDED.TO.CATALOG"]
+    dates = GWAS_ASSOCIATIONS[TRUE_FALSE_VECTOR_GWAS,1]
     # 1.5 If the gene could not be found, set the returns to ""
     # otherwise an error will be thrown because they are = character(0)
     if(length(mapped_genes) == 0){mapped_genes = ""}

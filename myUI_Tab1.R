@@ -170,26 +170,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              br(),
                          ),
                          tabBox(title = "",
-                                tabPanel("Association Data",
-                                         # Only show this message if no genes or diseases are inputted
-                                         p("", style="font-size:10px"),
-                                         span(textOutput("pleaseInput1"), style="font-size:18px;font-style:italic"),
-                                         br(),
-                                         # Only show this panel if the we're looking at genes or diseases 
-                                         conditionalPanel(
-                                             condition = "output.geneTableStatus",
-                                             strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
-                                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                             withSpinner(dataTableOutput(outputId = "gene_gwas_data"), type = 1)
-                                         ),
-                                         conditionalPanel(
-                                             #  condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
-                                             condition = "output.diseaseTableStatus",
-                                             strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
-                                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
-                                             withSpinner(dataTableOutput(outputId = "gene_disease_gwas_data"), type = 1)
-                                         )
-                                ),
                                 tabPanel("Escape States",
                                          # Only show this message if no study is selected
                                          p("", style="font-size:10px"),
@@ -272,6 +252,26 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                            value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study5"))
+                                         )
+                                ),
+                                tabPanel("Association Data",
+                                         # Only show this message if no genes or diseases are inputted
+                                         p("", style="font-size:10px"),
+                                         span(textOutput("pleaseInput1"), style="font-size:18px;font-style:italic"),
+                                         br(),
+                                         # Only show this panel if the we're looking at genes or diseases 
+                                         conditionalPanel(
+                                             condition = "output.geneTableStatus",
+                                             strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
+                                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                             withSpinner(dataTableOutput(outputId = "gene_gwas_data"), type = 1)
+                                         ),
+                                         conditionalPanel(
+                                             #  condition = "input.searchType == 'disease' && input.diseaseofinterest1 != ''",
+                                             condition = "output.diseaseTableStatus",
+                                             strong("GWAS Catalog Search (Disease/Trait)", style = "font-size:16px"),
+                                             p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
+                                             withSpinner(dataTableOutput(outputId = "gene_disease_gwas_data"), type = 1)
                                          )
                                 ),
                                 width = NULL, side = "left"
