@@ -349,6 +349,7 @@ server <- function(input, output, session) {
     } else {
       to_display <- rv$returned_genes_list
     }
+    print(to_display)
   })
   # "please enter" message
   output$pleaseInput1 <- renderText({
@@ -804,7 +805,7 @@ server <- function(input, output, session) {
                      panel.background = element_rect(fill = "white"))
     # Create plot
     genepvalue_1 <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
-                                                shape=p_mod_flag, label=GENE, label2=end,
+                                                shape=p_mod_flag,
                                                 group=1)) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome Position") + ylab("-log10(p)") +
@@ -815,29 +816,40 @@ server <- function(input, output, session) {
                 fill="lightblue", alpha=0.25) +
       geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330),
                 fill="pink", alpha=0.25)
-    genepvalue_1 <- genepvalue_1 +
-      # Main Data Points
-      geom_point(fill = p_less_300$BandColor, size = 2) +
-      geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-                 fill=p_more_300$BandColor, size=2, group=3) +
+    # Main Data Points
+    #genepvalue_1 <- genepvalue_1 +
+      #geom_point(fill = p_less_300$BandColor, size = 2) +
+      #geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
+      #           fill=p_more_300$BandColor, size=2, group=3) +
       # Data points below significance
-      geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],
-                 mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'],
-                             y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']),
-                             shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']),
-                 fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
-                 color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
-                 size=2, group=4) +
+      #geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],
+      #           mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'],
+      #                       y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']),
+      #                       shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']),
+      #           fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
+      #           color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
+      #           size=2, group=4)
       # Scaling and Legends
+    genepvalue_1 <- genepvalue_1 +
       scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
       scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) +
       # Annotations
       geom_hline(yintercept = -log10(P_SIG), linetype='dotted') +
       annotate("text", x = max(x_expr$start), y = -log10(P_SIG)+.40, hjust=-0.1, family = "serif",
               # label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) +
-              label = paste0("    p = ", P_SIG), size = (4)) +
+              label = paste0("    p = ", P_SIG), size = (4))
+    # Add escape colors  
+    if(rv$addStudies == 'study1'){
+        genepvalue_1 <- genepvalue_1 +
+          # Add Escape State information after Main Data Points
+          geom_point(escape_states, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
+                     fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, "lightsteelblue3",
+                                 ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
+                     size=3, group=2)
+      }
       # Data points added by user reactive values: Gene of Interest
-      geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
+      genepvalue_1 <- genepvalue_1 +
+        geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
                  fill='red', size=3, group=2) +
       # Change annotation color based on the displayed study
       annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = y_gene_annot,
@@ -850,14 +862,6 @@ server <- function(input, output, session) {
                color = "red", vjust = 2, group = 5) + 
       # Scale shape manual (though right now this is disabled)
       scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
-    if(rv$addStudies == 'study1'){
-      genepvalue_1 <- genepvalue_1 +
-        # Add Escape State information after Main Data Points
-        geom_point(escape_states, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-                   fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, "lightsteelblue3",
-                               ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
-                   size=3, group=2)
-    }
     genepvalue_1
   })
   output$plot_study2 <- renderPlot({
