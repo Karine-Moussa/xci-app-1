@@ -6,13 +6,11 @@
 #     It also takes care of subsetting the returned table to make sure
 #     only the disease/trait of interest is included. 
 getAssocObjGene <- function(study){
-    # db options are "gwas" and "nels"
     obj <- renderDataTable({
         validate(need(rv$geneofinterest1,""))
         geneofinterest <- rv$geneofinterest1
         df <- data.frame()
         db <- "gwas"
-        print(study)
         for(gene in geneofinterest){
             df <- rbind(df, create_gwas_association_df(gene))
         }
@@ -100,8 +98,7 @@ getAssocObjDisease <- function(study){
                 temp_df <- create_gwas_association_df(gene)
                 df <- rbind(df, temp_df[temp_df$`Disease/Trait` == d,])
                 # ^subsets the table only for the disease of interest
-                saveRDS(df, "testdf.rds") # for testing
-                df <- df[returned_genes_list %in% df$`Mapped Gene`,]
+                #df <- df[df$`Mapped Gene` %in% returned_genes_list,]
                 # ^subsets the table only for the genes of interest
             }
         }

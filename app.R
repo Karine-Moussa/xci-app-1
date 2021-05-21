@@ -718,7 +718,7 @@ server <- function(input, output, session) {
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
-    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+    returned_genes <- for(gene in study6_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
@@ -890,7 +890,7 @@ server <- function(input, output, session) {
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
-    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+    returned_genes <- for(gene in study2_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
@@ -971,7 +971,7 @@ server <- function(input, output, session) {
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
-    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+    returned_genes <- for(gene in study3_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
@@ -1051,7 +1051,7 @@ server <- function(input, output, session) {
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
-    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+    returned_genes <- for(gene in study4_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
@@ -1131,7 +1131,7 @@ server <- function(input, output, session) {
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
-    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+    returned_genes <- for(gene in study5_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
@@ -1214,12 +1214,12 @@ server <- function(input, output, session) {
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
-    returned_genes <- for(gene in c(unique(x_expr[,"GENE"]))){
+    returned_genes <- for(gene in study6_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
-    disease_geneofinterest_df <- kat_lin_df_fb[kat_lin_df_fb$gene %in% returned_genes_list,]
-    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    disease_geneofinterest_df <- TukGTExMod[TukGTExMod$`Gene name` %in% returned_genes_list,]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$`Pos clean`),]
     # Get Range of plot
     ymin = 0
     ymax = 10
@@ -1267,8 +1267,8 @@ server <- function(input, output, session) {
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p6 <- p6 + geom_segment(data = disease_geneofinterest_df, 
-                              aes(x=disease_geneofinterest_df[, "Pos clean"], y=ymin,
-                                  xend=disease_geneofinterest_df[, "Pos clean"], yend=ymax-1),
+                              aes(x=as.numeric(unlist(disease_geneofinterest_df[, "Pos clean"])), y=ymin,
+                                  xend=as.numeric(unlist(disease_geneofinterest_df[, "Pos clean"])), yend=ymax-1),
                               color='red')
     }
     p6
