@@ -28,7 +28,7 @@ create_escape_df <- function(gene){
     study_name <- "GTEx (multi-tissue)"
     ref_table <- unique(TukGTExMod[,-4]) # don't use Tissue column, make unique
     query <- "status_adv"
-    if (gene %in% ref_table$`Gene name`){
+    if (gene %in% study6_genes){
         status_abr = unique(ref_table[ref_table$`Gene name`==gene, query])
         if(status_abr == "E"){status <- list.append(status,"escape")}
         if(status_abr == "V"){status <- list.append(status,"variable")}
@@ -42,7 +42,11 @@ create_escape_df <- function(gene){
     study_name <- "Cotton et al. (multi-tissue)"
     ref_table <- cott_carr_will_df
     query <- "status_cott"
+    if (gene %in% study2_genes){
     status_abr = unique(ref_table[ref_table$gene==gene, query])
+    } else {
+        status_abr = "NA"
+    }
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
     
@@ -50,7 +54,11 @@ create_escape_df <- function(gene){
     study_name <- "Carrel/Willard (hybrid fibroblast)"
     ref_table <- cott_carr_will_df
     query <- "status_carrwill"
-    status_abr = unique(ref_table[ref_table$gene==gene, query])
+    if (gene %in% study3_genes){
+        status_abr = unique(ref_table[ref_table$gene==gene, query])
+    } else {
+        status_abr = "NA"
+    }
     status <- list.append(status, status_abr) 
     study <- list.append(study, study_name)
 
@@ -58,8 +66,12 @@ create_escape_df <- function(gene){
     study_name <- "Katsir + Linial (lymphoblast)"
     ref_table <- kat_lin_df
     query <- "status_lb"
-    status_abr = unique(ref_table[ref_table$gene==gene, query])
-    if(length(status_abr) == 0 || status_abr == ""){
+    if (gene %in% study4_genes){
+        status_abr = unique(ref_table[ref_table$gene==gene, query])
+        if(length(status_abr) == 0 || status_abr == ""){
+            status_abr = "NA"
+        }
+    } else {
         status_abr = "NA"
     }
     status <- list.append(status, status_abr) 
@@ -69,8 +81,12 @@ create_escape_df <- function(gene){
     study_name <- "Katsir + Linial (fibroblast)"
     ref_table <- kat_lin_df
     query <- "status_fb"
-    status_abr = unique(ref_table[ref_table$gene==gene, query])
-    if(length(status_abr) == 0 || status_abr == ""){
+    if (gene %in% study5_genes){
+        status_abr = unique(ref_table[ref_table$gene==gene, query])
+        if(length(status_abr) == 0 || status_abr == ""){
+            status_abr = "NA"
+        }
+    } else {
         status_abr = "NA"
     }
     status <- list.append(status, status_abr) 

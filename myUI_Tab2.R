@@ -5,8 +5,15 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                  # Create a layout with a sidebar and main area
                  sidebarLayout(
                      sidebarPanel(
-                         h3("Observing XCI escape calls per Gene"),
-                         autocomplete_input("geneofinterest2", "Gene of Interest:", all_genes, value = ""),
+                         h3("Observing XCI escape calls across studies"),
+                         selectizeInput("geneofinterest2", "Gene of Interest:", c("", all_genes)),
+                         br(),
+                         conditionalPanel(
+                             condition = "input.geneofinterest2 != ''",
+                             selectInput("tauStudy", "View Tau Data:",
+                                         c(" " = "empty", "GEUVADIS (lymphoblast)" = "study1")
+                             ),
+                         ),
                          br(),
                          strong("Directions for Use", style = "font-size:12px"),br(),
                          em("---Input an X-gene of interest", style = "font-size:12px"),br(),
@@ -18,29 +25,36 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          br(),
                          strong("Parameters"),
                          p("Tau = (Xi Expression)/(Total Expression)", style = "font-size:12px"),
+                         p("Gene = X-Chromosome genes from all studies",style = "font-size:12px"),
                          br(),
                          em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                      ),
                      mainPanel(
-                         (plotOutput(outputId = "individual_gene_tau_plot")),
+                         # Escape States Table
                          conditionalPanel(
+                             br(),
                              condition = "input.geneofinterest2 != ''",
+                             p("Escape States", style = "font-size:16px;font-weight:bold"), 
+                             (downloadButton("individual_gene_escape_download", "Download Escape Data")),
+                             br(),
+                             br(),
+                             withSpinner(dataTableOutput(outputId = "ind_escape_states_table"), type = 1, size = 1),
+                         ),
+                         # Show plot / Tau table if study has this information
+                         conditionalPanel(
+                             condition = "input.tauStudy == 'study1'",
+                             # Plot Output
+                             (plotOutput(outputId = "individual_gene_tau_plot")),
+                             # Plot Tau Table
                              fluidRow(
                                  column(12, "",
                                         fixedRow(
-                                            column(5,
+                                            column(6,
                                                    p("TAU Data (GEUVADIS lymphoblast)", style = "font-size:16px"),
                                                    (downloadButton("table1_download", "Download TAU Data")),
                                                    br(),
                                                    br(),
                                                    (dataTableOutput(outputId = "gene_detail_table"))
-                                            ),
-                                            column(5, offset = 2,
-                                                   p("Escape States", style = "font-size:16px"), 
-                                                   (downloadButton("individual_gene_escape_download", "Download Escape Data")),
-                                                   br(),
-                                                   br(),
-                                                   (dataTableOutput(outputId = "ind_escape_states_table"))
                                             )
                                         )
                                  )
