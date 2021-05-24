@@ -157,7 +157,6 @@ server <- function(input, output, session) {
     }
     rv$searchType <- input$searchType
     rv$addStudies <- input$addStudies
-    print(paste("observeEvent(input$diseaseofinterest1)", rv$diseaseofinterest1)) # For testing
   })
   observeEvent(input$searchType, {
     previous_searchtype <- rv$searchType
@@ -197,7 +196,6 @@ server <- function(input, output, session) {
       rv$closest_expr_index <- ""
       rv$returned_genes_list <- ""
     }
-    print(paste("observeEvent(input$addStudies, disease", rv$diseaseofinterest1)) # for testing
   })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
@@ -768,13 +766,12 @@ server <- function(input, output, session) {
     }
     mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
     returned_genes_list <- c()
-    returned_genes <- for(gene in study6_genes){
+    returned_genes <- for(gene in study1_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
     returned_genes_list_length <- (length(returned_genes_list)) # use this to set up graph dimensions
     disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% returned_genes_list,]
-    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
     ##### Create the y-positions for the disease/gene annotations:
     unique_disease_x_positions <- unique(disease_geneofinterest_df$start)
     unique_gene_x_positions <- unique(geneofinterest_df$start)
@@ -801,7 +798,6 @@ server <- function(input, output, session) {
     for(i in 1:length(y_disease_annot_unique)){
       gene_var <- unique(disease_geneofinterest_df$GENE)[i]
       rep_length <- sum(disease_geneofinterest_df$GENE == gene_var)
-      print(paste("rep_length", rep_length)) # for testing
       y_disease_annot <- c(y_disease_annot, rep(y_disease_annot_unique[i], rep_length))
     }
     for(i in 1:length(y_gene_annot_unique)){
