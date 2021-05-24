@@ -118,31 +118,37 @@ server <- function(input, output, session) {
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_1, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
     rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
   })
   observeEvent(input$geneofinterest1_2, { # conditional panel for study 2
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_2, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
     rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
   })
   observeEvent(input$geneofinterest1_3, { # conditional panel for study 3
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_3, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
     rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
   })
   observeEvent(input$geneofinterest1_4, { # conditional panel for study 4
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_4, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
     rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
   })
   observeEvent(input$geneofinterest1_5, { # conditional panel for study 5
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_5, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
     rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
   })
   observeEvent(input$geneofinterest1_6, { # conditional panel for study 6
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_6, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
     rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
   })
   observeEvent(input$diseaseofinterest1, { 
     rv$diseaseofinterest1 <- input$diseaseofinterest1
@@ -150,6 +156,8 @@ server <- function(input, output, session) {
       rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.rds")
     }
     rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
+    print(paste("observeEvent(input$diseaseofinterest1)", rv$addStudies)) # For testing
   })
   observeEvent(input$searchType, {
     previous_searchtype <- rv$searchType
@@ -163,6 +171,7 @@ server <- function(input, output, session) {
       rv$closest_expr_index = ""
       rv$returned_genes_list = ""
     }
+    rv$addStudies <- input$addStudies
   })
   observeEvent(input$checkbox_input1, {
     rv$checkbox_input1 <- input$checkbox_input1
@@ -176,15 +185,16 @@ server <- function(input, output, session) {
   observeEvent(input$addStudies, {
     previous_study <- rv$addStudies
     rv$addStudies <- input$addStudies
+    rv$diseaseofinterest1 <- input$diseaseofinterest1
     if(previous_study != rv$addStudies) {
-      rv$mapped_gene = ""
-      rv$geneofinterest1 = ""
-      rv$diseaseofinterest1 = ""
-      rv$plot_coord_x = c()
-      rv$plot_coord_y = c()
-      rv$closest_expr_index = ""
-      rv$returned_genes_list = ""
+      rv$mapped_gene <- ""
+      rv$geneofinterest1 <- ""
+      rv$plot_coord_x <- c()
+      rv$plot_coord_y <- c()
+      rv$closest_expr_index <- ""
+      rv$returned_genes_list <- ""
     }
+    print(paste("observeEvent(input$addStudies", rv$addStudies)) # for testing
   })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
@@ -262,6 +272,7 @@ server <- function(input, output, session) {
     rv$plot_coord_y = c()
     rv$closest_expr_index = ""
     rv$returned_genes_list = ""
+    rv$addStudies = ""
   })
   observeEvent(input$slider1, {
     rv$slider1 <- input$slider1

@@ -50,6 +50,8 @@ getAssocObjDisease <- function(study){
     obj <- renderDataTable({
         validate(need(rv$diseaseofinterest1,""))
         diseaseofinterest <- rv$diseaseofinterest1
+        study <- rv$addStudies
+        print(paste("getAssocObjdisease", study)) # for testing
         # First get a list of mapped genes (per disease "d")
         mapped_genes <- c()
         db <- "gwas"
