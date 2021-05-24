@@ -157,7 +157,7 @@ server <- function(input, output, session) {
     }
     rv$searchType <- input$searchType
     rv$addStudies <- input$addStudies
-    print(paste("observeEvent(input$diseaseofinterest1)", rv$addStudies)) # For testing
+    print(paste("observeEvent(input$diseaseofinterest1)", rv$diseaseofinterest1)) # For testing
   })
   observeEvent(input$searchType, {
     previous_searchtype <- rv$searchType
@@ -186,6 +186,9 @@ server <- function(input, output, session) {
     previous_study <- rv$addStudies
     rv$addStudies <- input$addStudies
     rv$diseaseofinterest1 <- input$diseaseofinterest1
+    if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS"){
+      rv$diseaseofinterest1 <- readRDS("data_intermediate/fbias_traits.rds")
+    }
     if(previous_study != rv$addStudies) {
       rv$mapped_gene <- ""
       rv$geneofinterest1 <- ""
@@ -194,7 +197,7 @@ server <- function(input, output, session) {
       rv$closest_expr_index <- ""
       rv$returned_genes_list <- ""
     }
-    print(paste("observeEvent(input$addStudies", rv$addStudies)) # for testing
+    print(paste("observeEvent(input$addStudies, disease", rv$diseaseofinterest1)) # for testing
   })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
@@ -798,6 +801,7 @@ server <- function(input, output, session) {
     for(i in 1:length(y_disease_annot_unique)){
       gene_var <- unique(disease_geneofinterest_df$GENE)[i]
       rep_length <- sum(disease_geneofinterest_df$GENE == gene_var)
+      print(paste("rep_length", rep_length)) # for testing
       y_disease_annot <- c(y_disease_annot, rep(y_disease_annot_unique[i], rep_length))
     }
     for(i in 1:length(y_gene_annot_unique)){
