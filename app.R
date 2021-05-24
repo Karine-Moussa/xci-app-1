@@ -480,6 +480,26 @@ server <- function(input, output, session) {
   output$gene_gwas_data <- getAssocObjGene(rv$addStudies)
   ## Disease GWAS table
   output$gene_disease_gwas_data <- getAssocObjDisease(rv$addStudies)
+  ## Status Table (Study0)
+  output$status_table_study0 <- renderDataTable({
+    # input$file1 will be NULL initially. After the user selects
+    # and uploads a file, head of that data file by default,
+    # or all rows if selected, will be shown.
+    req(input$file1)
+    input_df <- read.csv(input$file1$datapath,
+                   sep = input$sep,
+                   check.names = FALSE)
+    if(input$template == 1){
+      df <- data.frame("Gene" = input_df[,1],
+                       "Start (bp)" = input_df[,2],
+                       "Escape Status" = input_df[,3],
+                       check.names = FALSE)
+    }
+    if(input$template == 2){
+      print("Gotta catch em all")
+    }
+    df
+  })
   ## Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
     df <- data.frame("Gene" = distinct(x_expr_mod, GENE),
