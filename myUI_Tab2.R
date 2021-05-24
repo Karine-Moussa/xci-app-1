@@ -9,6 +9,7 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          selectizeInput("geneofinterest2", "Gene of Interest:", c("", all_genes), multiple = TRUE),
                          actionButton("resetButton2", "Clear Genes"),
                          br(),
+                         br(),
                          conditionalPanel(
                              condition = "input.geneofinterest2 != ''",
                              selectInput("tauStudy", "View Tau Data:",
@@ -45,6 +46,9 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          # Show plot / Tau table if study has this information
                          conditionalPanel(
                              condition = "input.tauStudy == 'study1'",
+                             br(),
+                             br(),
+                             p("Tau Data", style = "font-size:16px;font-weight:bold"), 
                              # Plot Output
                              (plotOutput(outputId = "individual_gene_tau_plot")),
                              # Plot Tau Table

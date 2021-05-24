@@ -77,8 +77,12 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          actionButton("resetButton1", "Clear Genes"),
                          br(),
                          br(),
-                         strong("Displayed Genes:", style = "font-size:14px"),br(),
-                         verbatimTextOutput("displayedGenes"),
+                         # Only dispaly the "Displayed Genes" if a study is selected
+                         conditionalPanel(
+                             condition = "input.addStudies != 'empty'",
+                             strong("Displayed Genes:", style = "font-size:14px"),br(),
+                             verbatimTextOutput("displayedGenes")
+                         ),
                          br(),
                          conditionalPanel(
                              condition = "output.sliderWarning",
@@ -97,12 +101,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          value = VE_threshold, min = 0.25, max = 0.99)
                          ),
                          br(),
-                         strong("Main Dataset"),
-                         p("GEUVADIS DATA: ", a("102 Samples, 268 Genes, Lymphoblast Cells", href="x_expr.tsv",
-                                                target="_blank"), style = "font-size:12px"),
-                         br(),
-                         br(),
-                         p("GEUVADIS genome build: hg38", style = "font-size:12px;color:grey"),
                          em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
                      ),
                      # Create plot and Action Buttons in Main Panel

@@ -21,7 +21,7 @@ library(data.table, warn.conflicts = FALSE)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
-publication_date <- "2021-05-21 11:09:42 EDT" # Sys.time()
+publication_date <- "2021-05-21 16:39:02 EDT" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -310,6 +310,10 @@ server <- function(input, output, session) {
   })
   observeEvent(input$resetButton2, {
     rv$geneofinterest2 <- ""
+    rv$tauStudy <- ""
+  })
+  observeEvent(input$tauStudy, {
+    rv$tauStudy <- input$tauStudy
   })
   ##############################
   ## FOR TESTING ###############
