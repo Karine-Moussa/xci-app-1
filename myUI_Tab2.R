@@ -38,7 +38,7 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          conditionalPanel(
                              condition = "output.geneTableStatus2",
                              p("Escape States", style = "font-size:16px;font-weight:bold"), 
-                             (downloadButton("individual_gene_escape_download", "Download Escape Data")),
+                             (downloadButton("individual_gene_escape_download", "Download Table")),
                              br(),
                              br(),
                              withSpinner(dataTableOutput(outputId = "ind_escape_states_table"), type = 1, size = 1),

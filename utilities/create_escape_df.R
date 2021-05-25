@@ -28,7 +28,6 @@ create_escape_df <- function(gene){
     # Study 0 (MANUAL study)
     study_name <- "UPLOADED STUDY"
     ref_table <- readRDS("rds/study0_df.rds")
-    print(ref_table) # for testing
     query <- "state"
     if(nrow(ref_table) != 0) { # first need to make sure it's not empty
         if (gene %in% ref_table$gene){
@@ -39,8 +38,6 @@ create_escape_df <- function(gene){
     } else { # if table was empty, status = NA
         status_abr <- "NA"
     }
-    print(paste("status:", status)) # for testing
-    print(paste("study_name:", study_name)) # for testing
     status <- list.append(status, status_abr)
     study <- list.append(study, study_name)
         
