@@ -8,6 +8,7 @@ create_escape_df <- function(gene){
     #
     status = list()
     study = list()
+
     # Study 1 (GEUVIDAS)
     study_name <- "GEUVADIS (lymphoblast)"
     ref_table <- x_expr_mod
@@ -24,6 +25,25 @@ create_escape_df <- function(gene){
         study <- list.append(study_name)
     }
     
+    # Study 0 (MANUAL study)
+    study_name <- "UPLOADED STUDY"
+    ref_table <- readRDS("rds/study0_df.rds")
+    print(ref_table) # for testing
+    query <- "state"
+    if(nrow(ref_table) != 0) { # first need to make sure it's not empty
+        if (gene %in% ref_table$gene){
+            status_abr <- unique(ref_table[ref_table$gene==gene, query])
+        } else {
+            status_abr <- "NA"
+        }
+    } else { # if table was empty, status = NA
+        status_abr <- "NA"
+    }
+    print(paste("status:", status)) # for testing
+    print(paste("study_name:", study_name)) # for testing
+    status <- list.append(status, status_abr)
+    study <- list.append(study, study_name)
+        
     # Study 6 (GTEx) (very similar to Study1 format)
     study_name <- "GTEx (multi-tissue)"
     ref_table <- unique(TukGTExMod[,-4]) # don't use Tissue column, make unique

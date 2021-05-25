@@ -652,12 +652,13 @@ server <- function(input, output, session) {
         last_column = 5
       }
       if(input$template == 2){
-        colnames(df) <- c("gene", "start", "tiss_samp", "tiss_samp_state", "escape_freq","state (based on escape_freq)","color")
+        colnames(df) <- c("gene", "start", "tiss_samp", "tiss_samp_state", "escape_freq","state","color")
         last_column = 6
       }
       rv$study0_df <- df # save the reactive value for plotting later
       df <- df[df$gene %in% to_display,]
-      saveRDS(df[,1:last_column], "data_output/uploaded_study_escape_states.rds") # save
+      saveRDS(df[,1:last_column], "data_output/uploaded_study_escape_states.rds") # save for downloading
+      saveRDS(df[,1:last_column], "rds/study0_df.rds") # save for tab 2
       df[,1:last_column] # display table, exclude the color
     } # end of "if rv$study0_flag == TRUE"
   })

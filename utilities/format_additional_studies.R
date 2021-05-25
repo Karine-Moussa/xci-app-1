@@ -55,8 +55,12 @@ hg19_to_hg38_katlin<- read.csv("resources_studies/KatsirLinial2019/hg19_to_hg38.
 hg19_to_hg38_katlin <- hg19_to_hg38_katlin[hg19_to_hg38_katlin$recip != "Second Pass",] # for now remove repeated mapping
 rm(path)
 
-## MANUALLY ADDED STUDIES
+# USER UPLOADED STUDY (created a blank rds object)
+# see utilites/create_study0_df.R for creation of default blank study0_df
+
+## MANUALLY ADDED STUDIES (for DISEASE/TRAITS data)
 MANUAL_STUDIES <- read_excel("data_intermediate/additional_findings.xlsx", sheet = "additional_findings")
+
 
 ##################################
 ### PREPARE FILES FOR USE IN CODE

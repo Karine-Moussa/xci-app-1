@@ -15,4 +15,6 @@ source("utilities/create_trait_objects.R", local = TRUE)
 source("utilities/create_gene_objects.R", local = TRUE)
 source("utilities/create_escape_df.R", local = TRUE)
 
+# Extras
+source("utilities/create_study0_df.R", local = TRUE)
 gene_stat_table <- readRDS(file = "data_intermediate/gene_stat_table.rds")
