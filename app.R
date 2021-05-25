@@ -493,6 +493,17 @@ server <- function(input, output, session) {
     }
   )
   ## Download escape states
+  output$download_states_study0 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "uploaded_study_escape_states.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/uploaded_study_escape_states.rds')
+      write.csv(mydata, file)
+    }
+  )
   output$download_states_study1 <- downloadHandler(
     filename =  function(){
       # Name of created file
@@ -646,7 +657,7 @@ server <- function(input, output, session) {
       }
       rv$study0_df <- df # save the reactive value for plotting later
       df <- df[df$gene %in% to_display,]
-      saveRDS(df[,1:last_column], "rds/temp.rds") # save
+      saveRDS(df[,1:last_column], "data_output/uploaded_study_escape_states.rds") # save
       df[,1:last_column] # display table, exclude the color
     } # end of "if rv$study0_flag == TRUE"
   })

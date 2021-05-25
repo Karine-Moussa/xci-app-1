@@ -39,13 +39,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              # Line Break: -------
                              tags$hr(),
                              # Download templates: --------
-                             strong("Download Templates"), br(),
-                             downloadLink('download_template_1', 'Download Template 1', style = "font-size:14px"), br(),
-                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_1', 'Download Example 1', style = "font-size:12px")), br(),
-                             downloadLink('download_template_2', 'Download Template 2', style = "font-size:14px"), br(),
-                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_2', 'Download Example 2', style = "font-size:12px")), br(),
-                             # Line Break: -------
-                             tags$hr(),
+                             # This was moved to below  input.slider1
                          ),
                          # Only display SearchType if a study is selected
                          conditionalPanel(
@@ -126,13 +120,24 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                 value", style="font-size:14px;color:red")
                          ),
                          conditionalPanel(
-                             condition = "input.addStudies == 'study1' || input.addStudies == 'study6'",
+                             condition = "input.addStudies == 'study1' || input.addStudies == 'study6' || output.plotStudy0",
                              sliderInput(inputId = "slider1", 
                                          label = "Choose an escape frequency for the [inactive | variable] threshold", 
                                          value = SV_threshold, min = 0.1, max = 0.75),
                              sliderInput(inputId = "slider2", 
                                          label = "Choose an escape frequency for the [variable | escape] threshold", 
-                                         value = VE_threshold, min = 0.25, max = 0.99)
+                                         value = VE_threshold, min = 0.25, max = 0.99),
+                             tags$hr(),
+                         ),
+                         conditionalPanel( # this used to be right after tags$hr()
+                             condition = "input.addStudies == 'study0'",
+                             strong("Download Templates"), br(),
+                             downloadLink('download_template_1', 'Download Template 1', style = "font-size:14px"), br(),
+                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_1', 'Download Example 1', style = "font-size:12px")), br(),
+                             downloadLink('download_template_2', 'Download Template 2', style = "font-size:14px"), br(),
+                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_2', 'Download Example 2', style = "font-size:12px")), br(),
+                             # Line Break: -------
+                             tags$hr(),
                          ),
                          br(),
                          em(paste("Last published:", publication_date), style = "font-size:12px;color:grey")
@@ -214,8 +219,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'study0'",
                                              p("", style = "font-size:14px"),
-                                             p("UPLOADED STUDY  ", style = "font-size:18px"), 
-                                               #downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
+                                             p("UPLOADED STUDY  ", style = "font-size:18px", 
+                                               downloadLink('download_states_study0', '[download table]', style = "font-size:14px")),
                                              checkboxInput("states_filter_study0", 
                                                            "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
                                                            value = TRUE),
