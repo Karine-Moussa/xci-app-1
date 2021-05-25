@@ -27,26 +27,42 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                   ".csv")),
                              # Input: Select separator ----
                              radioButtons("template", "Template Type",
-                                          choices = c("Template 1" = 1,
-                                                      "Template 2" = 2),
+                                          choices = c("Template 1 (gene, start, state)" = 1,
+                                                      "Template 2 (gene, start, sample, sample_state)" = 2),
                                           selected = 1),
                              # Input: Select separator ----
-                             radioButtons("sep", "Separator",
-                                          choices = c(Comma = ",",
-                                                      Tab = "\t"),
-                                          selected = ","),
+                             #radioButtons("sep", "Separator",
+                             #             choices = c(Comma = ",",
+                             #                         Tab = "\t"),
+                             #             selected = ","),
+                             actionButton("submitButton1", "Submit Uploaded Study"),
+                             # Line Break: -------
+                             tags$hr(),
+                             # Download templates: --------
+                             strong("Download Templates"), br(),
+                             downloadLink('download_template_1', 'Download Template 1', style = "font-size:14px"), br(),
+                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_1', 'Download Example 1', style = "font-size:12px")), br(),
+                             downloadLink('download_template_2', 'Download Template 2', style = "font-size:14px"), br(),
+                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_2', 'Download Example 2', style = "font-size:12px")), br(),
                              # Line Break: -------
                              tags$hr(),
                          ),
                          # Only display SearchType if a study is selected
                          conditionalPanel(
-                             condition = "input.addStudies != 'empty'",
+                             condition = "input.addStudies != 'empty' & input.addStudies != 'study0' || output.plotStudy0",
                              selectInput("searchType", "Search Type",
                                          c(Gene = "gene", "Disease/Trait" = "disease")
                              ),
                              # Conditional panels within a conditional panel
                              # Gene search if the SearchType box exists
                              # (there is a conditional panel for each study)
+                             
+                             # study 0
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & output.plotStudy0",
+                                 selectizeInput("geneofinterest1_0", "Gene of Interest:", study1_genes, multiple = TRUE), # need to update
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
                              # study 1
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study1'",
@@ -94,20 +110,14 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                 ## search in only the GWAS traits
                                                 c("", unique(c("ALL FEMALE BIAS TRAITS", LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
                                  p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
-                             )
-                             # end of inner conditional panels
-                         ),
-                         # end of outer condition panel
-                         actionButton("resetButton1", "Clear Genes"),
-                         br(),
-                         br(),
-                         # Only dispaly the "Displayed Genes" if a study is selected
-                         conditionalPanel(
-                             condition = "input.addStudies != 'empty'",
+                             ), # end of inner conditional panels
+                             actionButton("resetButton1", "Clear Genes"),
+                             br(),
+                             br(),
+                             # Only display the "Displayed Genes" if a study is selected / study0 submitted
                              strong("Displayed Genes:", style = "font-size:14px"),br(),
-                             verbatimTextOutput("displayedGenes")
-                         ),
-                         br(),
+                             verbatimTextOutput("displayedGenes"),
+                         ), # end of outer condition panel
                          conditionalPanel(
                              condition = "output.sliderWarning",
                              #   verbatimTextOutput("sliderWarningMessage"),
@@ -125,13 +135,13 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          value = VE_threshold, min = 0.25, max = 0.99)
                          ),
                          br(),
-                         em(paste("Last published:",publication_date), style = "font-size:12px;color:grey")
+                         em(paste("Last published:", publication_date), style = "font-size:12px;color:grey")
                      ),
                      # Create plot and Action Buttons in Main Panel
                      mainPanel(
                          conditionalPanel(
-                             condition = "input.addStudies == 'study0'",
-                             # study0 plot here
+                             condition = "output.plotStudy0",
+                             withSpinner(plotOutput(outputId = "plot_study0", height = "100px", click = "myclick", hover = "myhover"), type = 2)
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study1'",
@@ -204,11 +214,11 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'study0'",
                                              p("", style = "font-size:14px"),
-                                             p("MANUAL STUDY  ", style = "font-size:18px"), 
+                                             p("UPLOADED STUDY  ", style = "font-size:18px"), 
                                                #downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
-                                             #checkboxInput("states_filter_study1", 
-                                             #              "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
-                                             #              value = TRUE),
+                                             checkboxInput("states_filter_study0", 
+                                                           "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
+                                                           value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study0"))
                                          ),

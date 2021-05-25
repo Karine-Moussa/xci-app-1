@@ -5,7 +5,7 @@
 #     is obtained, creates an association table by querying those genes. 
 #     It also takes care of subsetting the returned table to make sure
 #     only the disease/trait of interest is included. 
-getAssocObjGene <- function(study){
+getAssocObjGene <- function(){
     obj <- renderDataTable({
         validate(need(rv$geneofinterest1,""))
         geneofinterest <- rv$geneofinterest1
@@ -46,7 +46,7 @@ getAssocObjGene <- function(study){
     )
 }
 
-getAssocObjDisease <- function(study){
+getAssocObjDisease <- function(){
     obj <- renderDataTable({
         validate(need(rv$diseaseofinterest1,""))
         diseaseofinterest <- rv$diseaseofinterest1
@@ -61,6 +61,11 @@ getAssocObjDisease <- function(study){
             }
         }
         returned_genes_list <- c()
+        if(study == "study0"){
+            returned_genes <- for(gene in c(rv$study0_genes)){ 
+                if(TRUE %in% grepl(gene, mapped_genes)){returned_genes_list <- c(returned_genes_list, gene)}
+            }
+        }
         if(study == "study1"){
             returned_genes <- for(gene in c(study1_genes)){ 
                 if(TRUE %in% grepl(gene, mapped_genes)){returned_genes_list <- c(returned_genes_list, gene)}

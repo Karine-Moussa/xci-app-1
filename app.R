@@ -21,7 +21,7 @@ library(data.table, warn.conflicts = FALSE)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
-publication_date <- "2021-05-21 16:39:02 EDT" # Sys.time()
+publication_date <- "2021-05-24 13:41:19 EDT" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -104,16 +104,46 @@ server <- function(input, output, session) {
     previous_val2 = "",
     SV_threshold = SV_threshold,
     VE_threshold = VE_threshold,
+    states_filter_study0 = "on",
     states_filter_study1 = "on",
     states_filter_study6 = "on",
     tissues_filter_study6 = "on",
     states_filter_study2 = "on",
     states_filter_study3 = "on",
     states_filter_study4 = "on",
-    states_filter_study5 = "on"
+    states_filter_study5 = "on",
+    study0_df = data.frame(),
+    study0_genes = c(),
+    study0_flag = FALSE
   )
   # ObserveEvents Tab 1
-  
+  observeEvent(input$file1, {
+    # need to reset settings if input$file1 changes
+    rv$study0_flag = FALSE
+    rv$study0_df = data.frame()
+    rv$study0_genes = c()
+  })
+  observeEvent(input$template, {
+    # need to reset settings if template type changes
+    rv$study0_flag = FALSE
+    rv$study0_df = data.frame()
+    rv$study0_genes = c()
+  })
+  observeEvent(input$submitButton1, { # submit study 0
+    rv$study0_df <- read.csv(input$file1$datapath,
+                             sep = ",",
+                            #sep = input$sep, # uncommented in myUI_Tab1.R
+                             check.names = FALSE)
+    rv$study0_genes <- toupper(rv$study0_df[,1]) # first column of input df
+    #rv$geneofinterest1 <- rv$study0_genes
+    rv$study0_flag <- TRUE
+  })
+  observeEvent(input$geneofinterest1_0, { # conditional panel for study 0
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_0, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
+  })
   observeEvent(input$geneofinterest1_1, { # conditional panel for study 1
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_1, rv$mapped_gene))
     rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
@@ -196,11 +226,23 @@ server <- function(input, output, session) {
       rv$closest_expr_index <- ""
       rv$returned_genes_list <- ""
     }
+    if(rv$addStudies != "study0"){
+      rv$study0_flag = FALSE
+    }
   })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
       rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
       rv$plot_coord_y = c(rv$plot_coord_y, input$myclick$y)
+      # Query study 0
+      if(rv$addStudies == "study0"){
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(rv$study0_df$start - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = rv$study0_df$gene[as.numeric(rv$closest_expr_index)]
+      }
       # Query study 1
       if(rv$addStudies == "study1"){
         for(i in 1:length(rv$plot_coord_x)){
@@ -273,7 +315,7 @@ server <- function(input, output, session) {
     rv$plot_coord_y = c()
     rv$closest_expr_index = ""
     rv$returned_genes_list = ""
-    rv$addStudies = ""
+    #rv$addStudies = ""
   })
   observeEvent(input$slider1, {
     rv$slider1 <- input$slider1
@@ -295,6 +337,9 @@ server <- function(input, output, session) {
     }
   })
   # If "filter" check box is changed, updated escape states table
+  observeEvent(input$states_filter_study0, {
+    rv$states_filter_study0 <- input$states_filter_study0
+  })
   observeEvent(input$states_filter_study1, {
     rv$states_filter_study1 <- input$states_filter_study1
   })
@@ -356,6 +401,11 @@ server <- function(input, output, session) {
   })
   outputOptions(output, "geneTableStatus2", suspendWhenHidden = FALSE)
   
+  output$plotStudy0 <- reactive({
+    rv$study0_flag == TRUE
+  })
+  outputOptions(output, "plotStudy0", suspendWhenHidden = FALSE)
+  
   # The logic for the slider warning message
   output$sliderWarning <- reactive({
     rv$slider1 >= rv$slider2
@@ -401,6 +451,47 @@ server <- function(input, output, session) {
   ## DOWNLOAD HANDLERS #########
   ##############################
   ### TAB 1
+  ## Download manual study templates
+  output$download_template_1 <- downloadHandler(
+    filename = function(){
+      # name of created file
+      "TEMPLATE_1.csv" 
+    },
+    content = function(file){
+      mydata <- read.csv('templates/TEMPLATE_1.csv', check.names = FALSE)
+      write.csv(mydata, file)
+    }
+  )
+  output$download_example_1 <- downloadHandler(
+    filename = function(){
+      # name of created file
+      "EXAMPLE_1.csv" 
+    },
+    content = function(file){
+      mydata <- read.csv('templates/EXAMPLE_1.csv', check.names = FALSE)
+      write.csv(mydata, file)
+    }
+  )
+  output$download_template_2 <- downloadHandler(
+    filename = function(){
+      # name of created file
+      "TEMPLATE_2.csv" 
+    },
+    content = function(file){
+      mydata <- read.csv('templates/TEMPLATE_2.csv', check.names = FALSE)
+      write.csv(mydata, file)
+    }
+  )
+  output$download_example_2 <- downloadHandler(
+    filename = function(){
+      # name of created file
+      "EXAMPLE_2.csv" 
+    },
+    content = function(file){
+      mydata <- read.csv('templates/EXAMPLE_2.csv', check.names = FALSE)
+      write.csv(mydata, file)
+    }
+  )
   ## Download escape states
   output$download_states_study1 <- downloadHandler(
     filename =  function(){
@@ -477,9 +568,9 @@ server <- function(input, output, session) {
   ### TAB 1
   source("myServer_Tab1_assocTables.R", local = TRUE) # Source for association tables
   ## Gene GWAS table
-  output$gene_gwas_data <- getAssocObjGene(rv$addStudies)
+  output$gene_gwas_data <- getAssocObjGene()
   ## Disease GWAS table
-  output$gene_disease_gwas_data <- getAssocObjDisease(rv$addStudies)
+  output$gene_disease_gwas_data <- getAssocObjDisease()
   ## Status Table (Study0)
   output$status_table_study0 <- renderDataTable({
     # input$file1 will be NULL initially. After the user selects
@@ -487,18 +578,77 @@ server <- function(input, output, session) {
     # or all rows if selected, will be shown.
     req(input$file1)
     input_df <- read.csv(input$file1$datapath,
-                   sep = input$sep,
+                   sep = ",",
+                   #sep = input$sep, # commented out in myUI_Tab1.R
                    check.names = FALSE)
-    if(input$template == 1){
-      df <- data.frame("Gene" = input_df[,1],
-                       "Start (bp)" = input_df[,2],
-                       "Escape Status" = input_df[,3],
-                       check.names = FALSE)
-    }
-    if(input$template == 2){
-      print("Gotta catch em all")
-    }
-    df
+    # Before the submit button is hit, df will just be
+    # the input df
+    if(rv$study0_flag == FALSE){
+      df <- input_df
+      colnames(df) <- c("gene", colnames(df)[2:length(colnames(df))]) # fix first col name
+      df
+    } else { # if study0_flag == TRUE:
+      # TEMPLATE 1
+      if(input$template == 1){
+        df <- data.frame("gene" = rv$study0_df[,1],
+                         "start" = rv$study0_df[,2],
+                         "tiss_samp_state" = rv$study0_df[,3],
+                         check.names = FALSE)
+      } 
+      # TEMPLATE 2
+      if(input$template == 2){
+        df <- data.frame("gene" = rv$study0_df[,1],
+                         "start" = rv$study0_df[,2],
+                         "tiss_samp" = rv$study0_df[,3],
+                         "tiss_samp_state" = rv$study0_df[,4],
+                         check.names = FALSE)
+      }
+      # TEMP 1 and TEMP2
+      # Calculate escape freq 
+      for(row in 1:nrow(df)){
+        subset_df <- subset(df, gene == df[row,1])
+        df$escape_freq[row] <- mean(subset_df$`tiss_samp_state` == "escape")
+      }
+      # Filter out non-genes of interest
+      to_display = df$gene
+      if (isTruthy(rv$states_filter_study0)){
+        # b. If the study search is 'gene' use 'geneofinterest' reactive value
+        # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+        if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+          to_display <- rv$geneofinterest1
+        }
+        if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+          to_display <- rv$returned_genes_list
+        }
+      }
+      # Add final escape states and color
+      for(i in 1:nrow(df)) {
+        if(df$`escape_freq`[i] <= rv$SV_threshold){
+          df$state[i] <- 'inactive'
+          df$color[i] <- 'lightsteelblue'
+        }
+        if(df$`escape_freq`[i] > rv$SV_threshold & df$`escape_freq`[i] <= rv$VE_threshold){
+          df$state[i] <- 'variable'
+          df$color[i] <- 'turquoise3'
+        }
+        if(df$`escape_freq`[i] > rv$VE_threshold){
+          df$state[i] <- 'escape'
+          df$color[i] <- 'purple'
+        }
+      }
+      if(input$template == 1){
+        colnames(df) <- c("gene", "start", "tiss_samp_state", "escape_freq","state","color")
+        last_column = 5
+      }
+      if(input$template == 2){
+        colnames(df) <- c("gene", "start", "tiss_samp", "tiss_samp_state", "escape_freq","state (based on escape_freq)","color")
+        last_column = 6
+      }
+      rv$study0_df <- df # save the reactive value for plotting later
+      df <- df[df$gene %in% to_display,]
+      saveRDS(df[,1:last_column], "rds/temp.rds") # save
+      df[,1:last_column] # display table, exclude the color
+    } # end of "if rv$study0_flag == TRUE"
   })
   ## Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
@@ -761,6 +911,91 @@ server <- function(input, output, session) {
   plot1_xmin = 0
   plot1_xmax = max(x_expr$start) + 1.3e7
   # Output object
+  output$plot_study0 <- renderPlot({
+    validate(need(rv$study0_flag,""))
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Study0 genes / df
+    study0_genes <- rv$study0_genes
+    study0_df <- rv$study0_df
+    # Create gene of interest data frame
+    geneofinterest_df <- study0_df[study0_genes %in% geneofinterest,]
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start),]
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    mapped_genes_nels <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+      if(!identical(mg_nels, character(0))){
+        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
+      }
+    }
+    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    returned_genes_list <- c()
+    returned_genes <- for(gene in study0_genes){
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- study0_df[study0_genes %in% returned_genes_list,]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p0 <- ggplot(data = study0_df, aes(x=start, y=start)) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome") + ylab("") + 
+      # Add points
+      geom_segment(data = study0_df, 
+                   aes(x=study0_df[, "start"], y=0,
+                       xend=study0_df[, "start"], yend=ymax-1),
+                   color=study0_df[,"color"]
+                   ) + 
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p0 <- p0 + geom_segment(data = geneofinterest_df, 
+                              aes(x=geneofinterest_df[, "start"], y=ymin,
+                                  xend=geneofinterest_df[, "start"], yend=ymax-1),
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    #if(nrow(disease_geneofinterest_df) != 0){
+    #  p0 <- p0 + geom_segment(data = disease_geneofinterest_df, 
+    #                          aes(x=disease_geneofinterest_df[, "start"], y=ymin,
+    #                              xend=disease_geneofinterest_df[, "start"], yend=ymax-1),
+    #                          color='red')
+    #}
+    p0
+  })
   output$plot_study1 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
