@@ -31,6 +31,7 @@ options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.siz
 #############################################################
 source("myUI_Tab1.R", local = TRUE)
 source("myUI_Tab2.R", local = TRUE)
+source("myUI_Tab3.R", local = TRUE)
 ui <- fluidPage(title = "XCI Data",
                   tabsetPanel(
                     ## TAB 1: Main Plot, disease/trait searches, association tables
@@ -40,11 +41,7 @@ ui <- fluidPage(title = "XCI Data",
                     ## (see myUI_Tab2.R for code)
                     TAB2,
                     ## TAB 3: Glossary of Terms
-                    tabPanel(title = "Terminology",
-                             strong("In progress...",style = "font-size:14px"),
-                             includeHTML("terminology.html"),
-                             
-                    ),
+                    TAB3,
                     ## TAB 4: How To Page
                     tabPanel(title = "How To",
                              br(),br(),
@@ -82,6 +79,7 @@ server <- function(input, output, session) {
     geneofinterest1 = "",
     geneofinterest1b = "",
     geneofinterest2 = "",
+    geneofinterest3 = "",
     diseaseofinterest1 = "",
     searchType = "gene",
     addStudies = "empty",
@@ -367,6 +365,10 @@ server <- function(input, output, session) {
   observeEvent(input$tauStudy, {
     rv$tauStudy <- input$tauStudy
   })
+  # ObserveEvents Tab3
+  observeEvent(input$geneofinterest3, {
+    rv$geneofinterest3 <- input$geneofinterest3
+  })
   ##############################
   ## FOR TESTING ###############
   ##############################
@@ -395,6 +397,11 @@ server <- function(input, output, session) {
     rv$geneofinterest2 != ""
   })
   outputOptions(output, "geneTableStatus2", suspendWhenHidden = FALSE)
+  
+  output$geneTableStatus3 <- reactive({
+    rv$geneofinterest3 != ""
+  })
+  outputOptions(output, "geneTableStatus3", suspendWhenHidden = FALSE)
   
   output$plotStudy0 <- reactive({
     rv$study0_flag == TRUE
@@ -438,6 +445,13 @@ server <- function(input, output, session) {
   output$pleaseInput3 <- renderText({
     text <- ""
     if(rv$geneofinterest2[1] == ""){
+      text <- "Select a gene"
+    }
+    text
+  })
+  output$pleaseInput4 <- renderText({
+    text <- ""
+    if(rv$geneofinterest3[1] == ""){
       text <- "Select a gene"
     }
     text
@@ -869,29 +883,6 @@ server <- function(input, output, session) {
     df
   })
   ### TAB 2
-  # TAU Table
-  output$gene_detail_table <- renderDataTable({
-    validate(need(input$geneofinterest2,""))
-    geneofinterest <- rv$geneofinterest2
-    for (gene in geneofinterest){
-      assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
-      tmp_genestatdf <- data.frame(sample = gene_stats$parent_sample,
-                               cell = gene_stats$cell_type,
-                               state = gene_stats$status,
-                               tau = gene_stats$tau,
-                               skew = gene_stats$skew_values,
-                               p = sprintf("%1.3f", gene_stats$p_values),
-                               tau_plus = ifelse(gene_stats$skew_values < 0.25, "yes","no"))
-      # Don't bind a new df if this was the first gene on the list
-      if(gene == geneofinterest[1]){
-        genestatdf <- tmp_genestatdf
-      } else {
-        genestatdf <- rbind(genestatdf, tmp_genestatdf)
-      }
-    }
-    saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
-    genestatdf
-  })
   # Individual Escape Table
   output$ind_escape_states_table <- renderDataTable({
     validate(need(input$geneofinterest2,""))
@@ -908,6 +899,29 @@ server <- function(input, output, session) {
     #df <- df[order(df$gene),]
     saveRDS(df,'data_output/individual_escape_table.rds')
     df
+  })
+  # TAU detail table
+  output$gene_detail_table <- renderDataTable({
+    validate(need(input$geneofinterest3,""))
+    geneofinterest <- rv$geneofinterest3
+    for (gene in geneofinterest){
+      assign(("gene_stats"), create_single_gene_stats(geneofinterest, x_expr))
+      tmp_genestatdf <- data.frame(sample = gene_stats$parent_sample,
+                                   cell = gene_stats$cell_type,
+                                   state = gene_stats$status,
+                                   tau = gene_stats$tau,
+                                   skew = gene_stats$skew_values,
+                                   p = sprintf("%1.3f", gene_stats$p_values),
+                                   tau_plus = ifelse(gene_stats$skew_values < 0.25, "yes","no"))
+      # Don't bind a new df if this was the first gene on the list
+      if(gene == geneofinterest[1]){
+        genestatdf <- tmp_genestatdf
+      } else {
+        genestatdf <- rbind(genestatdf, tmp_genestatdf)
+      }
+    }
+    saveRDS(genestatdf,'data_output/geneofinterest_tau_table.rds')
+    genestatdf
   })
   ##############################
   ## PLOTS/IMAGES ##############
@@ -1619,9 +1633,9 @@ server <- function(input, output, session) {
   ## Violin Plots - Gene of Interest
   output$individual_gene_tau_plot <- renderPlot({
     validate(
-      need(input$geneofinterest2 !="", "Please input a gene of interest")
+      need(input$geneofinterest3 !="", "Please input a gene of interest")
     )
-    geneofinterest <- rv$geneofinterest2
+    geneofinterest <- rv$geneofinterest3
     #geneofinterest <- "XIST" # For testing
     assign("geneofinterest_stats", create_single_gene_stats(geneofinterest, x_expr))
     # Assign object attributes to variables

@@ -1,6 +1,4 @@
 # Invidivual Gene Search
-all_genes <- unique(unique(c(x_expr_mod$GENE, TukGTExMod$`Gene name`,cott_carr_will_df$gene),
-                    kat_lin_df$gene))
 TAB2 <- tabPanel(title = "Individual Gene Search",
                  # Create a layout with a sidebar and main area
                  sidebarLayout(
@@ -10,13 +8,13 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          actionButton("resetButton2", "Clear Genes"),
                          br(),
                          br(),
-                         conditionalPanel(
-                             condition = "input.geneofinterest2 != ''",
-                             selectInput("tauStudy", "View Tau Data:",
-                                         c(" " = "empty", "GEUVADIS (lymphoblast)" = "study1")
-                             ),
-                         ),
-                         br(),
+                         #conditionalPanel(
+                         #    condition = "input.geneofinterest2 != ''",
+                         #    selectInput("tauStudy", "View Tau Data:",
+                         #                c(" " = "empty", "GEUVADIS (lymphoblast)" = "study1")
+                         #    ),
+                         #),
+                         #br(),
                          strong("Directions for Use", style = "font-size:12px"),br(),
                          em("---Input an X-gene of interest", style = "font-size:12px"),br(),
                          em("---Examples: XIST, ZBED1, ASMTL", style = "font-size:12px"),br(),
@@ -48,23 +46,23 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                              condition = "input.tauStudy == 'study1'",
                              br(),
                              br(),
-                             p("Tau Data", style = "font-size:16px;font-weight:bold"), 
+                             #p("Tau Data", style = "font-size:16px;font-weight:bold"), 
                              # Plot Output
-                             (plotOutput(outputId = "individual_gene_tau_plot")),
+                             #(plotOutput(outputId = "individual_gene_tau_plot")),
                              # Plot Tau Table
-                             fluidRow(
-                                 column(12, "",
-                                        fixedRow(
-                                            column(6,
-                                                   p("TAU Data (GEUVADIS lymphoblast)", style = "font-size:16px"),
-                                                   (downloadButton("table1_download", "Download TAU Data")),
-                                                   br(),
-                                                   br(),
-                                                   (dataTableOutput(outputId = "gene_detail_table"))
-                                            )
-                                        )
-                                 )
-                             )
+                             #fluidRow(
+                             #    column(12, "",
+                             #           fixedRow(
+                             #               column(6,
+                             #                      p("TAU Data (GEUVADIS lymphoblast)", style = "font-size:16px"),
+                             #                      (downloadButton("table1_download", "Download TAU Data")),
+                             #                      br(),
+                             #                      br(),
+                             #                      (dataTableOutput(outputId = "gene_detail_table"))
+                             #               )
+                             #          )
+                             #    )
+                             #)
                          )
                      )
                  )

@@ -12,6 +12,8 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+<br />
+
 **X Chromosome Inactivation (XCI)**: The epigenetic process which silences one X chromosome in females\
 to achieve gene dosage balance between males and females. [1]
 
@@ -79,7 +81,7 @@ set of cells.
 ![X Chromosomes](images/XCI-images/Slide5.png){width=12%}\
 ***Figure 3c: Skew Ratio 2.*** *All four samples have Xi assignment on Xm.*\
 *The resulting skew ratio is 0:100. This is a rare occurrence in nature,*\
-*and is often referred to has non-random assignment or a fully skewed individual. [3]*
+*and is often referred to has non-random assignment or fully skewed [3]*\
 
 <br />
 
