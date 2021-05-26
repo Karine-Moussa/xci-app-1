@@ -41,14 +41,9 @@ ui <- fluidPage(title = "XCI Data",
                     TAB2,
                     ## TAB 3: Glossary of Terms
                     tabPanel(title = "Terminology",
-                             strong("Will update...",style = "font-size:14px"),
-                             p("XCI: <define>"),
-                             img(src="demo1.png", height="100px"), br(),
-                             img(src="demo2.png", height="100px"), br(),br(),
-                             p("Tau: <define>"),
-                             img(src="demo3.png", height="100px"), br(),br(),
-                             p("Skew: <define>"),
-                             img(src="demo4.png", height="100px"),
+                             strong("In progress...",style = "font-size:14px"),
+                             includeHTML("terminology.html"),
+                             
                     ),
                     ## TAB 4: How To Page
                     tabPanel(title = "How To",
