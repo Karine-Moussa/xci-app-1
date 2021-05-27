@@ -2,6 +2,16 @@
 
 *Latest Update*
 
+Updated terminology page.
+
+<img width="1016" alt="image" src="https://user-images.githubusercontent.com/71516524/119851489-6e725000-bedc-11eb-9153-c4a7e902b10f.png">
+
+
+<img width="1292" alt="image" src="https://user-images.githubusercontent.com/71516524/119851524-77632180-bedc-11eb-8e72-5f57b410ebab.png">
+
+
+*Previous Update*
+
 Added manual upload feature
 
 TAB1\
@@ -9,10 +19,3 @@ TAB1\
 
 TAB2\
 <img width="1115" alt="Screen Shot 2021-05-25 at 2 50 23 PM" src="https://user-images.githubusercontent.com/71516524/119552431-980a6a80-bd68-11eb-8d1a-ece0630602f9.png">
-
-
-*Previous Update*
-
-Updated UI (tab 2) so that GEUVADIS isn't the main focus. 
-
-<img width="1309" alt="image" src="https://user-images.githubusercontent.com/71516524/119165834-ec8dad00-ba2b-11eb-9078-59038d13cc93.png">

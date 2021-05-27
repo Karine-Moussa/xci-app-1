@@ -10,7 +10,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                        "MANUAL UPLOAD" = "study0",
                                        "GEUVADIS: lymphoblast" = "study1",
                                        "GTEx Tukiainen et al: multi-tissue" = "study6",
-                                       "Cotton et al: multi-tissue" = "study2",
+                                       "Cotton et al: lymphoblast & fibroblast" = "study2",
                                        "Carrel + Willard: hybrid fibroblast" = "study3",
                                        "Katsir + Linial: scRNA-seq lymphoblast" = "study4",
                                        "Katsir + Linial: scRNA-seq fibroblast" = "study5"
@@ -175,10 +175,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          # Display the chromosome (image) if study is not selected
                          conditionalPanel(
                              condition = "input.addStudies == 'empty'",
-                             fluidRow(
-                                 column(4, offset = 1,
-                                        img(src = "x-chrom-img.png", width = "750px"))
-                             ),
+                             img(src = "x-chrom-img.png", width = "750px"),
                          ),
                          # Display the chromosome (graph) if study is selected
                          conditionalPanel(
@@ -232,6 +229,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              p("", style = "font-size:14px"),
                                              p("GEUVADIS lymphoblast  ", style = "font-size:18px", 
                                                downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
+                                             p("Sauteraud et al. (manuscript in preparation 2021)", style = "font-size:14px"),
+                                             #p(span(a("doi.org/____", href="https://doi.org/____", target="_blank",)), style = "font-size:14px"),
                                              checkboxInput("states_filter_study1", 
                                                            "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
                                                            value = TRUE),
@@ -256,9 +255,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'study2'",
                                              p("", style = "font-size:14px"),
-                                             p("Cotton et al: multi-tissue (n=27 tissues)", style = "font-size:18px", 
+                                             p("Cotton et al: lymphoblast & fibroblast (n=27 tissues)", style = "font-size:18px", 
                                                downloadLink('download_states_study2','[download table]', style = "font-size:14px")),
-                                             p(span(a("doi.org/10.1093/hmg/ddu564", href="https://doi.org/10.1093/hmg/ddu564", target="_blank",)), style = "font-size:14px"),
+                                             p(span(a("doi.org/10.1186/gb-2013-14-11-r122", href="https://doi.org/10.1186/gb-2013-14-11-r122", target="_blank",)), style = "font-size:14px"),
                                              p("Escape states obtained from Suppl.Table.1 of ", span(a("doi.org/10.1038/nature24265", href="https://doi.org/10.1038/nature24265", target="_blank",)), style = "font-size:14px"),
                                              checkboxInput("states_filter_study2", 
                                                            "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 

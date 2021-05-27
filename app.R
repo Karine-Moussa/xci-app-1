@@ -21,7 +21,7 @@ library(data.table, warn.conflicts = FALSE)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
-publication_date <- "2021-05-25 14:51:20 EDT" # Sys.time()
+publication_date <- "2021-05-27 11:13:39 EDT" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -562,7 +562,7 @@ server <- function(input, output, session) {
   output$table1_download <- downloadHandler(
     filename =  function(){
       # Name of created file
-      paste(rv$geneofinterest1, "_tau_table.csv", sep = "")
+      paste(rv$geneofinterest3, "_tau_table.csv", sep = "")
     },
     content = function(file){
       # Get the data source

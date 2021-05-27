@@ -30,8 +30,8 @@ TAB3 <- tabPanel(title = "Terminology",
                          column(12, "",
                                 fixedRow(
                                     column(8,
-                                           conditionalPanel(
-                                               conditon = "input.geneofinterest3 != ''",
+                                           conditionalPanel( # This condition isn't functioning
+                                               conditon = "output.geneTableStatus3",
                                                p("TAU Data (GEUVADIS lymphoblast)", style = "font-size:16px"),
                                                (downloadButton("table1_download", "Download TAU Data")),
                                                br(),
@@ -40,8 +40,10 @@ TAB3 <- tabPanel(title = "Terminology",
                                            )
                                     )
                                 )
-                         )
+                         ),
+                         br(), br(),
+                         includeHTML("citations.html"),
                      )
                      
-                 )
+                 ),
 )

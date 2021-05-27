@@ -29,7 +29,9 @@ to achieve gene dosage balance between males and females. [1]
 ![X Chromosomes](images/XCI-images/Slide3.png){width=12%}
 ![X Chromosomes](images/XCI-images/Slide4.png){width=12%}\
 
-***Figure 1: The paternally inherited (Xp) chromosome in and the maternally***\ ***inherited chromosome (Xm).*** *The active chromosome Xa is represented with*\ *color filled in, while the inactive*\ *chromosome Xi is represented with no color fill.*\
+***Figure 1: The paternally inherited (Xp) chromosome in and the maternally***\
+***inherited chromosome (Xm).*** *The active chromosome Xa is represented with*\
+*color filled in, while the inactive chromosome Xi is represented with no color fill.*\
 
 <br />
 
@@ -58,8 +60,7 @@ cell. *Mosaicism* refers to the heterogeneity of Xa/Xi assignment among a set of
 <br />
 
 
-**Skew**: A ratio which represents the mosaicism of Xa/Xi assignment in a\
-set of cells.
+**Skew**: A ratio which represents the mosaicism of Xa/Xi assignment in a set of cells.
 
 ![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
 ![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
@@ -85,10 +86,11 @@ set of cells.
 
 <br />
 
-**Tau ($\tau$)**: The ratio of a gene's expression on Xi over its total expression across\
-both Xa and Xi. In allele specific expression (ASE) based methods for escape inference,\
-$\tau$ is compared to the skew ratio. Significant deviation of $\tau$ from the skew\ 
-ratio reflects biallelic expression and classifies a gene as escape.
+**%Xi or tau ($\tau$)**: The ratio of a gene's expression on Xi over its total expression across\
+both Xa and Xi, referred to as %Xi [4] or $\tau$ [5]. In allele specific expression (ASE)\
+based methods for escape inference, $\tau$ is compared to the skew ratio. Significant\
+deviation of $\tau$ from the skew ratio reflects biallelic expression and classifies a gene as\
+escape.
 
 $N=expression\ level$
 
@@ -101,15 +103,14 @@ $a=active\ x\ chromosome$
 $\tau = \frac{N_{ij}}{N_{aj} + N_{ij}}$
 
 *A note about skew: For ASE based methods, data sets with a higher skew ratio (such as 25:75)*\
-*are strengthened for estimating escape expression due to the lower Xi expression levels*\ 
+*are strengthened for estimating escape expression due to the lower Xi expression levels*\
 *required to infer significance.*   
 
-**Tau+ ($\tau$+)**: The $\tau$ values from the subset of XCI calls which were inferred from\
+**Tau+ ($\tau$+)**: The $\tau$ (or %Xi) values from the subset of XCI calls which were inferred from\
 samples which were sufficiently skewed (>25:75). This subset is a more robust estimate of\
-ASE and is strengthened for escape calling. 
+ASE and is strengthened for escape calling. [4] 
 
 <br />
 
-[1] LYON MF. Gene action in the X-chromosome of the mouse (Mus musculus L.). *Nature.* 1961;190:372-373. [doi:10.1038/190372a0](https://www.nature.com/articles/190372a0)\
-[2] Carrel L, Brown CJ. When the Lyon(ized chromosome) roars: ongoing expression from an inactive X chromosome. *Philos Trans R Soc Lond B Biol Sci.* 2017;372(1733):20160355. [doi:10.1098/rstb.2016.0355](https://royalsocietypublishing.org/doi/10.1098/rstb.2016.0355)\
-[3] Tukiainen T, Villani AC, Yen A, et al. Landscape of X chromosome inactivation across human tissues [published correction appears in *Nature.* 2018 Mar 7;555(7695):274]. *Nature.* 2017;550(7675):244-248. [doi:10.1038/nature24265](https://doi.org/10.1038/nature24265)
+<br />
+
