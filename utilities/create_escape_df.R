@@ -8,22 +8,6 @@ create_escape_df <- function(gene){
     #
     status = list()
     study = list()
-
-    # Study 1 (GEUVIDAS)
-    study_name <- "GEUVADIS (lymphoblast)"
-    ref_table <- x_expr_mod
-    query <- "status_adv"
-    # Check if gene is in the study
-    if(gene %in% study1_genes){
-        status_abr = unique(ref_table[ref_table$GENE==gene, query])
-        if(status_abr == "E"){status <- list.append(status,"escape")}
-        if(status_abr == "V"){status <- list.append(status,"variable")}
-        if(status_abr == "S"){status <- list.append(status,"inactive")}
-        if(length(status_abr) != 0){study <- list.append(study, study_name)}
-    } else {
-        status <- list.append("NA")
-        study <- list.append(study_name)
-    }
     
     # Study 0 (MANUAL study)
     study_name <- "UPLOADED STUDY"
@@ -40,6 +24,23 @@ create_escape_df <- function(gene){
     }
     status <- list.append(status, status_abr)
     study <- list.append(study, study_name)
+
+    # Study 1 (GEUVIDAS)
+    study_name <- "GEUVADIS (lymphoblast)"
+    ref_table <- x_expr_mod
+    query <- "status_adv"
+    # Check if gene is in the study
+    if(gene %in% study1_genes){
+        status_abr = unique(ref_table[ref_table$GENE==gene, query])
+        if(status_abr == "E"){status <- list.append(status,"escape")}
+        if(status_abr == "V"){status <- list.append(status,"variable")}
+        if(status_abr == "S"){status <- list.append(status,"inactive")}
+        if(length(status_abr) != 0){study <- list.append(study, study_name)}
+    } else {
+        status <- list.append(status, "NA")
+        study <- list.append(study, study_name)
+    }
+
         
     # Study 6 (GTEx) (very similar to Study1 format)
     study_name <- "GTEx (multi-tissue)"
