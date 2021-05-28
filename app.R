@@ -546,7 +546,7 @@ server <- function(input, output, session) {
       write.csv(mydata, file)
     }
   )
-  output$download_states_study3 <- downloadHandler( # same as cotton et al.
+  output$download_states_study3 <- downloadHandler( 
     filename =  function(){
       # Name of created file
       "carr_will_escape_states.csv"
@@ -554,6 +554,28 @@ server <- function(input, output, session) {
     content = function(file){
       # Get the data source
       mydata <- readRDS('data_output/carr_will_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_study4 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "katsir_linial_lymphoblast_xstates.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/katsir_linial_lymphoblast_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_study5 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "katsir_linial_fibroblast_xstates.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/katsir_linial_fibroblast_xstates.rds')
       write.csv(mydata, file)
     }
   )
