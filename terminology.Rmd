@@ -80,7 +80,7 @@ cell. *Mosaicism* refers to the heterogeneity of Xa/Xi assignment among a set of
 ![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
 ![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
 ![X Chromosomes](images/XCI-images/Slide5.png){width=12%}\
-***Figure 3c: Skew Ratio 2.*** *All four samples have Xi assignment on Xm.*\
+***Figure 3c: Skew Ratio 3.*** *All four samples have Xi assignment on Xm.*\
 *The resulting skew ratio is 0:100. This is a rare occurrence in nature,*\
 *and is often referred to has non-random assignment or fully skewed [3]*\
 

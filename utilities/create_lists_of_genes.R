@@ -4,11 +4,12 @@
 
 # Get x genes from biomart
 #library(biomaRt)
-mart <- useMart(biomart="ensembl", dataset="hsapiens_gene_ensembl")
-results <- getBM(attributes = c("chromosome_name", "hgnc_symbol"),
-                 filters = "chromosome_name", values = "X", mart = mart)
-Xgenes <- results$hgnc_symbol[results$hgnc_symbol != ""]
-rm(mart, results)
+#mart <- useMart(biomart="ensembl", dataset="hsapiens_gene_ensembl")
+#results <- getBM(attributes = c("chromosome_name", "hgnc_symbol"),
+#                 filters = "chromosome_name", values = "X", mart = mart)
+#Xgenes <- results$hgnc_symbol[results$hgnc_symbol != ""]
+#rm(mart, results)
+Xgenes <- readRDS("rds/Xgenes.rds")
 
 # Get study genes
 study1_genes <- unique(x_expr_mod$GENE)
@@ -23,7 +24,7 @@ all_genes <- unique(c(Xgenes, study1_genes, study2_genes, study3_genes,
                     study4_genes, study5_genes, study6_genes))
 
 # Save rds 
-saveRDS(Xgenes, "rds/Xgenes.rds")
+#saveRDS(Xgenes, "rds/Xgenes.rds")
 saveRDS(study1_genes, "rds/study1_genes.rds")
 saveRDS(study2_genes, "rds/study2_genes.rds")
 saveRDS(study3_genes, "rds/study3_genes.rds")
