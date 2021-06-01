@@ -32,22 +32,6 @@ meritetal_suppl_table_3_top30 <- read_excel(path, sheet = "Top30_autosomal_predi
 meritetal_suppl_table_3_top100 <- read_excel(path, sheet = "Top100_autosomal_predictive_acr")
 rm(path)
 
-## Nelson et al associations (incorporates GWAS, OMIM, GWASCentral, dbGaP)
-NELSON_ASSOCIATIONS_1 <- read.delim("resources_studies/Nelsonetal2015/nelson_supp_dataset1",header=T,sep="\t",na.strings="?")
-df <- data.frame(GWAS_NAME = tolower(pheno_conv_NELSON1_list$`DISEASE/TRAIT`),
-                 UKBIO_NAME = tolower(pheno_conv_NELSON1_list$UKBIO))
-cols <- c("NELS1_NAME","UKBIO_NAME")
-colnames(df) <- cols
-LIST_OF_TRAITS_NELSON_1<- df
-rm(df)
-NELSON_ASSOCIATIONS_2 <- read.delim("resources_studies/Nelsonetal2015/nelson_supp_dataset2",header=T,sep="\t",na.strings="?")
-df <- data.frame(GWAS_NAME = tolower(pheno_conv_NELSON2_list$`DISEASE/TRAIT`),
-                 UKBIO_NAME = tolower(pheno_conv_NELSON2_list$UKBIO))
-cols <- c("NELS2_NAME","UKBIO_NAME")
-colnames(df) <- cols
-LIST_OF_TRAITS_NELSON_2 <- df
-rm(cols, df)
-
 # Katsir + Linial 2019 scRNA-seq study
 path <- "resources_studies/KatsirLinial2019/table_s3_mod.xlsx"
 katsir_linail_s3 <- read_excel(path, sheet = "ChrX")
@@ -248,10 +232,6 @@ kat_lin_df_lb <- subset(kat_lin_df, snp_lb != "NA")
 rm(col_check, col_escape, col_variable, col_inactive, col_na)
 
 # Save as RDS for easy compiling
-saveRDS(NELSON_ASSOCIATIONS_1, "rds/NELSON_ASSOCIATIONS_1.rds")
-saveRDS(NELSON_ASSOCIATIONS_2, "rds/NELSON_ASSOCIATIONS_2.rds")
-saveRDS(LIST_OF_TRAITS_NELSON_1, "rds/LIST_OF_TRAITS_NELSON_1.rds")
-saveRDS(LIST_OF_TRAITS_NELSON_2, "rds/LIST_OF_TRAITS_NELSON_2.rds")
 saveRDS(MANUAL_STUDIES, "rds/MANUAL_STUDIES.rds")
 saveRDS(cott_carr_will_df, "rds/cott_carr_will_df.rds")
 saveRDS(kat_lin_df, "rds/kat_lin_df.rds")

@@ -13,14 +13,10 @@ create_single_trait_stats <- function(trait)
     trait_gwas2ukbio = unique(tolower(unique(GWAS_UKBIO_MAPPING[tolower(GWAS_TRAIT) == trait, 
                                                                 c(`ZOOMA QUERY`)])))
     ifelse(identical(trait_gwas2ukbio, "character(0)"), trait_gwas2ukbio <- "N/A","")
-    trait_nels2ukbio = LIST_OF_TRAITS_NELSON_2[grepl(tolower(paste0("^",trait_no_parenthesis,"$")), 
-                                                   gsub('\\(|\\)',"", tolower(LIST_OF_TRAITS_NELSON_2$NELS2_NAME))) & 
-                                                 !is.na(LIST_OF_TRAITS_NELSON_2$UKBIO_NAME), 'UKBIO_NAME']
     trait_ukbio <- trait_gwas2ukbio
     if(length(trait_ukbio) == 0){
       trait_ukbio = ""
     }
-  #  ifelse(!identical(trait_nels2ukbio, "character(0)"), trait_ukbio <- trait_nels2ukbio, trait_ukbio <- "")
     # Manual exceptions
     if (trait == "systemic lupus erythematosus"){
         trait_ukbio <- "systemic lupus erythematosis/sle"
@@ -33,7 +29,6 @@ create_single_trait_stats <- function(trait)
         stat <- get_ukbiobank_information(t)
         ukbio_stats <- rbind(ukbio_stats, stat)
     }
-   # ukbio_stats <- get_ukbiobank_information(trait_ukbio)
     #### Assign attributes to trait
     assign(paste0(trait, "_stats"),
            # Add any attributes of interest to this list
@@ -50,7 +45,6 @@ create_single_trait_stats <- function(trait)
                ratio = ukbio_stats$ratio,
                bias = ukbio_stats$bias,
                # GWAS to UKBIO stats
-             #  trait_gwas2ukbio = trait_gwas2ukbio,
                trait_gwas2ukbio = trait_gwas2ukbio,
                case_female_gwas2ukbio = ukbio_stats$case_female,
                case_male_gwas2ukbio = ukbio_stats$case_male,

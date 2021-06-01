@@ -10,8 +10,6 @@ x_expr_tauplus <- x_expr[x_expr$f < 0.25,]  # only data with strong skew values
 pheno_path <- "data_intermediate/diseasetrait_naming_conversion.xlsx"
 pheno_conv_UKBIO_list <- read_excel(pheno_path, sheet = "UKBIO_list")
 pheno_conv_GWAS_list <- read_excel(pheno_path, sheet = "GWAS_list")
-pheno_conv_NELSON1_list <- read_excel(pheno_path, sheet = "NELSON1_list")
-pheno_conv_NELSON2_list <- read_excel(pheno_path, sheet = "NELSON2_list")
 rm(pheno_path)
 
 ## GWAS associations
@@ -42,8 +40,6 @@ saveRDS(x_expr, "rds/x_expr.rds")
 saveRDS(x_expr_tauplus, "rds/x_expr_tauplus.rds")
 saveRDS(pheno_conv_UKBIO_list, "rds/pheno_conv_UKBIO_list.rds")
 saveRDS(pheno_conv_GWAS_list, "rds/pheno_conv_GWAS_list.rds")
-saveRDS(pheno_conv_NELSON1_list, "rds/pheno_conv_NELSON1_list.rds")
-saveRDS(pheno_conv_NELSON2_list, "rds/pheno_conv_NELSON2_list.rds")
 saveRDS(GWAS_ASSOCIATIONS, "rds/GWAS_ASSOCIATIONS.rds")
 saveRDS(LIST_OF_TRAITS_GWAS, "rds/LIST_OF_TRAITS_GWAS.rds")
 saveRDS(PHENO_RATES_UKBIO, "rds/PHENO_RATES_UKBIO.rds")
@@ -51,9 +47,10 @@ saveRDS(LIST_OF_TRAITS_UKBIO, "rds/LIST_OF_TRAITS_UKBIO.rds")
 saveRDS(GWAS_UKBIO_MAPPING, "rds/GWAS_UKBIO_MAPPING.rds")
 saveRDS(xchrom_map_colored, "rds/xchrom_map_colored.rds")
 saveRDS(gene_stat_table, "rds/gene_stat_table.rds")
+
+# Remove variables
 #rm(x_expr, x_expr_tauplus, pheno_conv_UKBIO_list,
-#   pheno_conv_GWAS_list, pheno_conv_NELSON1_list,
-#   pheno_conv_NELSON2_list, GWAS_ASSOCIATIONS,
+#   pheno_conv_GWAS_list, GWAS_ASSOCIATIONS,
 #   LIST_OF_TRAITS_GWAS, PHENO_RATES_UKBIO,
 #   LIST_OF_TRAITS_UKBIO, GWAS_UKBIO_MAPPING,
 #   xchrom_map_colored, gene_stat_table)
