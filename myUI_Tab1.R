@@ -19,6 +19,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          # Display options if manual upload is selected
                          conditionalPanel(
                              condition = "input.addStudies == 'study0'",
+                             strong(a('(Tutorial)', href = "terminology.html", target="_blank", style = "font-size:14px")),
                              h4("1. CREATE A TEMPLATE"),
                              # Input: Select separator ----
                              radioButtons("template", "Template Type",
@@ -132,6 +133,10 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study1' || input.addStudies == 'study6' || output.plotStudy0",
+                             p("", "font-size:8px"),
+                             strong("Escape Thresholds ", style = "font-size:16px",
+                               a('(?)', href = "terminology.html", target="_blank", style = "font-size:14px")
+                               ),
                              sliderInput(inputId = "slider1", 
                                          label = "Choose an escape frequency for the [inactive | variable] threshold", 
                                          value = SV_threshold, min = 0.1, max = 0.75),
@@ -314,7 +319,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          # Only show this panel if the we're looking at genes or diseases 
                                          conditionalPanel(
                                              condition = "output.geneTableStatus1",
-                                             strong("GWAS Catalog Search (Gene)", style = "font-size:16px"),
+                                             strong("GWAS Catalog Search", style = "font-size:16px",
+                                                    a('(?)', href = "terminology.html", target="_blank", style = "font-size:14px")
+                                                    ),
                                              p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                              withSpinner(dataTableOutput(outputId = "gene_gwas_data"), type = 1)
                                          ),

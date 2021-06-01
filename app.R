@@ -603,37 +603,9 @@ server <- function(input, output, session) {
     if(rv$study0_flag == FALSE){
       df <- input_df
       colnames(df) <- c("gene", colnames(df)[2:length(colnames(df))]) # fix first col name
+      saveRDS(df, "data_output/uploaded_study_escape_states.rds")
       df
     } else {
-    # Before the submit button is hit, df will just be
-    # the input df
-    #if(rv$study0_flag == FALSE){
-    #  df <- input_df
-    #  colnames(df) <- c("gene", colnames(df)[2:length(colnames(df))]) # fix first col name
-    #  df
-    #} else { # if study0_flag == TRUE:
-      # TEMPLATE 1
-      #if(input$template == 1){
-      #  df <- data.frame("gene" = rv$study0_df[,1],
-      #                   "tiss_samp_state" = rv$study0_df[,2],
-      #                   check.names = FALSE)
-      #}
-      # TEMPLATE 2
-      #if(input$template == 2){
-      #  df <- data.frame("gene" = rv$study0_df[,1],
-      #                   "start" = rv$study0_df[,2],
-      #                   "tiss_samp_state" = rv$study0_df[,3],
-      #                   check.names = FALSE)
-      #} 
-      # TEMPLATE 3
-      #if(input$template == 3){
-      #  df <- data.frame("gene" = rv$study0_df[,1],
-      #                   "start" = rv$study0_df[,2],
-      #                   "tiss_samp" = rv$study0_df[,3],
-      #                   "tiss_samp_state" = rv$study0_df[,4],
-      #                   check.names = FALSE)
-      #}
-      # ALL TEMPLATES
       # Calculate escape freq 
       df <- input_df
       colnames(df) <- c("gene", colnames(df)[2:length(colnames(df))]) # fix first col name
