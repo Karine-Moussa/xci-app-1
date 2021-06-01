@@ -1,0 +1,21 @@
+---
+output:
+  html_document: default
+---
+<style type="text/css">
+  body{
+  font-size: 12pt;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<br />
+
+**TITLE**
+
+words
+
+![X Chromosomes](../images/XCI-images/Slide2.png){width=20%}\

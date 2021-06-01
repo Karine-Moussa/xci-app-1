@@ -1,5 +1,5 @@
 TAB3 <- tabPanel(title = "Terminology",
-                 includeHTML("www/terminology.html"),
+                 includeHTML("terminology.html"),
                  sidebarPanel(
                      h3("Observing TAU and TAU+ in GEUVADIS data set"),
                      selectizeInput("geneofinterest3", "Gene of Interest:", c("", study1_genes), multiple = FALSE),
@@ -42,7 +42,7 @@ TAB3 <- tabPanel(title = "Terminology",
                                 )
                          ),
                          br(), br(),
-                         includeHTML("www/citations.html"),
+                         includeHTML("citations.html"),
                      )
                      
                  ),

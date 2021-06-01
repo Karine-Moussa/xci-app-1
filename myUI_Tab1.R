@@ -19,7 +19,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          # Display options if manual upload is selected
                          conditionalPanel(
                              condition = "input.addStudies == 'study0'",
-                             strong(a('(Tutorial)', href = "terminology.html", target="_blank", style = "font-size:14px")),
+                             strong(a('(Tutorial)', href = "tutorial.html", target="_blank", style = "font-size:14px")),
                              h4("1. CREATE A TEMPLATE"),
                              # Input: Select separator ----
                              radioButtons("template", "Template Type",
@@ -133,7 +133,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study1' || input.addStudies == 'study6' || output.plotStudy0",
-                             p("", "font-size:8px"),
+                             p("", style = "font-size:8px"),
                              strong("Escape Thresholds ", style = "font-size:16px",
                                a('(?)', href = "terminology.html", target="_blank", style = "font-size:14px")
                                ),
