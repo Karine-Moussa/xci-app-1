@@ -19,23 +19,34 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          # Display options if manual upload is selected
                          conditionalPanel(
                              condition = "input.addStudies == 'study0'",
-                             # Input: Select a file ----
-                             fileInput("file1", "Choose CSV File",
-                                       multiple = TRUE,
-                                       accept = c("text/csv",
-                                                  "text/comma-separated-values,text/plain",
-                                                  ".csv")),
+                             h4("1. CREATE A TEMPLATE"),
                              # Input: Select separator ----
                              radioButtons("template", "Template Type",
-                                          choices = c("Template 1 (gene, start, state)" = 1,
-                                                      "Template 2 (gene, start, sample, sample_state)" = 2),
-                                          selected = 1),
+                                          choices = c("Template 1 (gene, state)" = 1,
+                                                      "Template 2 (gene, state, tiss_samp)" = 2),
+                             selected = 1),
+                             # Input: Check box -------
+                             checkboxInput("includes_start", 
+                                           "Include 'start' position", 
+                                           value = TRUE),
                              # Input: Select separator ----
                              #radioButtons("sep", "Separator",
                              #             choices = c(Comma = ",",
                              #                         Tab = "\t"),
                              #             selected = ","),
-                             actionButton("submitButton1", "Submit Uploaded Study"),
+                             # Download Template ------
+                             (downloadButton("template_download", "Download Template")),
+                             br(), br(),
+                             # Input: Select a file ----
+                             h4("2. UPLOAD DATA SET"),
+                             fileInput("file1", "Choose CSV File",
+                                       multiple = TRUE,
+                                       accept = c("text/csv",
+                                                  "text/comma-separated-values,text/plain",
+                                                  ".csv")),
+                             # Submit File Upload ------
+                             h4("3. SUBMIT"),
+                             actionButton("submitButton1", "Submit Uploaded Data Set"),
                              # Line Break: -------
                              tags$hr(),
                              # Download templates: --------
@@ -127,16 +138,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              sliderInput(inputId = "slider2", 
                                          label = "Choose an escape frequency for the [variable | escape] threshold", 
                                          value = VE_threshold, min = 0.25, max = 0.99),
-                             tags$hr(),
-                         ),
-                         conditionalPanel( # this used to be right after tags$hr()
-                             condition = "input.addStudies == 'study0'",
-                             strong("Download Templates"), br(),
-                             downloadLink('download_template_1', 'Download Template 1', style = "font-size:14px"), br(),
-                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_1', 'Download Example 1', style = "font-size:12px")), br(),
-                             downloadLink('download_template_2', 'Download Template 2', style = "font-size:14px"), br(),
-                             a(paste0(intToUtf8(8194), intToUtf8(8194), " "), downloadLink('download_example_2', 'Download Example 2', style = "font-size:12px")), br(),
-                             # Line Break: -------
                              tags$hr(),
                          ),
                          br(),

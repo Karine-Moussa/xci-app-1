@@ -14,6 +14,7 @@ source("utilities/create_association_df.R", local = TRUE)
 source("utilities/create_trait_objects.R", local = TRUE)
 source("utilities/create_gene_objects.R", local = TRUE)
 source("utilities/create_escape_df.R", local = TRUE)
+source("utilities/create_template.R", local = TRUE)
 
 # Extras
 source("utilities/create_study0_df.R", local = TRUE)
