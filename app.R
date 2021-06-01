@@ -956,18 +956,13 @@ server <- function(input, output, session) {
     }
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
-    mapped_genes_nels <- c()
     for(d in diseaseofinterest){
       mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
-      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
       if(!identical(mg_gwas, character(0))){
         ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
       }
-      if(!identical(mg_nels, character(0))){
-        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      }
     }
-    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    mapped_genes <- unique(mapped_genes_gwas)
     returned_genes_list <- c()
     returned_genes <- for(gene in study0_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -1039,18 +1034,13 @@ server <- function(input, output, session) {
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start),]
     # Create disease of interest data frame subsetting x_expr_mod data
     mapped_genes_gwas <- c()
-    mapped_genes_nels <- c()
     for(d in diseaseofinterest){
       mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
-      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
       if(!identical(mg_gwas, character(0))){
         ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
       }
-      if(!identical(mg_nels, character(0))){
-        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      }
     }
-    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    mapped_genes <- unique(mapped_genes_gwas)
     returned_genes_list <- c()
     returned_genes <- for(gene in study1_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -1210,18 +1200,13 @@ server <- function(input, output, session) {
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
-    mapped_genes_nels <- c()
     for(d in diseaseofinterest){
       mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
-      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
       if(!identical(mg_gwas, character(0))){
         ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
       }
-      if(!identical(mg_nels, character(0))){
-        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      }
     }
-    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    mapped_genes <- unique(mapped_genes_gwas)
     returned_genes_list <- c()
     returned_genes <- for(gene in study2_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -1291,18 +1276,13 @@ server <- function(input, output, session) {
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
-    mapped_genes_nels <- c()
     for(d in diseaseofinterest){
       mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
-      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
       if(!identical(mg_gwas, character(0))){
         ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
       }
-      if(!identical(mg_nels, character(0))){
-        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      }
     }
-    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    mapped_genes <- unique(mapped_genes_gwas)
     returned_genes_list <- c()
     returned_genes <- for(gene in study3_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -1371,18 +1351,13 @@ server <- function(input, output, session) {
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
-    mapped_genes_nels <- c()
     for(d in diseaseofinterest){
       mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
-      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
       if(!identical(mg_gwas, character(0))){
         ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
       }
-      if(!identical(mg_nels, character(0))){
-        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      }
     }
-    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    mapped_genes <- unique(mapped_genes_gwas)
     returned_genes_list <- c()
     returned_genes <- for(gene in study4_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -1451,18 +1426,13 @@ server <- function(input, output, session) {
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
-    mapped_genes_nels <- c()
     for(d in diseaseofinterest){
       mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
-      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
       if(!identical(mg_gwas, character(0))){
         ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
       }
-      if(!identical(mg_nels, character(0))){
-        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      }
     }
-    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    mapped_genes <- unique(mapped_genes_gwas)
     returned_genes_list <- c()
     returned_genes <- for(gene in study5_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
@@ -1534,18 +1504,13 @@ server <- function(input, output, session) {
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$`Pos clean`),]
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
-    mapped_genes_nels <- c()
     for(d in diseaseofinterest){
       mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
-      mg_nels <- NELSON_ASSOCIATIONS_2[tolower(NELSON_ASSOCIATIONS_2$MSH) == d,'Gene']
       if(!identical(mg_gwas, character(0))){
         ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
       }
-      if(!identical(mg_nels, character(0))){
-        ifelse(is.null(mapped_genes_nels), mapped_genes_nels <- mg_nels, mapped_genes_nels <- c(mapped_genes_nels, mg_nels))
-      }
     }
-    mapped_genes <- unique(c(mapped_genes_gwas, mapped_genes_nels))
+    mapped_genes <- unique(mapped_genes_gwas)
     returned_genes_list <- c()
     returned_genes <- for(gene in study6_genes){
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
