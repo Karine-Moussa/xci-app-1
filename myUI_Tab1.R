@@ -135,7 +135,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              condition = "input.addStudies == 'study1' || input.addStudies == 'study6' || output.plotStudy0",
                              p("", style = "font-size:8px"),
                              strong("Escape Thresholds ", style = "font-size:16px",
-                               a('(?)', href = "terminology.html", target="_blank", style = "font-size:14px")
+                               a('(?)', href = "Tutorial-Sliders.pdf", target="_blank", style = "font-size:14px")
                                ),
                              sliderInput(inputId = "slider1", 
                                          label = "Choose an escape frequency for the [inactive | variable] threshold", 
@@ -320,7 +320,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel(
                                              condition = "output.geneTableStatus1",
                                              strong("GWAS Catalog Search", style = "font-size:16px",
-                                                    a('(?)', href = "terminology.html", target="_blank", style = "font-size:14px")
+                                                    a('(?)', href = "Tutorial-GWAS.pdf", target="_blank", style = "font-size:14px")
                                                     ),
                                              p(span(a("Searching \"All Assocations v1.02\"", href="https://www.ebi.ac.uk/gwas/docs/file-downloads", target="_blank",)), style = "font-size:14px"),
                                              withSpinner(dataTableOutput(outputId = "gene_gwas_data"), type = 1)
