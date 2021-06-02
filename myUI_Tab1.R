@@ -185,7 +185,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          # Display the chromosome (graph) if study is selected
                          conditionalPanel(
-                             condition = "input.addStudies != 'empty'",
+                             condition = "input.addStudies != 'empty' || output.plotStudy0",
                              withSpinner(plotOutput(outputId = "xchromosome", height = "100px"), type = 1, size = 1)
                          ),
                          # LEGENDS

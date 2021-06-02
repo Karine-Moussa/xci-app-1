@@ -21,7 +21,7 @@ library(data.table, warn.conflicts = FALSE)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
-publication_date <- "2021-05-27 11:13:39 EDT" # Sys.time()
+publication_date <- "2021-06-02 12:10:34 EDT" # Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -941,7 +941,9 @@ server <- function(input, output, session) {
     }
     rv$returned_genes_list <- returned_genes_list
     disease_geneofinterest_df <- study0_df[study0_genes %in% returned_genes_list,]
-    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    if("start" %in% colnames(study0_df)){
+      disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    }
     # Get Range of plot
     ymin = 0
     ymax = 10
