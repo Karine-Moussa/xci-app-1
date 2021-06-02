@@ -16,43 +16,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                        "Katsir + Linial: scRNA-seq fibroblast" = "study5"
                                        )
                          ),
-                         # Display options if manual upload is selected
-                         conditionalPanel(
-                             condition = "input.addStudies == 'study0'",
-                             strong(a('(Tutorial)', href = "tutorial-upload.pdf", target="_blank", style = "font-size:14px")),
-                             h4("1. CREATE A TEMPLATE"),
-                             # Input: Select separator ----
-                             radioButtons("template", "Template Type",
-                                          choices = c("Template 1 (gene, state)" = 1,
-                                                      "Template 2 (gene, state, tiss_samp)" = 2),
-                             selected = 1),
-                             # Input: Check box -------
-                             checkboxInput("includes_start", 
-                                           "Include 'start' position", 
-                                           value = TRUE),
-                             # Input: Select separator ----
-                             #radioButtons("sep", "Separator",
-                             #             choices = c(Comma = ",",
-                             #                         Tab = "\t"),
-                             #             selected = ","),
-                             # Download Template ------
-                             (downloadButton("template_download", "Download Template")),
-                             br(), br(),
-                             # Input: Select a file ----
-                             h4("2. UPLOAD DATA SET"),
-                             fileInput("file1", "Choose CSV File",
-                                       multiple = TRUE,
-                                       accept = c("text/csv",
-                                                  "text/comma-separated-values,text/plain",
-                                                  ".csv")),
-                             # Submit File Upload ------
-                             h4("3. SUBMIT"),
-                             actionButton("submitButton1", "Submit Uploaded Data Set"),
-                             # Line Break: -------
-                             tags$hr(),
-                             # Download templates: --------
-                             # This was moved to below  input.slider1
-                         ),
                          # Only display SearchType if a study is selected
                          conditionalPanel(
                              condition = "input.addStudies != 'empty' & input.addStudies != 'study0' || output.plotStudy0",
@@ -62,7 +25,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              # Conditional panels within a conditional panel
                              # Gene search if the SearchType box exists
                              # (there is a conditional panel for each study)
-                             
                              # study 0
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & output.plotStudy0",
@@ -144,6 +106,43 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          label = "Choose an escape frequency for the [variable | escape] threshold", 
                                          value = VE_threshold, min = 0.25, max = 0.99),
                              tags$hr(),
+                         ),
+                         # Display options if manual upload is selected
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study0'",
+                             strong(a('(Tutorial)', href = "tutorial-upload.pdf", target="_blank", style = "font-size:14px")),
+                             h4("1. CREATE A TEMPLATE"),
+                             # Input: Select separator ----
+                             radioButtons("template", "Template Type",
+                                          choices = c("Template 1 (gene, state)" = 1,
+                                                      "Template 2 (gene, state, tiss_samp)" = 2),
+                                          selected = 1),
+                             # Input: Check box -------
+                             checkboxInput("includes_start", 
+                                           "Include 'start' position", 
+                                           value = TRUE),
+                             # Input: Select separator ----
+                             #radioButtons("sep", "Separator",
+                             #             choices = c(Comma = ",",
+                             #                         Tab = "\t"),
+                             #             selected = ","),
+                             # Download Template ------
+                             (downloadButton("template_download", "Download Template")),
+                             br(), br(),
+                             # Input: Select a file ----
+                             h4("2. UPLOAD DATA SET"),
+                             fileInput("file1", "Choose CSV File",
+                                       multiple = TRUE,
+                                       accept = c("text/csv",
+                                                  "text/comma-separated-values,text/plain",
+                                                  ".csv")),
+                             # Submit File Upload ------
+                             h4("3. SUBMIT"),
+                             actionButton("submitButton1", "Submit Uploaded Data Set"),
+                             # Line Break: -------
+                             tags$hr(),
+                             # Download templates: --------
+                             # This was moved to below  input.slider1
                          ),
                          br(),
                          em(paste("Last published:", publication_date), style = "font-size:12px;color:grey")
