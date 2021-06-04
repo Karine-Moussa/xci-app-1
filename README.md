@@ -2,7 +2,7 @@
 
 *Latest Update*
 
-Added informational popouts for several features. 
+Added informational popouts for several features. Also fixed labelings for diseases.
 
 <img width="363" alt="image" src="https://user-images.githubusercontent.com/71516524/120514417-429f1080-c39b-11eb-86b7-7659f9376dfd.png">
 
