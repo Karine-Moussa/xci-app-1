@@ -110,7 +110,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          # Display options if manual upload is selected
                          conditionalPanel(
                              condition = "input.addStudies == 'study0'",
-                             strong(a('(Tutorial)', href = "tutorial-upload.pdf", target="_blank", style = "font-size:14px")),
+                             strong(a('(Tutorial)', href = "Tutorial-upload.pdf", target="_blank", style = "font-size:14px")),
                              h4("1. CREATE A TEMPLATE"),
                              # Input: Select separator ----
                              radioButtons("template", "Template Type",
