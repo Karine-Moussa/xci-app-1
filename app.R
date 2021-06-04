@@ -1022,10 +1022,12 @@ server <- function(input, output, session) {
     rv$returned_genes_list <- returned_genes_list
     returned_genes_list_length <- (length(returned_genes_list)) # use this to set up graph dimensions
     disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% returned_genes_list,]
-    ##### Create the y-positions for the disease/gene annotations:
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
+    ##### Create the x-positions for the disease/gene annotations:
     unique_disease_x_positions <- unique(disease_geneofinterest_df$start)
     unique_gene_x_positions <- unique(geneofinterest_df$start)
-    ##### First get a vector of single unique positions
+    ##### Create the x-positions for the disease/gene annotations:
+    # First get a vector of single unique positions
     y_disease_annot_unique <- c(rep(0,returned_genes_list_length))
     y_gene_annot_unique <- c(rep(0,length(geneofinterest)))
     for(i in 2:(length(unique_disease_x_positions))){
@@ -1113,20 +1115,7 @@ server <- function(input, output, session) {
                 fill="lightblue", alpha=0.25) +
       geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330),
                 fill="pink", alpha=0.25)
-    # Main Data Points
-    #genepvalue_1 <- genepvalue_1 +
-      #geom_point(fill = p_less_300$BandColor, size = 2) +
-      #geom_point(p_more_300, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-      #           fill=p_more_300$BandColor, size=2, group=3) +
-      # Data points below significance
-      #geom_point(p_less_300[p_less_300$p_value_mod > P_SIG,],
-      #           mapping=aes(x=p_less_300[p_less_300$p_value_mod > P_SIG, 'start'],
-      #                       y=-log10(p_less_300[p_less_300$p_value_mod > P_SIG, 'p_value_mod']),
-      #                       shape=p_less_300[p_less_300$p_value_mod > P_SIG, 'p_mod_flag']),
-      #           fill=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
-      #           color=p_less_300[p_less_300$p_value_mod > P_SIG, 'BandColor'],
-      #           size=2, group=4)
-      # Scaling and Legends
+    # Scaling and Legends
     genepvalue_1 <- genepvalue_1 +
       scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
       scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) +
