@@ -28,6 +28,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              # study 0
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & output.plotStudy0",
+                                 #selectizeInput("geneofinterest1_0", "Gene of Interest:", c("MECP2,"ASMTL"), multiple = TRUE), # need to update
                                  selectizeInput("geneofinterest1_0", "Gene of Interest:", Xgenes, multiple = TRUE), # need to update
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
@@ -214,6 +215,10 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          tabBox(title = "",
                                 tabPanel("Escape States",
+                                         conditionalPanel(
+                                             condition = "!output.ready",
+                                             span("Please wait until app is fully loaded before selecting a study...", style="font-size:18px;font-style:italic;color:purple"),
+                                         ),
                                          # Only show this message if no study is selected
                                          p("", style="font-size:10px"),
                                          span(textOutput("pleaseInput2"), style="font-size:18px;font-style:italic"),

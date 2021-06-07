@@ -21,7 +21,7 @@ library(data.table, warn.conflicts = FALSE)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Save publication date
-publication_date <- "2021-06-02 12:10:34 EDT" # Sys.time()
+publication_date <- Sys.time()
 
 ### Options for Loading Spinner (for TAB1 main plot) #####
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
@@ -109,7 +109,8 @@ server <- function(input, output, session) {
     study0_df = data.frame(),
     study0_genes = c(),
     study0_flag = FALSE,
-    includes_start = TRUE
+    includes_start = TRUE,
+    ready = FALSE
   )
   # ObserveEvents Tab 1
   observeEvent(input$file1, {
@@ -392,7 +393,12 @@ server <- function(input, output, session) {
   ##########################################
   ## CONDITIONAL PANEL STATUS ##############
   ##########################################
-  # The logic for whether the tables are displayed
+  # The logic for whether tables or messages are displayed
+  output$ready <- reactive({
+    rv$ready != FALSE
+  })
+  outputOptions(output, "ready", suspendWhenHidden = FALSE)
+  
   output$geneTableStatus1 <- reactive({
     rv$geneofinterest1 != ""
   })
@@ -448,7 +454,8 @@ server <- function(input, output, session) {
   output$pleaseInput2 <- renderText({
     text <- ""
     if(rv$addStudies == "empty"){
-      text <- "Select a study for escape states"
+      text <- "READY. Select a study."
+      rv$ready <- TRUE
     }
     text
   })
