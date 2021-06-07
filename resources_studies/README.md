@@ -31,3 +31,8 @@ were compiled, and uploaded to [NCBI Genome Remapping Service](https://www.ncbi.
 The source genome was hg19, the converted genome was hg38.
 
 -table_s5.xlsx: "A list of informative SNPs (iSNPs) along with their labeling on ChrX, Chr17 and autosomes from single cell lymphoblasts and Pool100 lymphoblasts. (XLSX 5482 kb)"
+
+**CarrelWillard2005**\
+*X-inactivation profile reveals extensive variability in X-linked gene expression in females*\
+[DOI: 10.1038/nature03479](https://doi.org/10.1038/nature03479)\
+Contains a data table with the original hybrid fibroblast escape states. 
