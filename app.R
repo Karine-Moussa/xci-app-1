@@ -292,7 +292,7 @@ server <- function(input, output, session) {
       # Query study 6
       if(rv$addStudies == "study6"){
         for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(TukGTExMod$`Pos clean` - rv$plot_coord_x[i]))
+          index <- which.min(abs(TukGTExMod$`start_mapped` - rv$plot_coord_x[i]))
           rv$closest_expr_index[i] <- index
         }
         rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
@@ -800,7 +800,7 @@ server <- function(input, output, session) {
   ## Status Table (Study6) (similar to Study1)
   output$status_table_study6 <- renderDataTable({
     df <- data.frame("Gene" = TukGTExMod$`Gene name`,
-                     "Start (bp) [hg19]" = TukGTExMod$`Pos clean`,
+                     "Start (bp) [hg38]" = TukGTExMod$`start_mapped`,
                      "Tissue" = TukGTExMod$Tissue,
                      "Tissue State" = TukGTExMod$`Incomplete XCI`,
                      "Escape Freq" = TukGTExMod$perc_tissues_esc,
@@ -1464,7 +1464,7 @@ server <- function(input, output, session) {
     VE_threshold <- rv$VE_threshold
     # Create gene of interest data frame
     geneofinterest_df <- TukGTExMod[TukGTExMod$`Gene name` %in% geneofinterest,]
-    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$`Pos clean`),]
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$`start_mapped`),]
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
     for(d in diseaseofinterest){
@@ -1480,7 +1480,7 @@ server <- function(input, output, session) {
     }
     rv$returned_genes_list <- returned_genes_list
     disease_geneofinterest_df <- TukGTExMod[TukGTExMod$`Gene name` %in% returned_genes_list,]
-    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$`Pos clean`),]
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$`start_mapped`),]
     # Get Range of plot
     ymin = 0
     ymax = 10
@@ -1508,8 +1508,8 @@ server <- function(input, output, session) {
       xlab("X-Chromosome") + ylab("") + 
       # Add points
       geom_segment(data = TukGTExMod, 
-                   aes(x=as.numeric(unlist(TukGTExMod[, "Pos clean"])), y=0,
-                       xend=as.numeric(unlist(TukGTExMod[, "Pos clean"])), yend=ymax-1),
+                   aes(x=as.numeric(unlist(TukGTExMod[, "start_mapped"])), y=0,
+                       xend=as.numeric(unlist(TukGTExMod[, "start_mapped"])), yend=ymax-1),
                    color=ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= SV_threshold, 
                                 "lightsteelblue3",
                                 ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) > SV_threshold & as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= VE_threshold, 
@@ -1520,16 +1520,16 @@ server <- function(input, output, session) {
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
       p6 <- p6 + geom_segment(data = geneofinterest_df, 
-                              aes(x=as.numeric(unlist(geneofinterest_df[, "Pos clean"])), y=ymin,
-                                  xend=as.numeric(unlist(geneofinterest_df[, "Pos clean"])), yend=ymax-1),
+                              aes(x=as.numeric(unlist(geneofinterest_df[, "start_mapped"])), y=ymin,
+                                  xend=as.numeric(unlist(geneofinterest_df[, "start_mapped"])), yend=ymax-1),
                               color='red')
       
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p6 <- p6 + geom_segment(data = disease_geneofinterest_df, 
-                              aes(x=as.numeric(unlist(disease_geneofinterest_df[, "Pos clean"])), y=ymin,
-                                  xend=as.numeric(unlist(disease_geneofinterest_df[, "Pos clean"])), yend=ymax-1),
+                              aes(x=as.numeric(unlist(disease_geneofinterest_df[, "start_mapped"])), y=ymin,
+                                  xend=as.numeric(unlist(disease_geneofinterest_df[, "start_mapped"])), yend=ymax-1),
                               color='red')
     }
     p6

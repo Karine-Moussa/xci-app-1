@@ -17,7 +17,7 @@ tuketal_suppl_table_1_cottonetal <- tuketal_suppl_table_1_cottonetal[-which(tuke
 tuketal_suppl_table_1_carrwillard <- tuketal_suppl_table_1[,12:14]  # section suppl table
 tuketal_suppl_table_1_carrwillard <- tuketal_suppl_table_1_carrwillard[-which(tuketal_suppl_table_1_carrwillard == ""), ] # remove blank rows
 rm(tuketal_suppl_table_1)   # remove full tuketal_suppl_table_1
-hg19_to_hg38_cotcar <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38.csv")
+hg19_to_hg38_cotcar <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38_cottcar.csv")
 hg19_to_hg38_cotcar <- hg19_to_hg38_cotcar[hg19_to_hg38_cotcar$recip != "Second Pass",] # for now remove repeated mapping
 
 # TUK ET AL 2017 (Tuk et al study GTEx findings)
@@ -25,6 +25,7 @@ TukGTEx <- read_xlsx("resources_studies/Tuketal2017/TukSupTables/Suppl.Table.5.x
 saveRDS(TukGTEx, "rds/TukGTEx.rds")
 TukGTEx <- readRDS("rds/TukGTEx.rds")
 TukGTExMod <- TukGTEx
+hg19_to_hg38_tuk <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38_tuk.csv")
 
 # MERIT ET AL 2020 (the GTEx papers)
 path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
@@ -83,6 +84,7 @@ for(i in 1:length(cott_carr_will_df$start)){
     cott_carr_will_df$gene_mapped[i] <- mapped_gene
 }
 cott_carr_will_df$start_mapped <- as.numeric(cott_carr_will_df$start_mapped)
+rm(hg19_to_hg38_cotcar)
 
 # Change the nomenclature for Cotton et al. study
 cott_carr_will_df$status_cott <- ifelse(cott_carr_will_df$status_cott == "variable escape", "variable",
@@ -148,6 +150,10 @@ split_pos <- function(pos) {
 }
 pos_clean <- unlist(lapply(TukGTEx$`chr:pos`, split_pos))
 TukGTExMod$`Pos clean` <- as.numeric(pos_clean)
+
+# remap positions
+TukGTExMod$`start_mapped` <- as.numeric(hg19_to_hg38_tuk$mapped_start)
+rm(hg19_to_hg38_tuk)
 
 # Determine the "variable" state of genes in gtex data set
 # First get percent of samples for which gene escaped
