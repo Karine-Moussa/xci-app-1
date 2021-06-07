@@ -7,9 +7,6 @@ create_single_trait_stats <- function(trait)
 {
     trait <- tolower(trait)
     trait_no_parenthesis <- gsub('\\(|\\)',"",trait) # This is necessary to handle parenthesis in traits#
-#    trait_gwas2ukbio_old = LIST_OF_TRAITS_GWAS[grepl(tolower(paste0("^",trait_no_parenthesis,"$")), 
-#                                                 gsub('\\(|\\)',"", tolower(LIST_OF_TRAITS_GWAS$GWAS_NAME))) & 
-#                                               !is.na(LIST_OF_TRAITS_GWAS$UKBIO_NAME), 'UKBIO_NAME']
     trait_gwas2ukbio = unique(tolower(unique(GWAS_UKBIO_MAPPING[tolower(GWAS_TRAIT) == trait, 
                                                                 c(`ZOOMA QUERY`)])))
     ifelse(identical(trait_gwas2ukbio, "character(0)"), trait_gwas2ukbio <- "N/A","")
@@ -24,6 +21,7 @@ create_single_trait_stats <- function(trait)
     if (trait == "venous thromboembolism"){
       trait_ukbio <- c(trait_ukbio, "deep venous thrombosis (dvt)")
     }
+    # ukbio_stats
     ukbio_stats = c()
     for(t in trait_ukbio){
         stat <- get_ukbiobank_information(t)

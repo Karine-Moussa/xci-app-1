@@ -35,8 +35,6 @@ create_gwas_association_df <- function(gene){
     # 3. Clean up
     # Remove duplicate rows.
     df_final <- unique(df_final)
-    # for testing
-    #View(df_final)
     # Remove blank rows (if the df_final exists)
     if(length(nrow(df_final)) != 0){
         to_remove = c()

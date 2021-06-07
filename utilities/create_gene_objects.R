@@ -6,7 +6,7 @@ create_single_gene_stats <- function(gene, ref_table)
     ### Function returns the object "<gene>_stats" with attributes of gene
     ### Usage:  assign("geneofinterest_stats", create_single_gene_stats(gene, x_expr))
 # First, set up function for finding gene color stain and region
-{
+{ # (this was used for the original design of the GEUVADIS plot. no longer needed)
     gene_start <- gene_stat_table[gene_stat_table$GENE==gene,"START"]
     for (row_num in (1:nrow(xchrom_map_colored))){
         in_region <- between(gene_start, xchrom_map_colored[row_num,"bp_start"],xchrom_map_colored[row_num,"bp_stop"])
@@ -17,9 +17,6 @@ create_single_gene_stats <- function(gene, ref_table)
         # Break out of this loop once we find a stain color
         if(isTruthy(gene_stain != "")){break}
     }
-# Establish a TRUE/FALSE vector for matching disease/traits to UKBIO names
-    # (this is just to make code cleaner further down)
-
 # Then, assign attributes to gene
     assign(paste0(gene, "_stats"),
         # Add any attributes of interest to this list
@@ -71,7 +68,6 @@ create_single_gene_stats <- function(gene, ref_table)
             #stain_color = BandColor[xchrom_map$density == "NA"] = xcolors[1],
             # Cell Type (vector)
             cell_type = c(ctype=rep("lymphoblast",length(ref_table[ref_table$GENE==gene,"status"])))
-            # Escape State DF
         )
         )
 )
