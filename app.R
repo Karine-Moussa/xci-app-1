@@ -136,8 +136,17 @@ server <- function(input, output, session) {
                             #sep = input$sep, # uncommented in myUI_Tab1.R
                              check.names = FALSE)
     rv$study0_genes <- toupper(rv$study0_df[,1]) # first column of input df
-    #rv$geneofinterest1 <- rv$study0_genes
     rv$study0_flag <- TRUE
+    updateSelectizeInput(session,
+                         inputId = "geneofinterest1_0",
+                         choices = rv$study0_genes,
+                         selected = NULL)
+    updateSelectizeInput(session,
+                         inputId = "geneofinterest2",
+                         choices = c(rv$study0_genes, study1_genes, study2_genes,
+                                     study3_genes, study4_genes, study5_genes,
+                                     study6_genes),
+                         selected = NULL)
   })
   observeEvent(input$geneofinterest1_0, { # conditional panel for study 0
     rv$geneofinterest1 <- unique(c(input$geneofinterest1_0, rv$mapped_gene))
