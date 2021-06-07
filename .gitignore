@@ -1,5 +1,11 @@
 sandbox/
+delete/
 data_sources/gwas_associations_v1
 data_sources/gwas_assoc_v1_02
 data_intermediate/gwas_assoc_v1_xonly.csv
 resources_studies/Nelsonetal2015/nelson_supp_dataset4.xlsx
+resources_studies/KatsirLinial2019/table_s2*
+resources_studies/KatsirLinial2019/table_s5*
+resources_studies/KatsirLinial2019/hg19_to_hg38_snps.xls
+utilities/create_association_df_old.R
+report/
