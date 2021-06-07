@@ -99,6 +99,7 @@ server <- function(input, output, session) {
     VE_threshold = VE_threshold,
     states_filter_study0 = "on",
     states_filter_study1 = "on",
+    tissues_filter_study1 = "on",
     states_filter_study6 = "on",
     tissues_filter_study6 = "on",
     states_filter_study2 = "on",
@@ -341,6 +342,9 @@ server <- function(input, output, session) {
   })
   observeEvent(input$states_filter_study1, {
     rv$states_filter_study1 <- input$states_filter_study1
+  })
+  observeEvent(input$tissues_filter_study1, {
+    rv$tissues_filter_study1 <- input$tissues_filter_study1
   })
   observeEvent(input$states_filter_study6, {
     rv$states_filter_study6 <- input$states_filter_study6
@@ -651,15 +655,23 @@ server <- function(input, output, session) {
   })
   ## Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
-    df <- data.frame("Gene" = distinct(x_expr_mod, GENE),
-                     "Start (bp) [hg38]" = distinct(x_expr_mod, GENE, start)[,'start'],
-                     "Escape Freq" = distinct(x_expr_mod, GENE, perc_samples_esc)[,'perc_samples_esc'],
-                     check.names = FALSE
-    )
+    if (!isTruthy(rv$tissues_filter_study1)){
+      df <- data.frame("Gene" = distinct(x_expr_mod, GENE),
+                       "Start (bp) [hg38]" = distinct(x_expr_mod, GENE, start)[,'start'],
+                       "Escape Freq" = distinct(x_expr_mod, GENE, perc_samples_esc)[,'perc_samples_esc'],
+                       check.names = FALSE)
+    } else {
+      df <- data.frame("Gene" = x_expr_mod$GENE[order(x_expr_mod$start)],
+                       "Start (bp) [hg38]" = x_expr_mod$start[order(x_expr_mod$start)],
+                       "Sample" = x_expr_mod$sample[order(x_expr_mod$start)],
+                       "Sample State" = x_expr_mod$status[order(x_expr_mod$start)],
+                       "Escape Freq" = x_expr_mod$perc_samples_esc[order(x_expr_mod$start)],
+                       check.names = FALSE)
+    }
     # Filter the df based on what genes are being displayed
     # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
-    to_display = df$GENE
+    to_display = df[,1]
     if (isTruthy(rv$states_filter_study1)){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
@@ -670,7 +682,7 @@ server <- function(input, output, session) {
         to_display <- rv$returned_genes_list
       }
     }
-    df <- df[df$GENE %in% to_display,]
+    df <- df[df[,1] %in% to_display,]
     # The rest can only be performed if the data table is populated
     if(nrow(df) != 0){
       # State is going to be a little complex because it now
@@ -688,6 +700,12 @@ server <- function(input, output, session) {
         if(df$`Escape Freq`[i] > rv$VE_threshold){
           df$State[i] <- 'escape'
         }
+      }
+      # If all of the samples are being displayed, make sure the sample state 
+      # is correctly formatted:
+      if(isTruthy(rv$tissues_filter_study1)){
+        df$`Sample State` <- ifelse(df$`Sample State` == "S", "inactive",
+                                    ifelse(df$`Sample State` == "E", "escape",""))
       }
       # Also update format of frequency column
       df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
