@@ -2,7 +2,7 @@
 Files that are created as outputs of manipulating /data_sources.
 These files are used as inputs for further processing or visualizing.
 
--**gwas_assoc_v1_02_xonly.csv**: GWAS associations from [GWAS Catalog v1.02](https://www.ebi.ac.uk/gwas/docs/file-downloads)\
+- **gwas_assoc_v1_02_xonly.csv**: GWAS associations from [GWAS Catalog v1.02](https://www.ebi.ac.uk/gwas/docs/file-downloads)\
 The applications returns genes from the "MAPPED GENE" column of GWAS association data.
 - **additional findings**: prototype for adding disease/traits that are not in GWAS catalogue. 
 - **fbias_traits**: list of female-biased traits from the UK Biobank. 
