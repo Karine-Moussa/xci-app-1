@@ -3,8 +3,8 @@
 # format_input_data.R
 x_expr <- readRDS("rds/x_expr.rds")
 x_expr_tauplus <- readRDS("rds/x_expr_tauplus.rds")
-pheno_conv_UKBIO_list <- readRDS("rds/pheno_conv_UKBIO_list.rds")
-pheno_conv_GWAS_list <- readRDS("rds/pheno_conv_GWAS_list.rds")
+#pheno_conv_UKBIO_list <- readRDS("rds/pheno_conv_UKBIO_list.rds")
+#pheno_conv_GWAS_list <- readRDS("rds/pheno_conv_GWAS_list.rds")
 GWAS_ASSOCIATIONS <- readRDS("rds/GWAS_ASSOCIATIONS.rds")
 LIST_OF_TRAITS_GWAS <- readRDS("rds/LIST_OF_TRAITS_GWAS.rds")
 PHENO_RATES_UKBIO <- readRDS("rds/PHENO_RATES_UKBIO.rds")
