@@ -1,6 +1,7 @@
 # This script sources everything in order.
 
 # Formatting and data
+source("utilities/add_colors_xchrom_map.R", local = TRUE)
 source("utilities/format_input_data.R", local = TRUE)
 source("utilities/create_global_variables.R", local = TRUE)
 source("utilities/x_expr_mods.R", local = TRUE)

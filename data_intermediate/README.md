@@ -10,4 +10,4 @@ The applications returns genes from the "MAPPED GENE" column of GWAS association
 - **gwas_ukbio_mapping_xchrom.rds**: RDS version of UK Biobank to GWAS conversions from\
 [Mapping UK Biobank to the Experimental Factor Ontology (EFO)](https://github.com/EBISPOT/EFO-UKB-mappings)
 - **xchrom_map_colored**: used to create bank colors for the  X-chromosome graphic.\
-Original file from (NCBI/ideogram_10090_GCF_000000045.1_NA_V2 )[https://ftp.ncbi.nlm.nih.gov/pub/gdp/] 
+Original file from (NCBI/ideogram_10090_GCF_000000045.1_NA_V2 )[https://ftp.ncbi.nlm.nih.gov/pub/gdp/]

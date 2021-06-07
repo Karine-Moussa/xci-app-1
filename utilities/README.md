@@ -2,8 +2,12 @@
 
 ### Formatting and data
 **format_input_data.R**
-Initiliazes input x_expr data and global variables\
+Initializes input x_expr data and global variables\
 used in app.R
+
+**add_colors_xchrom_map.R**
+Adds gg-plot specific colors to the xchrom map in\
+data_sources/xchrom_map_2020-10-20.
 
 **create_global_variables.R**
 Initializes global variables.
