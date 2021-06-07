@@ -9,15 +9,9 @@ The positions were then remapped to fit the GEUVADIS escape calls.
 
 -Suppl.Table.5.xlsx: (2017) classification of escape states in male/female participants\
 of GTEx dataset (v6p release) for 681 X-chromosomal genes across 29 tissues.\
- - note: gene positions were remapped using the [biomaRt](https://bioconductor.org/packages/release/bioc/vignettes/biomaRt/inst/doc/biomaRt.html) package,\
-querying the gene ID (column B) to return gene `start_position`
-
-
-**Nelsonetal2015**\
-*The support of human genetic evidence for approved drug indications*\
-[https://doi.org/10.1038/ng.3314](https://www.nature.com/articles/ng.3314)\
--nelson_supp_dataset1: "Supplementary Data Set 1: GWASdb entries with MeSH terms mapped for each trait and genes annotated as described in the Online Methods."\
--nelson_supp_dataset2: "Supplementary Data Set 2: Reduction of the genetic association data to a single row per gene and trait as used for most analyses described."
+ - note: to convert suppl.table.5.csv to the proper genome build (hg38), the chromosome positions\
+were compiled, and uploaded to [NCBI Genome Remapping Service](https://www.ncbi.nlm.nih.gov/genome/tools/remap#)\
+The source genome was hg19, the converted genome was hg38.
 
 
 **Meritxelletal2020**\
