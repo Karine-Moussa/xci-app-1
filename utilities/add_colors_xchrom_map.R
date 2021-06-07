@@ -3,7 +3,7 @@
 ### The colors will be added to the xchrom_map
 ### and stored in the data_intermediate folder
 # Import x-map
-xchrom_map <- read.delim("data_sources/xchrom_map", sep = "\t")
+xchrom_map <- read.delim("data_sources/xchrom_map_2012-09-27 ", sep = "\t")
 # Add a column for color based on density
 xcolors <- c("gray80","gray60","gray40","gray20","gray0")
 BandColor <- rep(xcolors[1],nrow(xchrom_map))
