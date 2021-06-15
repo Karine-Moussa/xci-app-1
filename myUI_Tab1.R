@@ -215,8 +215,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          tabBox(title = "",
                                 tabPanel("Escape States",
                                          conditionalPanel(
-                                             condition = "!output.ready",
-                                             span("Please wait until app is fully loaded before selecting a study...", style="font-size:18px;font-style:italic;color:purple"),
+                                             condition = "!output.ready1",
+                                             span("Please wait until app is fully loaded before selecting a study...", style="font-size:18px;font-style:italic;color:purple"),br(),
+                                             span("(refresh page if >10 seconds)", style="font-size:18px;font-style:italic;color:purple"),
                                          ),
                                          # Only show this message if no study is selected
                                          p("", style="font-size:10px"),

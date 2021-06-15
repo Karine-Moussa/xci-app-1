@@ -7,7 +7,7 @@ used in app.R
 
 **add_colors_xchrom_map.R**
 Adds gg-plot specific colors to the xchrom map in\
-data_sources/xchrom_map_2020-10-20.
+data_sources/xchrom_map_2012-09-27.
 
 **create_global_variables.R**
 Initializes global variables.
@@ -61,6 +61,11 @@ object is stored in "rds/GWAS_UKBIO_MAPPING.rds" created by\
 
 **create_study0_df.R**
 Creates a blank data frame to initialize the user uploaded study.
+
+**consolidate_escape_states.R**
+Consolidate all escape states for each gene in a table\
+to minimize loading speed for tab 2 in application.\
+Output is saved as an RDS object.
 
 ### Initialization
 **source_all_scripts.R**

@@ -4,8 +4,8 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                  sidebarLayout(
                      sidebarPanel(
                          h3("Observing XCI escape calls across studies"),
-                         selectizeInput("geneofinterest2", "Gene of Interest:", c(study1_genes,
-                                study2_genes, study3_genes, study4_genes, study5_genes, study6_genes), multiple = TRUE),
+                         selectizeInput("geneofinterest2", "Gene of Interest:", unique(c(study1_genes,
+                                study2_genes, study3_genes, study4_genes, study5_genes, study6_genes)), multiple = TRUE),
                          actionButton("resetButton2", "Clear Genes"),
                          br(),
                          br(),
@@ -17,6 +17,11 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                      ),
                      mainPanel(
                          # Show message if no genes are displayed 
+                         conditionalPanel(
+                             condition = "!output.ready1",
+                             span("Please wait until app is fully loaded before selecting a gene...", style="font-size:18px;font-style:italic;color:purple"),br(),
+                             span("(refresh page if >10 seconds)", style="font-size:18px;font-style:italic;color:purple"),
+                         ),
                          span(textOutput("pleaseInput3"), style="font-size:18px;font-style:italic"),
                          # Escape States Table
                          conditionalPanel(

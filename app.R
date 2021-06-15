@@ -53,7 +53,7 @@ ui <- fluidPage(title = "XCI Data",
                              tags$img(type="png",src="HT-gene-select-click.png", height="300px"),br(),
                              br(),br(),br(),
                              strong("Observe GWAS catalog information:", style = "font-size:18px"),br(),
-                             tags$img(type="png",src="HT-GWAS.png", height="500px"),br(),br(),
+                             tags$img(type="png",src="HT-gwas.png", height="500px"),br(),br(),
                              a('Link: Additional GWAS information', href = "Tutorial-GWAS.pdf", target="_blank", style = "font-size:18px"),
                              br(),br(),br(),
                              strong("Search for diseases/traits:", style = "font-size:18px"),br(),
@@ -110,7 +110,7 @@ server <- function(input, output, session) {
     study0_genes = c(),
     study0_flag = FALSE,
     includes_start = TRUE,
-    ready = FALSE
+    ready1 = FALSE
   )
   # ObserveEvents Tab 1
   observeEvent(input$file1, {
@@ -143,9 +143,10 @@ server <- function(input, output, session) {
                          selected = NULL)
     updateSelectizeInput(session,
                          inputId = "geneofinterest2",
-                         choices = c(rv$study0_genes, study1_genes, study2_genes,
+                         server = TRUE,
+                         choices = c(unique(rv$study0_genes, study1_genes, study2_genes,
                                      study3_genes, study4_genes, study5_genes,
-                                     study6_genes),
+                                     study6_genes)),
                          selected = NULL)
   })
   observeEvent(input$geneofinterest1_0, { # conditional panel for study 0
@@ -403,10 +404,10 @@ server <- function(input, output, session) {
   ## CONDITIONAL PANEL STATUS ##############
   ##########################################
   # The logic for whether tables or messages are displayed
-  output$ready <- reactive({
-    rv$ready != FALSE
+  output$ready1 <- reactive({
+    rv$ready1 != FALSE
   })
-  outputOptions(output, "ready", suspendWhenHidden = FALSE)
+  outputOptions(output, "ready1", suspendWhenHidden = FALSE)
   
   output$geneTableStatus1 <- reactive({
     rv$geneofinterest1 != ""
@@ -464,14 +465,14 @@ server <- function(input, output, session) {
     text <- ""
     if(rv$addStudies == "empty"){
       text <- "READY. Select a study."
-      rv$ready <- TRUE
+      rv$ready1 <- TRUE
     }
     text
   })
   output$pleaseInput3 <- renderText({
     text <- ""
     if(rv$geneofinterest2[1] == ""){
-      text <- "Select a gene"
+      text <- "READY. Select a gene"
     }
     text
   })
