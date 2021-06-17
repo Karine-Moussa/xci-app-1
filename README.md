@@ -21,15 +21,16 @@
 [Link: Additional GWAS information](https://kmoussa-psu.shinyapps.io/xci-app-1/_w_8a1171f8/Tutorial-GWAS.pdf)
 
 **Search for diseases/traits:**
+
 <img width="350" alt="image" src="https://i.imgur.com/JalmKm1.png">
 
 ![](https://i.imgur.com/EBETLMt.png)
 
 
-**Modify Escape Frequency Thresholds:**
+**Modify Escape Frequency Thresholds:**\
 Tutorial: [Escape Frequency Tresholds](https://kmoussa-psu.shinyapps.io/xci-app-1/_w_8a1171f8/Tutorial-Sliders.pdf)
 
-**Manually upload studies:** 
+**Manually upload studies:** \
 Tutorial: [Manual Upload](https://kmoussa-psu.shinyapps.io/xci-app-1/_w_e5af9ff3/Tutorial-Upload.pdf)
 
 ## TAB 2: Individual Gene Search 
