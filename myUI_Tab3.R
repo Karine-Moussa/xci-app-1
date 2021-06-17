@@ -1,5 +1,7 @@
 TAB3 <- tabPanel(title = "Terminology",
                  includeHTML("terminology.html"),
+                 #tags$iframe(style="height:100%; width:100%", 
+                 #            src="terminology.pdf"),
                  sidebarPanel(
                      h3("Observing TAU and TAU+ in GEUVADIS data set"),
                      selectizeInput("geneofinterest3", "Gene of Interest:", c("", study1_genes), multiple = FALSE),

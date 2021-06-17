@@ -5,7 +5,7 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                      sidebarPanel(
                          h3("Observing XCI escape calls across studies"),
                          selectizeInput("geneofinterest2", "Gene of Interest:", unique(c(study1_genes,
-                                study2_genes, study3_genes, study4_genes, study5_genes, study6_genes)), multiple = TRUE),
+                                study2_genes, study3_genes, study4_genes, study5_genes, study6_genes)), multiple = FALSE),
                          actionButton("resetButton2", "Clear Genes"),
                          br(),
                          br(),
@@ -16,22 +16,23 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          em(paste("Last published:", publication_date), style = "font-size:12px;color:grey")
                      ),
                      mainPanel(
-                         # Show message if no genes are displayed 
+                         # Show message if no genes are displayed
                          conditionalPanel(
                              condition = "!output.ready1",
-                             span("Please wait until app is fully loaded before selecting a gene...", style="font-size:18px;font-style:italic;color:purple"),br(),
-                             span("(refresh page if >10 seconds)", style="font-size:18px;font-style:italic;color:purple"),
+                             span(
+                                 "Please wait until app is fully loaded before selecting a gene...",
+                                 style = "font-size:18px;font-style:italic;color:purple"
+                             ),
+                             br(),
+                             span("(refresh page if >10 seconds)", style =
+                                      "font-size:18px;font-style:italic;color:purple"),
                          ),
-                         span(textOutput("pleaseInput3"), style="font-size:18px;font-style:italic"),
-                         # Escape States Table
-                         conditionalPanel(
-                             condition = "output.geneTableStatus2",
-                             p("Escape States", style = "font-size:16px;font-weight:bold"), 
-                             (downloadButton("individual_gene_escape_download", "Download Table")),
-                             br(),
-                             br(),
-                             withSpinner(dataTableOutput(outputId = "ind_escape_states_table"), type = 1, size = 1),
-                         )
+                         span(textOutput("pleaseInput3"), style = "font-size:18px;font-style:italic"),
+                         p("Escape States", style = "font-size:16px;font-weight:bold"),
+                         (downloadButton("individual_gene_escape_download", "Download Table")),
+                         br(),
+                         br(),
+                         withSpinner(dataTableOutput(outputId = "ind_escape_states_table"), type = 1, size = 1),
                      )
                  )
 )

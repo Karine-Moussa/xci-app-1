@@ -9,13 +9,13 @@ library(shiny, warn.conflicts = FALSE)
 library(shinydashboard, warn.conflicts = FALSE)
 library(dqshiny, warn.conflicts = FALSE)
 library(ggplot2, warn.conflicts = FALSE)
-library(plotly, warn.conflicts = FALSE)
 library(dplyr, warn.conflicts = FALSE)
 library(png, warn.conflicts = FALSE)
 library(gridExtra, warn.conflicts = FALSE)
 library(shinycssloaders, warn.conflicts = FALSE)
 library(rlist, warn.conflicts = FALSE)
 library(data.table, warn.conflicts = FALSE)
+library(magrittr)
 
 ### Source Data/Functions ###
 source("utilities/source_all_scripts.R", local = TRUE)
@@ -64,7 +64,7 @@ ui <- fluidPage(title = "XCI Data",
                              a('Tutorial: Escape Frequency Tresholds', href = "Tutorial-Sliders.pdf", target="_blank", style = "font-size:18px"),
                              br(),br(),br(),
                              strong("Manually upload studies:", style = "font-size:18px"),br(),
-                             a('Tutorial: Manual Upload', href = "Tutorial-upload.pdf", target="_blank", style = "font-size:18px"),
+                             a('Tutorial: Manual Upload', href = "Tutorial-Upload.pdf", target="_blank", style = "font-size:18px"),
                              br(),br(),br(),
                              strong("TAB 2: Individual Gene Search", style = "font-size:20px"),br(),
                              strong("Search individual gene characteristics:", style = "font-size:18px"),br(),
@@ -112,6 +112,10 @@ server <- function(input, output, session) {
     includes_start = TRUE,
     ready1 = FALSE
   )
+  geneofinterest2 <- reactive({
+    input$geneofinterest2
+  }) %>%
+    bindCache(input$geneofinterest2)
   # ObserveEvents Tab 1
   observeEvent(input$file1, {
     # need to reset settings if input$file1 changes
@@ -898,20 +902,14 @@ server <- function(input, output, session) {
   ### TAB 2
   # Individual Escape Table
   output$ind_escape_states_table <- renderDataTable({
-    validate(need(input$geneofinterest2,""))
+    #validate(need(input$geneofinterest2,""))
     geneofinterest <- rv$geneofinterest2
-    for (gene in geneofinterest){
-      tmp_df <- create_escape_df(gene)
-      if(gene == geneofinterest[1]){
-        df <- tmp_df
-      } else {
-        df <- rbind(df, tmp_df)
-      }
+    dt <- data.table()
+    if (length(geneofinterest) != 0) {
+      dt <- create_escape_df(geneofinterest)
     }
-    # Don't bind a new df if this was the first gene on the list
-    #df <- df[order(df$gene),]
-    saveRDS(df,'data_output/individual_escape_table.rds')
-    df
+    saveRDS(dt,'data_output/individual_escape_table.rds')
+    dt
   })
   # TAU detail table
   output$gene_detail_table <- renderDataTable({
