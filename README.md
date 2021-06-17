@@ -1,17 +1,37 @@
-# xci-app-1
+# x-Viz User Guide
 
-*Latest Update*
+## TAB 1: X Chromosome gene search, disease query, and manual upload
+**Search for genes:**
+*Type to add genes and click ENTER* 
 
-Added informational popouts for several features. Also fixed labelings for diseases.
+<img width="200" alt="image" src="https://i.imgur.com/9JPsRbZ.png">
 
-<img width="363" alt="image" src="https://user-images.githubusercontent.com/71516524/120514417-429f1080-c39b-11eb-86b7-7659f9376dfd.png">
+<br></br>
 
-<img width="409" alt="image" src="https://user-images.githubusercontent.com/71516524/120514378-39ae3f00-c39b-11eb-9251-f260dacdb98c.png">
 
-<img width="446" alt="image" src="https://user-images.githubusercontent.com/71516524/120514361-33b85e00-c39b-11eb-9644-682db34290b6.png">
+*Or click to add genes*
+![](https://i.imgur.com/UDfQWT2.png)
 
-*Previous Update*
+<br></br>
 
-Reformatted approach to uploading studies. Now user can create a template.\
+**Observe GWAS catalog information:**
+![](https://i.imgur.com/KZ7xXV6.png)
 
-<img width="1265" alt="image" src="https://user-images.githubusercontent.com/71516524/120359435-a959f680-c2d5-11eb-8394-4953c24c8a91.png">
+
+[Link: Additional GWAS information](https://kmoussa-psu.shinyapps.io/xci-app-1/_w_8a1171f8/Tutorial-GWAS.pdf)
+
+**Search for diseases/traits:**
+<img width="350" alt="image" src="https://i.imgur.com/JalmKm1.png">
+
+![](https://i.imgur.com/EBETLMt.png)
+
+
+**Modify Escape Frequency Thresholds:**
+Tutorial: [Escape Frequency Tresholds](https://kmoussa-psu.shinyapps.io/xci-app-1/_w_8a1171f8/Tutorial-Sliders.pdf)
+
+**Manually upload studies:** 
+Tutorial: [Manual Upload](https://kmoussa-psu.shinyapps.io/xci-app-1/_w_e5af9ff3/Tutorial-Upload.pdf)
+
+## TAB 2: Individual Gene Search 
+**Search individual gene characteristics:**
+![](https://i.imgur.com/80btRe1.png)
