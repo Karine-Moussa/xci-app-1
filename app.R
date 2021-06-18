@@ -1568,7 +1568,8 @@ server <- function(input, output, session) {
     p6
   })
   ## X chromosome "image"
-  output$xchromosome <- renderPlot({
+  ## commented out for testing
+  output$xchromosome <- renderCachedPlot({
     # Create theme for plot
     mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
@@ -1599,7 +1600,8 @@ server <- function(input, output, session) {
     # ^these objects contains geom_segment() layers for each band.
     #  Created in utilities/format_plot_aesthetics.R
     xchromosome_plot
-  })
+  }, cacheKeyExpr = { input$geneofinterest1 }
+  )
   ### TAB 2
   ## Violin Plots - Gene of Interest
   output$individual_gene_tau_plot <- renderPlot({
