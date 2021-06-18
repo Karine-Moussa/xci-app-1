@@ -5,7 +5,7 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                      sidebarPanel(
                          h3("Observing XCI escape calls across studies"),
                          selectizeInput("geneofinterest2", "Gene of Interest:", unique(c(study1_genes,
-                                study2_genes, study3_genes, study4_genes, study5_genes, study6_genes)), multiple = FALSE),
+                                study2_genes, study3_genes, study4_genes, study5_genes, study6_genes)), multiple = TRUE),
                          actionButton("resetButton2", "Clear Genes"),
                          br(),
                          br(),
