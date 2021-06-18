@@ -1029,7 +1029,7 @@ server <- function(input, output, session) {
       p0
     }
   })
-  output$plot_study1 <- renderPlot({
+  output$plot_study1 <- renderCachedPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints
@@ -1182,7 +1182,8 @@ server <- function(input, output, session) {
       # Scale shape manual (though right now this is disabled)
       scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
     genepvalue_1
-  })
+  }, cacheKeyExpr = { list(input$addStudies) }, cache = "app",
+  )
   output$plot_study2 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
