@@ -13,7 +13,15 @@ TAB2 <- tabPanel(title = "Individual Gene Search",
                          em("---Input an X-gene of interest", style = "font-size:12px"),br(),
                          em("---Examples: XIST, ZBED1, ASMTL", style = "font-size:12px"),br(),
                          br(),
-                         em(paste("Last published:", publication_date), style = "font-size:12px;color:grey")
+                         strong("Studies:", style = "font-size:12px"),br(),
+                         p("GEUVADIS (lymphoblast) - manuscript accepted 2021", style = "font-size:10px"),
+                         #p(span(a("GEUVADIS (lymphoblast) - manuscript accepted 2021", href="<LINK>", target="_blank",)), style = "font-size:10px"),
+                         p(span(a("Cotton et al. (multi-tissue)", href="https://doi.org/10.1186/gb-2013-14-11-r122", target="_blank",)), style = "font-size:10px"),
+                         p(span(a("Carrel/Willard (hybrid fibroblast)", href="https://doi.org/10.1038/nature03479", target="_blank",)), style = "font-size:10px"),
+                         p(span(a("Katsir + Linial (lymphoblast & fibroblast)", href="https://doi.org/10.1186/s12864-019-5507-6", target="_blank",)), style = "font-size:10px"),
+                         p(span(a("GTEx (multi-tissue)", href="https://doi.org/10.1038/nature24265", target="_blank",)), style = "font-size:10px"),
+                         br(),
+                         em(paste("Last published:", publication_date), style = "font-size:12px;color:grey"),
                      ),
                      mainPanel(
                          # Show message if no genes are displayed
