@@ -112,10 +112,6 @@ server <- function(input, output, session) {
     includes_start = TRUE,
     ready1 = FALSE
   )
-  geneofinterest2 <- reactive({
-    input$geneofinterest2
-  }) %>%
-    bindCache(input$geneofinterest2)
   # ObserveEvents Tab 1
   observeEvent(input$file1, {
     # need to reset settings if input$file1 changes
@@ -808,6 +804,7 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
+    df <- df[!grepl("TCON", df$Gene),]
     saveRDS(df,'data_output/katsir_linial_lymphoblast_xstates.rds')
     df
   })
@@ -833,6 +830,7 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
+    df <- df[!grepl("TCON", df$Gene),]
     saveRDS(df,'data_output/katsir_linial_fibroblast_xstates.rds')
     df
   })
