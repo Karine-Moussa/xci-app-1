@@ -112,7 +112,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              condition = "input.addStudies == 'study0'",
                              strong(a('(Tutorial)', href = "Tutorial-Upload.pdf", target="_blank", style = "font-size:14px")),
                              h4("1. CREATE A TEMPLATE"),
-                             # Input: Select separator ----
+                             # Input: Select Template ----
                              radioButtons("template", "Template Type",
                                           choices = c("Template 1 (gene, state)" = 1,
                                                       "Template 2 (gene, state, tiss_samp)" = 2),

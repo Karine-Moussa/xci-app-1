@@ -133,7 +133,7 @@ server <- function(input, output, session) {
   observeEvent(input$submitButton1, { # submit study 0
     rv$study0_df <- read.csv(input$file1$datapath,
                              sep = ",",
-                            #sep = input$sep, # uncommented in myUI_Tab1.R
+                             #sep = input$sep, # uncomment in myUI_Tab1.R
                              check.names = FALSE)
     rv$study0_genes <- toupper(rv$study0_df[,1]) # first column of input df
     rv$study0_flag <- TRUE
@@ -617,7 +617,7 @@ server <- function(input, output, session) {
     req(input$file1)
     input_df <- read.csv(input$file1$datapath,
                    sep = ",",
-                   #sep = input$sep, # commented out in myUI_Tab1.R
+                   #sep = input$sep, # uncomment in myUI_Tab1.R
                    check.names = FALSE)
     # Before the submit button is hit, df will just be
     # the input df
@@ -1180,7 +1180,10 @@ server <- function(input, output, session) {
       # Scale shape manual (though right now this is disabled)
       scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
     genepvalue_1
-  }, cacheKeyExpr = { list(input$addStudies) }, cache = "app",
+  }, 
+  cacheKeyExpr = { list(input$addStudies, input$diseaseofinterest1, 
+                        input$geneofinterest1_1, input$searchType) }, 
+  cache = "app",
   )
   output$plot_study2 <- renderPlot({
     # Save geneofinterest
