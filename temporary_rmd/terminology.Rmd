@@ -1,0 +1,116 @@
+---
+output:
+  html_document: default
+---
+<style type="text/css">
+  body{
+  font-size: 12pt;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<br />
+
+**X Chromosome Inactivation (XCI)**: The epigenetic process which silences one X chromosome in females\
+to achieve gene dosage balance between males and females. [1]
+
+**Xa**: the active X chromosome\
+
+**Xi**: the inactive X chromosome\
+
+**Xm**: maternally inheritted X chromosome\
+
+**Xp**: paternally inheritted X chromosome\
+
+![X Chromosomes](images/XCI-images/Slide2.png){width=20%}\
+![X Chromosomes](images/XCI-images/Slide3.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide4.png){width=12%}\
+
+***Figure 1: The paternally inherited (Xp) chromosome in and the maternally***\
+***inherited chromosome (Xm).*** *The active chromosome Xa is represented with*\
+*color filled in, while the inactive chromosome Xi is represented with no color fill.*\
+
+<br />
+
+**Escape**: The status of genes which are expressed on Xi. These genes "escape" inactivation. 
+
+**Inactive**: The status of genes which are suppressed on Xi.
+
+**Variable**: The status of genes which are expressed on Xi in some tissues/individuals,\
+but not in all tissues/individuals. [2]
+
+<br />
+
+**Mosaicism**: Xa and Xi are typically randomly assigned to either Xp or Xm in each\
+cell. *Mosaicism* refers to the heterogeneity of Xa/Xi assignment among a set of cells.
+
+![X Chromosomes](images/XCI-images/Slide5.png){width=10%}
+![X Chromosomes](images/XCI-images/Slide6.png){width=10%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=10%}
+![X Chromosomes](images/XCI-images/Slide6.png){width=10%}\
+![X Chromosomes](images/XCI-images/Slide6.png){width=10%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=10%}
+![X Chromosomes](images/XCI-images/Slide6.png){width=10%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=10%}\
+***Figure 2: Mosaicism.*** *A sample of six cells with differences in Xa/Xi assignments.*\
+
+<br />
+
+
+**Skew**: A ratio which represents the mosaicism of Xa/Xi assignment in a set of cells.
+
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide6.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide6.png){width=12%}\
+***Figure 3a: Skew Ratio 1.*** *Two samples have Xi assignment on Xm, while two samples*\
+*have Xi assignment on Xp. The resulting skew ratio is 50:50.*
+
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide6.png){width=12%}\
+***Figure 3b: Skew Ratio 2.*** *Three samples have Xi assignment on Xm, while one sample*\
+*has Xi assignment on Xp. The resulting skew ratio is 25:75.*
+
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}
+![X Chromosomes](images/XCI-images/Slide5.png){width=12%}\
+***Figure 3c: Skew Ratio 3.*** *All four samples have Xi assignment on Xm.*\
+*The resulting skew ratio is 0:100. This is a rare occurrence in nature,*\
+*and is often referred to has non-random assignment or fully skewed [3]*\
+
+<br />
+
+**%Xi or tau ($\tau$)**: The ratio of a gene's expression on Xi over its total expression across\
+both Xa and Xi, referred to as %Xi [4] or $\tau$ [5]. In allele specific expression (ASE)\
+based methods for escape inference, $\tau$ is compared to the skew ratio. Significant\
+deviation of $\tau$ from the skew ratio reflects biallelic expression and classifies a gene as\
+escape.
+
+$N=expression\ level$
+
+$j=gene$
+
+$i=inactive\ x\ chromosome$
+
+$a=active\ x\ chromosome$
+
+$\tau = \frac{N_{ij}}{N_{aj} + N_{ij}}$
+
+*A note about skew: For ASE based methods, data sets with a higher skew ratio (such as 25:75)*\
+*are strengthened for estimating escape expression due to the lower Xi expression levels*\
+*required to infer significance.*   
+
+**Tau+ ($\tau$+)**: The $\tau$ (or %Xi) values from the subset of XCI calls which were inferred from\
+samples which were sufficiently skewed (>25:75). This subset is a more robust estimate of\
+ASE and is strengthened for escape calling. [4] 
+
+<br />
+
+<br />
+

@@ -667,7 +667,7 @@ server <- function(input, output, session) {
       df <- df[df$gene %in% to_display,]
       saveRDS(df[,1:last_column], "data_output/uploaded_study_escape_states.rds") # save for downloading
       saveRDS(df[,1:last_column], "rds/study0_df.rds") # save for tab 2
-      df[,1:last_column] # display table, exclude the color
+      df[,1:last_column] # display table, exclude the color # commented out for testing
     } # end of "if rv$study0_flag == TRUE"
   })
   ## Status Table (Study1)
@@ -1028,6 +1028,8 @@ server <- function(input, output, session) {
     }
   })
   output$plot_study1 <- renderCachedPlot({
+  #output$plot_study1 <- renderPlot({
+      
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints
@@ -1182,7 +1184,9 @@ server <- function(input, output, session) {
     genepvalue_1
   }, 
   cacheKeyExpr = { list(input$addStudies, input$diseaseofinterest1, 
-                        input$geneofinterest1_1, input$searchType) }, 
+                        rv$mapped_gene, rv$geneofinterest1, 
+                        input$searchType,
+                        rv$SV_threshold, rv$VE_threshold) }, 
   cache = "app",
   )
   output$plot_study2 <- renderPlot({

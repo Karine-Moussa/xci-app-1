@@ -104,7 +104,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          value = SV_threshold, min = 0.1, max = 0.75),
                              sliderInput(inputId = "slider2", 
                                          label = "Choose an escape frequency for the [variable | escape] threshold", 
-                                         value = VE_threshold, min = 0.25, max = 0.99),
+                                         value = VE_threshold, min = 0.25, max = 0.95),
                              tags$hr(),
                          ),
                          # Display options if manual upload is selected

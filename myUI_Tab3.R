@@ -1,7 +1,11 @@
 TAB3 <- tabPanel(title = "Terminology",
+                 tags$div(
+                     HTML("<div style='padding:75% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578163489?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:100%;height:100%;' title='Demo July 22.mov'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                 ),
                  includeHTML("terminology.html"),
-                 #tags$iframe(style="height:100%; width:100%", 
-                 #            src="terminology.pdf"),
+                 #tags$iframe(style="height:1000px; width:75%", 
+                 #            src="terminology_with_cite.pdf"),
+                 # for testing
                  sidebarPanel(
                      h3("Observing TAU and TAU+ in GEUVADIS data set"),
                      selectizeInput("geneofinterest3", "Gene of Interest:", c("", study1_genes), multiple = FALSE),
@@ -19,9 +23,9 @@ TAB3 <- tabPanel(title = "Terminology",
                      p("Gene = 268 Genes from GEUVADIS lymphoblast samples",style = "font-size:12px"),
                      br(),
                      em(paste("Last published:", publication_date), style = "font-size:12px;color:grey")
-                 ),
+                 ), # don't forget to recomment the comma
                  mainPanel(
-                     # Show message if no genes are displayed 
+                     # Show message if no genes are displayed
                      span(textOutput("pleaseInput4"), style="font-size:18px;font-style:italic"),
                      # Show plot / Tau table if study has this information
                      br(),
@@ -32,20 +36,18 @@ TAB3 <- tabPanel(title = "Terminology",
                          column(12, "",
                                 fixedRow(
                                     column(8,
-                                           conditionalPanel( # This condition isn't functioning
-                                               conditon = "output.geneTableStatus3",
-                                               p("TAU Data (GEUVADIS lymphoblast)", style = "font-size:16px"),
-                                               (downloadButton("table1_download", "Download TAU Data")),
-                                               br(),
-                                               br(),
-                                               withSpinner((dataTableOutput(outputId = "gene_detail_table")), type = 1)
-                                           )
+                                        p("TAU Data (GEUVADIS lymphoblast)", style = "font-size:16px"),
+                                        (downloadButton("table1_download", "Download TAU Data")),
+                                        br(),
+                                        br(),
+                                        withSpinner((dataTableOutput(outputId = "gene_detail_table")), type = 1)
                                     )
                                 )
                          ),
-                         br(), br(),
+                         br(),
+                         br(),
                          includeHTML("citations.html"),
                      )
-                     
+
                  ),
 )
