@@ -46,29 +46,52 @@ ui <- fluidPage(title = "XCI Data",
                     tabPanel(title = "How To",
                              br(),br(),
                              strong("TAB 1: All Escape Expressions", style = "font-size:20px"),br(),
+                             strong("Select a study:", style = "font-size:18px"),br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502584?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='1'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
                              strong("Search for genes:", style = "font-size:18px"),br(),
                              em("Type to add genes and click ENTER", style = "font-size:18px"),br(),br(),
                              tags$img(type="png",src="HT-gene-select-type.png", height="400px"),br(),br(),
                              em("Or click to add genes", style = "font-size:18px"),br(),
                              tags$img(type="png",src="HT-gene-select-click.png", height="300px"),br(),
-                             br(),br(),br(),
+                             br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502613?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='2'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
                              strong("Observe GWAS catalog information:", style = "font-size:18px"),br(),
                              tags$img(type="png",src="HT-gwas.png", height="500px"),br(),br(),
-                             a('Link: Additional GWAS information', href = "Tutorial-GWAS.pdf", target="_blank", style = "font-size:18px"),
-                             br(),br(),br(),
+                             a('Link: Additional GWAS information (PDF)', href = "Tutorial-GWAS.pdf", target="_blank", style = "font-size:18px"),
+                             br(),br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502668?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='3'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
                              strong("Search for diseases/traits:", style = "font-size:18px"),br(),
                              tags$img(type="png",src="HT-disease-type-1.png", height="300px"), br(),br(),
                              tags$img(type="png",src="HT-disease-type-2.png", height="400px"),
-                             br(),br(),br(),
+                             br(),br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502702?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='4'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
                              strong("Modify Escape Frequency Thresholds:", style = "font-size:18px"),br(),
-                             a('Tutorial: Escape Frequency Tresholds', href = "Tutorial-Sliders.pdf", target="_blank", style = "font-size:18px"),
-                             br(),br(),br(),
+                             a('Tutorial: Escape Frequency Tresholds (PDF)', href = "Tutorial-Sliders.pdf", target="_blank", style = "font-size:18px"),
+                             br(),br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502810?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='5'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
                              strong("Manually upload studies:", style = "font-size:18px"),br(),
-                             a('Tutorial: Manual Upload', href = "Tutorial-Upload.pdf", target="_blank", style = "font-size:18px"),
-                             br(),br(),br(),
+                             a('Tutorial: Manual Upload (PDF)', href = "Tutorial-Upload.pdf", target="_blank", style = "font-size:18px"),
+                             br(),br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502846?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='6'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
                              strong("TAB 2: Individual Gene Search", style = "font-size:20px"),br(),
                              strong("Search individual gene characteristics:", style = "font-size:18px"),br(),
-                             tags$img(type="png",src="HT-individual-search.png", height="500px")
+                             tags$img(type="png",src="HT-individual-search.png", height="500px"),
+                             br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502928?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='tab 2'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
                     )
                   )
 )
