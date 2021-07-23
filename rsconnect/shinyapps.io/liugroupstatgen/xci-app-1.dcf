@@ -5,10 +5,10 @@ account: liugroupstatgen
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4408368
-bundleId: 4845756
+bundleId: 4849547
 url: https://liugroupstatgen.shinyapps.io/xci-app-1/
-when: 1626964786.45081
-lastSyncTime: 1626964786.45084
+when: 1627048984.88989
+lastSyncTime: 1627048984.88991
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: temporary_rmd/citations.Rmd|temporary_rmd/terminology.Rmd|temporary_rmd/terminology_with_cite.Rmd
+ignoredFiles: temporary_rmd/.DS_Store|temporary_rmd/citations.Rmd|temporary_rmd/terminology.Rmd|temporary_rmd/terminology_with_cite.Rmd

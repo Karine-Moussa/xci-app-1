@@ -144,7 +144,7 @@ server <- function(input, output, session) {
     updateSelectizeInput(session,
                          inputId = "geneofinterest2",
                          server = TRUE,
-                         choices = c(unique(rv$study0_genes, study1_genes, study2_genes,
+                         choices = unique(c(rv$study0_genes, study1_genes, study2_genes,
                                      study3_genes, study4_genes, study5_genes,
                                      study6_genes)),
                          selected = NULL)
