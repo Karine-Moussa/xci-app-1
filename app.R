@@ -32,7 +32,7 @@ options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.siz
 source("myUI_Tab1.R", local = TRUE)
 source("myUI_Tab2.R", local = TRUE)
 source("myUI_Tab3.R", local = TRUE)
-ui <- fluidPage(title = "XCI Data",
+ui <- fluidPage(title = "x-Viz",
                   tabsetPanel(
                     ## TAB 1: Main Plot, disease/trait searches, association tables
                     ## (see myUI_Tab1.R for code)
