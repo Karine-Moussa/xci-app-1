@@ -1,0 +1,492 @@
+﻿,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+ Closest annotated TSS information ,,Tissue and number of females in the tissue),,,,,,,,,,,,,,,,,,,,,,,,,,,XCI status information,
+ POS ,GENE,PB,BU,BC,BL,SA,KI,MU,SF,OM,ST,HA,HE,PA,AD,SL,LU,LI,PC,BR,B1,B2,B7,WB,PM,CB,BS,KT,STATUS,NOVEL
+2746862    ,GYG2,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+2847415    ,ARSD,E+U only,E,E+U only,E,E,E,E,E,E+U only,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E+U only,escape from XCI in 27 tissues,yes
+3264683    ,MXRA5,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E+U only,E,E,E+U only,escape from XCI in 27 tissues,yes
+3631674    ,PRKX,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+6145115    ,NLGN4X,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E+U only,escape from XCI in 27 tissues,yes
+6145887    ,NLGN4X,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+6146705    ,NLGN4X,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+7066047    ,STS,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,escape from XCI in 27 tissues,yes
+7066230    ,HDHD1,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+7895474    ,PNPLA4,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+8700226    ,KAL1,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,escape from XCI in 27 tissues,yes
+9431334    ,TBL1X,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+9433200    ,TBL1X,"VE, S+U+E",E+U only,"VE, S+U+E",E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,"VE, S+U+E",E+U only,E,E,E+U only,VE and escape from XCI,yes
+9754495    ,SHROOM2,"VE, S+U+E",U,U,"VE, S+U+E",U,E,E,E+U only,U,E,E+U only,E,E,E,U,E+U only,"VE, S+U+E",E+U only,E+U only,E+U only,E,E+U only,"VE, S+U+E",U,"VE, S+U+E",E+U only,"VE, S+U+E",VE and escape from XCI,yes
+9983794    ,WWC3,"VE, S+U+E","VE, S+U+E","VE, S+U+E",S,S,S,S+U only,"VE, S+E only",S+U only,S,S,S,U,S,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,"VE, S+U+E",S+U only,VE and subject to XCI,yes
+11129257    ,AY660578,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+11129405    ,HCCS,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+11445892    ,ARHGAP6,S+U only,S+U only,S+U only,S,S+U only,S,S+U only,S,S,S,S+U only,S,S,S,S+U only,S,"VE, S+U+E",S,S,S,S,S+U only,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+11683820    ,ARHGAP6,S+U only,S+U only,U,"VE, S+U+E",S+U only,S,S+U only,U,S+U only,S+U only,S+U only,S,S,S,S+U only,U,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,U,S+U only,VE and subject to XCI,yes
+11776277    ,MSL3,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+11777734    ,MSL3,S+U only,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+12809473    ,PRPS2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S+U only,S+U only,S,S+U only,S,subject to XCI in 27 tissues,yes
+13671224    ,TCEANC,E+U only,E+U only,"VE, S+U+E",E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E+U only,E,E,E,VE and escape from XCI,yes
+13671306    ,TCEANC,"VE, S+U+E","VE, S+U+E",E+U only,"VE, S+E only",E+U only,U,E,E,E,E,E,E+U only,E,E,E,E+U only,E+U only,E+U only,E+U only,E+U only,E+U only,E+U only,E+U only,E+U only,"VE, S+U+E",U,E+U only,VE and escape from XCI,yes
+13707239    ,RAB9A,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,escape from XCI in 27 tissues,yes
+13752753    ,TRAPPC2,E,E+U only,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E,E+U only,E,E,E,escape from XCI in 27 tissues,yes
+13752831    ,OFD1,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+13956533    ,GPM6B,E+U only,E+U only,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E+U only,E,E+U only,E+U only,escape from XCI in 27 tissues,yes
+13956830    ,GPM6B,E+U only,E+U only,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E+U only,escape from XCI in 27 tissues,yes
+14048034    ,GEMIN8,E+U only,E+U only,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,escape from XCI in 27 tissues,yes
+14547419    ,GLRA2,E+U only,E+U only,E+U only,"VE, S+U+E",E,E,E,E,E,E,E+U only,E,E,E,E+U only,E,E,E,E,E,E,E,"VE, S+U+E","VE, S+U+E",E,E+U only,E,VE and escape from XCI,yes
+14891183    ,FANCB,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+14891526    ,MOSPD2,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+15353675    ,PIGA,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+15511710    ,PIR,E+U only,E+U only,E+U only,E,E+U only,E,E,E,E+U only,E,E,E,E,E,E,E+U only,U,E,E,E,E,E,E+U only,E+U only,E,E+U only,E+U only,VE and escape from XCI,yes
+15693038    ,CA5BP1,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+15756411    ,CA5B,E+U only,E+U only,E+U only,E,E,E,E,E,E,E,E,E,U,E,E,E,E+U only,E,E,E,E,E,E,E,E,E,E+U only,VE and escape from XCI,yes
+15808573    ,ZRSR2,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+15873099    ,AP1S2,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+16730339    ,CTPS2,E,E,E+U only,S,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,subject and escape from XCI,yes
+16730774    ,CTPS2,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+16731058    ,CTPS2,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+16737706    ,SYAP1,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+16804554    ,TXLNG,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+16888533    ,RBBP7,E+U only,E+U only,E+U only,E,"VE, S+U+E",E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E,VE and escape from XCI,yes
+17393542    ,NHS,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+17755591    ,SCML1,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S,S,S+U only,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+17878946    ,RAI2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+18372843    ,SCML2,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+18443724    ,CDKL5,"VE, S+U+E",U,"VE, S+U+E","VE, S+U+E",S+U only,S+U only,U,U,U,U,S+U only,U,U,U,U,U,"VE, S+U+E",S+U only,S+U only,S,S,S,"VE, S+U+E","VE, S+U+E",S+U only,U,S+U only,VE and subject to XCI,yes
+18693100    ,TRNA_Val,"VE, S+U+E",S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+19002479    ,PHKA2,S+U only,S+U only,S+U only,S,S+U only,S,S+U only,S+U only,U,U,S+U only,U,U,U,S+U only,U,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+19533378    ,MAP3K15,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+19905743    ,SH3KBP1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+20159965    ,EIF1AX,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,escape from XCI in 27 tissues,yes
+20284749    ,RPS6KA3,S+U only,S+U only,S+U only,S,S,S,S+U only,S,S,S,S,S,S,S,S+U only,U,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+20285522    ,RPS6KA3,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+21392535    ,CNKSR2,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+21857655    ,MBTPS2,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+21958714    ,SMS,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+23685644    ,PRDX4,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+23761406    ,ACOT9,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+23801293    ,AK310094,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+23926056    ,APOO,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+23926122    ,CXorf58,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+24073064    ,EIF2S3,E+U only,E+U only,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E+U only,escape from XCI in 27 tissues,yes
+24167761    ,ZFX,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+24483343    ,PDK3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+24665454    ,PCYT1B,S+U only,S+U only,S+U only,S,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+24712057    ,POLA1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S+U only,S,subject to XCI in 27 tissues,yes
+24712063    ,POLA1,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+28605680    ,IL1RAPL1,"VE, S+U+E",S+U only,"VE, S+U+E",S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S+U only,U,S+U only,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+30327494    ,NR0B1,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+30907510    ,TAB3,"VE, S+U+E",U,S+U only,U,U,U,S+U only,U,S+U only,U,S,U,S,U,S+U only,U,S+U only,S+U only,U,S+U only,S,S,U,S+U only,S,U,S+U only,VE and subject to XCI,yes
+31285023    ,DMD,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+37208527    ,PRRG1,S+U only,S+U only,S+U only,S,S,S,S,S,U,S,S,S,S,S,S+U only,S+U only,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+37430821    ,LANCL3,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+37545132    ,XK,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+37706888    ,DYNLT3,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+38080176    ,SRPX,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+38186787    ,RPGR,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,U,S,S,S,S+U only,S+U only,S+U only,S,U,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+38420730    ,TSPAN7,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+38663072    ,MID1IP1,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+38664199    ,MID1IP1,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+40036581    ,BCOR,E+U only,E+U only,"VE, S+U+E",E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E+U only,E+U only,E,E,E+U only,E+U only,E,E,E+U only,VE and escape from XCI,yes
+40440215    ,ATP6AP2,"VE, S+U+E",U,"VE, S+U+E","VE, S+U+E",S+U only,U,U,"VE, S+U+E",S+U only,U,U,U,U,U,U,U,"VE, S+U+E",S+U only,U,S+U only,S,S,"VE, S+U+E","VE, S+U+E",S,U,U,VE and subject to XCI,yes
+40506805    ,CXorf38,"VE, S+U+E",E+U only,"VE, S+U+E",E,E+U only,U,E+U only,E+U only,E,U,E,U,E,U,E+U only,U,"VE, S+U+E",E+U only,"VE, S+E only",U,U,U,"VE, S+U+E",E+U only,"VE, S+U+E",E+U only,"VE, S+U+E",VE and escape from XCI,yes
+40506818    ,CXorf38,E+U only,E+U only,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E+U only,escape from XCI in 27 tissues,yes
+40944887    ,USP9X,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+41192650    ,DDX3X,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+41193843    ,DDX3X,E,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+41782286    ,CASK,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+43515408    ,MAOA,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+44202922    ,EFHC2,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E,escape from XCI in 27 tissues,yes
+44402220    ,FUNDC1,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+44732422    ,KDM6A,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+45710446    ,AK098783,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,S,S,S,S,S+U only,S,S,S,S,S+U only,S+U only,S+U only,S+U only,S,S,S,S,U,S+U only,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+46306623    ,ZNF673,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+46404891    ,ZNF674,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+46404927    ,LOC401588,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+46433191    ,CHST7,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+46433366    ,CHST7,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+46618471    ,SLC9A7,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+46696346    ,RP2,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+46771867    ,PHF16,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+47004608    ,NDUFB11,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+47004616    ,RBM10,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+47053200    ,UBA1,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+47077527    ,CDK16,"VE, S+U+E",E+U only,"VE, S+U+E",E,"VE, S+U+E",E,E,E,E,U,E+U only,E,E,U,E+U only,E+U only,"VE, S+U+E",E+U only,E,E+U only,E+U only,U,"VE, S+U+E",E+U only,E,E+U only,"VE, S+U+E",VE and escape from XCI,yes
+47078075    ,CDK16,"VE, S+U+E",E+U only,"VE, S+U+E",E+U only,E+U only,E,E,E,E,U,U,U,E,U,E+U only,E+U only,E+U only,E+U only,E,E+U only,E,U,"VE, S+U+E",E+U only,E+U only,E+U only,"VE, S+U+E",VE and escape from XCI,yes
+47342344    ,ZNF41,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+47342609    ,ZNF41,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+47420515    ,ARAF,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+47479255    ,SYN1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+47510002    ,ELK1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+47518578    ,UXT,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+47696191    ,LOC441493,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+47696300    ,ZNF81,U,S+U only,S+U only,"VE, S+U+E",S+U only,S+U only,S,S,S+U only,S,S,S,S,S,U,S+U only,S+U only,S+U only,S,S+U only,S+U only,S,U,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+47863376    ,ZNF182,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+47863393    ,ZNF182,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+47863733    ,SPACA5,S+U only,S+U only,S+U only,"VE, S+E only",S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,no therefore novel XCI status call
+47931000    ,ZNF630,"VE, S+U+E",S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,VE and subject to XCI,yes
+48334548    ,FTSJ1,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+48367370    ,PORCN,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+48380163    ,EBP,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S,U,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+48398074    ,TBC1D25,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+48398099    ,TBC1D25,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+48432740    ,RBM3,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+48456223    ,WDR13,S+U only,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+48555130    ,SUV39H1,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+48660508    ,HDAC6,"VE, S+U+E",U,"VE, S+U+E",S,"VE, S+U+E",U,S+U only,S+U only,S,U,S,U,U,U,S+U only,U,U,"VE, S+E only","VE, S+E only",S+U only,U,U,U,U,S,"VE, S+U+E","VE, S+U+E",VE and subject to XCI,yes
+48693959    ,PCSK1N,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+48755194    ,PQBP1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+48755425    ,TIMM17B,"VE, S+U+E",S+U only,S+U only,S,S,S,S,S,S,S,U,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,VE and subject to XCI,yes
+48755538    ,PQBP1,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+48755774    ,PQBP1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+48768922    ,SLC35A2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+48769234    ,SLC35A2,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+48776412    ,PIM2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+48814892    ,OTUD5,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+48815647    ,OTUD5,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+48828250    ,KCND1,S+U only,S+U only,"VE, S+U+E",S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,"VE, S+U+E",S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+48858674    ,GRIPAP1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+48900989    ,TFE3,S+U only,S+U only,"VE, S+U+E","VE, S+E only",S+U only,S,S,S+U only,S+U only,S,S+U only,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+48931661    ,PRAF2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+48937755    ,WDR45,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+48958058    ,WDR45,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+48980078    ,GPKOW,S+U only,S+U only,S+U only,S,U,U,S+U only,S+U only,S,S+U only,S,S+U only,S,S,S+U only,U,S+U only,S+U only,U,S,S,S,U,S+U only,S,U,S+U only,VE and subject to XCI,yes
+49020120    ,MAGIX,S,S,"VE, S+U+E",S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,VE and subject to XCI,yes
+49028183    ,PLP2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+49056660    ,SYP,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+49091926    ,CCDC22,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+49126305    ,PPP1R3F,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+49643958    ,LOC158572,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+49687224    ,CLCN5,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+50213720    ,DGKK,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+50557043    ,SHROOM4,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S+U only,S+U only,S+U only,S+U only,S,S,U,S,U,U,"VE, S+U+E",S+U only,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+51075680    ,NUDT10,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+53024650    ,FAM156A,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+53111541    ,TSPYL2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+53254603    ,KDM5C,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+53350521    ,IQSEC2,E+U only,E+U only,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E,escape from XCI in 27 tissues,yes
+53449617    ,SMC1A,"VE, S+U+E",E+U only,"VE, S+U+E",E,E+U only,E+U only,E,E,E+U only,E,E,E,E,E,E,E,"VE, S+U+E",E+U only,E,E+U only,E+U only,E+U only,"VE, S+U+E",E+U only,E,E+U only,E+U only,VE and escape from XCI,yes
+53449838    ,RIBC1,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E,E,E,E+U only,escape from XCI in 27 tissues,yes
+53461322    ,HSD17B10,"VE, S+U+E",S+U only,"VE, S+U+E",S,S+U only,S+U only,S+U only,S,S+U only,S+U only,S,S,S,S,U,U,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+53713672    ,HUWE1,S+U only,U,S+U only,S,S+U only,U,U,S+U only,U,U,S,U,U,U,S+U only,U,S+U only,S+U only,U,S+U only,S+U only,S+U only,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+54070606    ,PHF8,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+54209713    ,FAM120C,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+54384437    ,WNK3,S+U only,S,S+U only,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+54466852    ,TSR2,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+54522598    ,FGD1,S+U only,"VE, S+E only",S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+54556643    ,GNL3L,S+U only,"VE, S+E only",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,VE and subject to XCI,yes
+54834170    ,MAGED2,S+U only,S+U only,U,S,U,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,U,S+U only,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+54834796    ,MAGED2,"VE, S+U+E","VE, S+U+E","VE, S+U+E",S,S,S,S,S,S,S,"VE, S+U+E",S,S,S,S,S,S,"VE, S+U+E",S,S,S,S,"VE, S+U+E",S,S,"VE, S+U+E","VE, S+U+E",VE and subject to XCI,yes
+54835492    ,MAGED2,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+54947283    ,TRO,S+U only,S+U only,U,S,U,S,S,S+U only,S+U only,S+U only,S,S,S,U,U,U,U,S+U only,U,U,U,S+U only,U,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+55026779    ,APEX2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+55187534    ,FAM104B,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,VE and subject to XCI,yes
+55187627    ,FAM104B,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+55478537    ,MAGEH1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+55515371    ,USP51,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,S,S+U only,S,S,S+U only,S,S,S,S,S+U only,U,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+55515630    ,USP51,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S,S,S+U only,S,subject to XCI in 27 tissues,yes
+55744109    ,RRAGB,S+U only,S+U only,S+U only,U,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+56258821    ,KLF8,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+56258869    ,KLF8,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+56590059    ,UBQLN2,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+57021957    ,SPIN3,S,S,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,VE and subject to XCI,yes
+57147061    ,SPIN2B,"VE, S+U+E",S+U only,"VE, S+U+E",S,S+U only,S,S,S,S,S,S,S,U,S,U,S,S+U only,S+U only,S,S,S,S,"VE, S+U+E","VE, S+U+E",S,S+U only,S+U only,VE and subject to XCI,yes
+57147978    ,SPIN2B,S+U only,S+U only,S+U only,U,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,VE and subject to XCI,yes
+57618268    ,ZXDB,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+62571217    ,SPIN4,S+U only,S+U only,S+U only,S,S+U only,U,U,S+U only,S+U only,S+U only,S,S,U,S,S+U only,U,S+U only,S+U only,U,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+62974990    ,ARHGEF9,S,S,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,VE and subject to XCI,no therefore novel XCI status call
+62975030    ,ARHGEF9,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+63005425    ,ARHGEF9,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+63425623    ,FAM123B,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+63615332    ,MTMR8,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+64254623    ,ZC4H2,S,S+U only,S+U only,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S+U only,S,subject to XCI in 27 tissues,yes
+64754685    ,LAS1L,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+64887510    ,MSN,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S,S,S+U only,S,subject to XCI in 27 tissues,yes
+66763873    ,AR,S+U only,S+U only,U,S,S+U only,S+U only,S+U only,S+U only,U,U,S,S,S,S,U,U,S+U only,S+U only,U,S,S,S,U,U,S,S+U only,S+U only,VE and subject to XCI,yes
+67653298    ,OPHN1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S+U only,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+67718623    ,YIPF6,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+67867510    ,STARD8,S,S,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+67913481    ,STARD8,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+68048839    ,EFNB1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+68385364    ,PJA1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+68725077    ,FAM155B,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+68835910    ,EDA,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+69353298    ,IGBP1,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S+U only,S+U only,S+U only,S,S,S,U,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+69509797    ,PDZD11,S,S,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,VE and subject to XCI,yes
+69509932    ,KIF4A,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+69664704    ,DLG3,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+69672154    ,DLG3,"VE, S+U+E",S+U only,"VE, S+U+E",S,S,S,S,S+U only,S,S,S,S,U,S,S,S,S+U only,S,S,S,S,S,"VE, S+U+E",S+U only,S,S,S+U only,VE and subject to XCI,yes
+69674945    ,DLG3,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+70150974    ,SLC7A3,S+U only,S+U only,S+U only,S,S+U only,S,S+U only,S,S,S+U only,S,S,U,S,S+U only,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,"VE, S+U+E",S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+70288230    ,SNX12,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+70338405    ,MED12,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+70474037    ,ZMYM3,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+70474498    ,ZMYM3,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,S+U only,S+U only,S+U only,S,U,S,S,U,S,S+U only,U,S+U only,S+U only,U,S+U only,S+U only,U,S+U only,S+U only,S,S+U only,U,VE and subject to XCI,yes
+70475046    ,ZMYM3,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+70503041    ,NONO,S+U only,S+U only,S+U only,S,S,U,S,S,S+U only,S+U only,S,U,S,U,S+U only,U,S+U only,S+U only,U,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+70586113    ,TAF1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+70752911    ,OGT,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,"VE, S+U+E",S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+71130937    ,NHSL2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+71351389    ,RGAG4,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+71351750    ,RGAG4,S+U only,S+U only,S+U only,S,S+U only,S,U,S+U only,S+U only,S+U only,S+U only,S,U,S,S+U only,U,S+U only,S+U only,U,U,U,U,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+71458857    ,ERCC6L,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+71497140    ,RPS4X,E+U only,E,E+U only,"VE, S+E only",E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,VE and escape from XCI,yes
+71525763    ,CITED1,U,E+U only,"VE, S+U+E",E+U only,E+U only,E,E,E,U,E+U only,E,U,E,E,E+U only,E+U only,E+U only,E,E+U only,E,E,E,"VE, S+U+E",E+U only,"VE, S+U+E",E+U only,E+U only,VE and escape from XCI,yes
+71526836    ,CITED1,E+U only,E,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+71527036    ,CITED1,"VE, S+U+E",E+U only,"VE, S+U+E",E,"VE, S+U+E",E,E,E,E+U only,E,E,E,E,E,E,E,U,E,E,E,E,E,"VE, S+U+E",E+U only,"VE, S+U+E",E+U only,E+U only,VE and escape from XCI,yes
+71792952    ,HDAC8,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+71934028    ,PHKA1,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+72434709    ,NAP1L2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+72782920    ,LOC139201,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+73164158    ,JPX,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,escape from XCI in 27 tissues,yes
+73641084    ,SLC16A2,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S,S,S+U only,S+U only,S,S,U,S,U,S,S+U only,S,S+U only,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+73834460    ,RLIM,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+74145286    ,KIAA2022,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+74376131    ,ABCB7,S+U only,S+U only,S+U only,S,S+U only,U,S,S,S,S+U only,S,S,S,S,S+U only,S+U only,S+U only,S+U only,U,S,S,S,U,S+U only,S,U,S+U only,VE and subject to XCI,yes
+74493893    ,UPRT,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+74743336    ,ZDHHC15,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S+U only,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+75392770    ,CXorf26,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+75648045    ,MAGEE1,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,S,S,S+U only,S,S,S,S,S,S,S+U only,S+U only,S+U only,S+U only,U,S,S,S+U only,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+77041718    ,ATRX,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+77151064    ,MAGT1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+77166193    ,ATP7A,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+77359665    ,PGK1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+77395178    ,TAF9B,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S+U only,S,subject to XCI in 27 tissues,yes
+79277741    ,TBX22,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+80064412    ,BRWD3,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+80065232    ,BRWD3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+80457440    ,HMGN5,U,U,U,E,U,U,E,E+U only,E+U only,U,E+U only,U,U,E,E+U only,U,U,E+U only,E,E,E,U,"VE, S+U+E",U,"VE, S+U+E",U,E+U only,VE and escape from XCI,yes
+82763268    ,POU3F4,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+83442942    ,RPS6KA6,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+83757486    ,HDX,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+84258897    ,APOOL,S+U only,S+U only,S,"VE, S+E only",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,"VE, S+U+E",S,S,S,S+U only,VE and subject to XCI,yes
+84498996    ,ZNF711,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,U,S+U only,VE and subject to XCI,yes
+84499770    ,ZNF711,S+U only,S+U only,S+U only,S,S+U only,S+U only,S+U only,S+U only,U,S,S,S,U,S,S+U only,S+U only,U,S+U only,S,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+85403454    ,DACH2,S+U only,S+U only,S+U only,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+90689596    ,PABPC5,"VE, S+U+E","VE, S+U+E","VE, S+U+E","VE, S+U+E","VE, S+U+E",E+U only,E,E+U only,E+U only,E,U,U,E,U,E,E+U only,E+U only,E+U only,E,E+U only,U,E+U only,"VE, S+U+E","VE, S+U+E","VE, S+E only",U,"VE, S+U+E",VE and escape from XCI,no therefore novel XCI status call
+91034259    ,PCDH11X,E+U only,E+U only,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E+U only,E,escape from XCI in 27 tissues,yes
+92928681    ,NAP1L3,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,escape from XCI in 27 tissues,yes
+99665270    ,PCDH19,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+99891793    ,TSPAN6,U,U,U,"VE, S+E only",U,U,S,S+U only,U,S,S,S,U,S,S+U only,U,U,S+U only,S+U only,S+U only,S,S,U,U,S,S+U only,S+U only,VE and subject to XCI,yes
+99986521    ,SYTL4,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S+U only,S,S+U only,S+U only,S+U only,S,S+U only,S,subject to XCI in 27 tissues,yes
+99987134    ,SYTL4,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+100075347    ,CSTF2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+100183897    ,XKRX,S+U only,S+U only,S+U only,S,S+U only,S,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+100307104    ,TRMT2B,S+U only,S+U only,S+U only,S,S+U only,S,S,S+U only,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+100353177    ,CENPI,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+100603956    ,TIMM8A,S+U only,U,S+U only,S,S+U only,U,U,U,U,S+U only,U,S+U only,U,U,S+U only,U,S+U only,S+U only,U,S+U only,S,S,U,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+100645769    ,BTK,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+100645877    ,RPL36A-HNRNPH2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+100645877    ,RPL36A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+100663120    ,HNRNPH2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+100740407    ,ARMCX4,S,S,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+100805513    ,ARMCX1,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+100872990    ,ARMCX6,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+100878119    ,ARMCX3,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+100878350    ,ARMCX3,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+100913634    ,ARMCX2,"VE, S+U+E",E+U only,"VE, S+U+E",E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E+U only,E,E,E,E,E,E+U only,E+U only,E,E,E,VE and escape from XCI,yes
+100914862    ,ARMCX2,S,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+101187038    ,ZMAT1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+101854095    ,ARMCX5,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+101854275    ,ARMCX5-GPRASP2,S+U only,S+U only,S+U only,S,S+U only,S+U only,S,S,S,S,S,S,S,U,S+U only,U,S+U only,S+U only,S+U only,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+101854425    ,ARMCX5,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+101906293    ,GPRASP1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+101967103    ,GPRASP2,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+101967290    ,ARMCX5-GPRASP2,S,S,S+U only,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+101975641    ,BHLHB9,S+U only,S+U only,S+U only,S,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+102000906    ,BHLHB9,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,U,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S,VE and subject to XCI,yes
+102470019    ,BEX4,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+102510120    ,TCEAL8,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+102611379    ,WBP5,E+U only,E+U only,"VE, S+U+E","VE, S+U+E",E,E,E,E,E,E,E,E,E,U,E+U only,E,E+U only,E,E,E,E,E,S+U only,E,"VE, S+E only",E+U only,E+U only,subject and escape from XCI,yes
+102883891    ,TCEAL1,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+102943085    ,MORF4L2,S+U only,S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+103087211    ,RAB9B,S+U only,S+U only,S+U only,S,U,S+U only,U,S,U,U,"VE, S+E only",S+U only,S,U,S+U only,S+U only,U,S+U only,S+U only,S+U only,S,S,"VE, S+U+E",U,S,U,U,VE and subject to XCI,yes
+103174130    ,AK026512,"VE, S+U+E",E+U only,"VE, S+U+E","VE, S+U+E",E+U only,E,E,E,E,E,E,E,E,E,E,E+U only,E+U only,E,E,E,E+U only,E,"VE, S+U+E","VE, S+U+E",E,E,E+U only,VE and escape from XCI,no therefore novel XCI status call
+103217241    ,TMSB15B,S+U only,U,S+U only,S,S+U only,S+U only,S+U only,U,U,S+U only,S,S,U,U,U,U,U,S+U only,S+U only,U,U,U,S+U only,U,S,U,S+U only,VE and subject to XCI,no therefore novel XCI status call
+103357106    ,ZCCHC18,S,S+U only,S+U only,"VE, S+E only",S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,no therefore novel XCI status call
+103401707    ,MCART6,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+103411155    ,FAM199X,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+103810995    ,IL1RAPL2,S+U only,S+U only,U,S,S+U only,S+U only,S,S,S,S+U only,S,S,S,S,S+U only,U,S+U only,S+U only,U,S+U only,S+U only,S+U only,U,U,S,U,S+U only,VE and subject to XCI,yes
+105855159    ,CXorf57,S+U only,S+U only,S+U only,S,S+U only,S,S,S+U only,S+U only,S,S,S,S,S,S+U only,S+U only,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+105969893    ,RNF128,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+106243473    ,MORC4,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+106362056    ,RBM41,U,U,U,S,U,U,U,U,U,S+U only,S,S+U only,S,U,S+U only,U,S+U only,S+U only,U,S+U only,S,S+U only,U,S+U only,S,U,S+U only,VE and subject to XCI,yes
+106449669    ,NUP62CL,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+106449861    ,CXorf41,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+107019016    ,TSC22D3,S+U only,S+U only,"VE, S+U+E",S,S+U only,S,S+U only,S+U only,S+U only,S,U,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,"VE, S+U+E",S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+107019201    ,TSC22D3,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,subject to XCI in 27 tissues,yes
+107069083    ,MID2,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+107334873    ,PSMD10,S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+107334898    ,ATG4A,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S,S+U only,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+107681657    ,COL4A6,"VE, S+U+E",S+U only,U,S,U,S,S,U,U,S,S+U only,S,U,S,S+U only,S,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+107979606    ,IRS4,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,U,S,S,S,S,S,U,S+U only,S+U only,S+U only,S,S+U only,S,S+U only,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+108780058    ,NXT2,"VE, S+U+E",U,"VE, S+U+E","VE, S+U+E",S+U only,S,S+U only,S+U only,S,S+U only,"VE, S+U+E",U,U,S,S+U only,S+U only,S+U only,S+U only,S,S,S,S+U only,"VE, S+U+E",S+U only,S+U only,S+U only,S+U only,VE and subject to XCI,yes
+108976620    ,ACSL4,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+109245862    ,TMEM164,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+109246341    ,TMEM164,"VE, S+U+E",S+U only,"VE, S+U+E",S+U only,S+U only,S+U only,U,U,U,U,S+U only,S+U only,U,U,U,U,S+U only,S+U only,S,S+U only,U,U,"VE, S+U+E",S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+109561379    ,AMMECR1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+110187512    ,PAK3,"VE, S+U+E",S+U only,U,S,U,S+U only,S,S,S+U only,S,S,S,S,S,U,S+U only,U,S+U only,U,U,U,U,S+U only,U,S,S,"VE, S+U+E",VE and subject to XCI,yes
+110339374    ,PAK3,S+U only,S+U only,S+U only,S,U,S,S+U only,U,U,S,S,S,U,S,S+U only,S,S+U only,S+U only,S,S+U only,S,S+U only,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+110924345    ,ALG13,"VE, S+U+E",U,"VE, S+U+E",E,E+U only,E,E,E,E,E,E,E,E,E,E,E,"VE, S+U+E",E,E,E+U only,E,E+U only,E+U only,E+U only,E,E+U only,E+U only,VE and escape from XCI,yes
+113818550    ,HTR2C,"VE, S+U+E",E+U only,E+U only,"VE, S+U+E",E+U only,E+U only,E,E,E+U only,E,E,E,E,E,E,E,E+U only,E,E+U only,E,E,E,"VE, S+U+E","VE, S+U+E","VE, S+E only",E+U only,E+U only,VE and escape from XCI,no therefore novel XCI status call
+114795176    ,PLS3,E+U only,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E,E,E,E,escape from XCI in 27 tissues,yes
+117250827    ,KLHL13,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,U,S+U only,S,S+U only,S+U only,S+U only,S,S,S,S+U only,U,S+U only,S+U only,U,S+U only,S,S+U only,S+U only,S+U only,S,U,S+U only,VE and subject to XCI,yes
+117251302    ,KLHL13,"VE, S+U+E",S+U only,S+U only,"VE, S+U+E",S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+117480035    ,WDR44,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+117629871    ,DOCK11,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+117861558    ,IL13RA1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+117957786    ,ZCCHC12,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+117973518    ,AK057519,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+118108712    ,LONRF3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+118370210    ,PGRMC1,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+118533257    ,SLC25A43,S+U only,S+U only,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+118602224    ,AK094280,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+118603060    ,BC028211,"VE, S+U+E",S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,no therefore novel XCI status call
+118699371    ,CXorf56,"VE, S+U+E",S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,U,S+U only,U,S+U only,U,S,S,S+U only,VE and subject to XCI,yes
+118708498    ,UBE2A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+118739845    ,NKRF,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+118826791    ,41158,S+U only,S+U only,U,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+118827140    ,41158,"VE, S+U+E",S,U,"VE, S+E only",S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,"VE, S+U+E",U,S,S+U only,S+U only,VE and subject to XCI,yes
+118827332    ,41158,"VE, S+U+E",S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,U,S,S,S,S+U only,S,S,S,S,S,"VE, S+U+E",U,S,S+U only,S+U only,VE and subject to XCI,yes
+118892575    ,SOWAHD,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+118925605    ,RPL39,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+118986990    ,UPF3B,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+119005733    ,NDUFA1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+119005790    ,RNF113A,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+119077734    ,NKAP,S+U only,S,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+119379121    ,NKAPP1,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+119384606    ,ZBTB33,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+119445390    ,FAM70A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+119603203    ,LAMP2,S,S+U only,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,VE and subject to XCI,yes
+119694816    ,CUL4B,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+119737743    ,MCTS1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+119738551    ,MCTS1,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,U,S,S+U only,"VE, S+U+E",S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+119764004    ,C1GALT1C1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+122318095    ,GRIA3,"VE, S+U+E",S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S+U only,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+122318764    ,GRIA3,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+122866903    ,THOC2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+122993661    ,XIAP,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S+U only,S,S,U,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+122994016    ,XIAP,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+123094474    ,STAG2,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,U,S+U only,VE and subject to XCI,yes
+125300079    ,DCAF12L2,S,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+128657459    ,SMARCA1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+128788932    ,APLN,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+128977560    ,ZDHHC9,S+U only,S+U only,S,"VE, S+E only",S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,VE and subject to XCI,yes
+128977909    ,ZDHHC9,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+128978123    ,ZDHHC9,"VE, S+U+E",S+U only,S+U only,S,S+U only,S,S,S,S,S,U,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+129040096    ,UTP14A,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+129299860    ,AIFM1,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+129305772    ,RAB33A,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+129402921    ,ZNF280C,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+129473927    ,SLC25A14,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+129474046    ,SLC25A14,"VE, S+U+E",S+U only,S+U only,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,VE and subject to XCI,yes
+129535942    ,RBMX2,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+129658230    ,BC043223,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,VE and subject to XCI,no therefore novel XCI status call
+130037207    ,ENOX2,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+130423034    ,IGSF1,S+U only,S+U only,S+U only,"VE, S+U+E",S+U only,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+131157244    ,MST4,"VE, S+U+E",S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+131157535    ,MST4,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S,VE and subject to XCI,yes
+131351489    ,RAP2C,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+131352188    ,RAP2C,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+131352649    ,AK095439,"VE, S+U+E",S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S+U only,S,VE and subject to XCI,no therefore novel XCI status call
+131623060    ,MBNL3,"VE, S+U+E",U,"VE, S+U+E","VE, S+U+E",S+U only,S+U only,S+U only,U,U,S+U only,S,S,S,S,S+U only,U,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S+U only,S,U,S+U only,VE and subject to XCI,yes
+131623995    ,MBNL3,S+U only,S+U only,S+U only,"VE, S+E only",S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+132091372    ,HS6ST2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+132548586    ,GPC4,S+U only,S+U only,S+U only,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+132549204    ,GPC4,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+133119672    ,GPC3,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+133371076    ,CCDC160,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+133507341    ,PHF6,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+133594174    ,HPRT1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S,subject to XCI in 27 tissues,yes
+133684053    ,LOC100506757,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+133931184    ,FAM122B,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+133931261    ,FAM122B,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,U,S+U only,S+U only,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+133941204    ,FAM122C,S+U only,S+U only,S+U only,S,S+U only,S,S+U only,S+U only,S,S,S+U only,S,U,S,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,yes
+133941222    ,FAM122C,"VE, S+U+E",U,S+U only,"VE, S+U+E",S+U only,S,S,S,S,S+U only,S,S,S,S,S+U only,U,S+U only,S+U only,S,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+134049296    ,MOSPD1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+134124967    ,CXorf69,S+U only,S+U only,S+U only,"VE, S+E only",S+U only,S,U,U,S+U only,S,S,S,S,S,S+U only,S,S+U only,S+U only,S+U only,S+U only,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+134166332    ,FAM127A,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+134186220    ,FAM127B,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+134232732    ,LINC00087,S+U only,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+134477956    ,DKFZp451F083,"VE, S+U+E",S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,U,S,S,S,S+U only,S+U only,S,S,S+U only,VE and subject to XCI,no therefore novel XCI status call
+134478011    ,BC029787,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+134478695    ,ZNF449,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+134555867    ,LINC00086,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+134654554    ,DDX26B,S+U only,S,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+135056133    ,MMGT1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+135067582    ,SLC9A6,S,S,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,VE and subject to XCI,yes
+135067585    ,SLC9A6,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+135228860    ,FHL1,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+135229558    ,FHL1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+135333737    ,MAP7D3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+135579237    ,HTATSF1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+135579670    ,HTATSF1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+135849658    ,ARHGEF6,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+135962938    ,RBMX,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+135991553    ,AK055694,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+136113832    ,GPR101,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+136648345    ,ZIC3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+137793826    ,FGF13,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+137794268    ,LOC100129662,U,S+U only,U,E+U only,U,S,U,S,U,S,S,S,U,S,S+U only,U,U,S+U only,S+U only,S+U only,S,U,U,U,S,S+U only,S+U only,subject and escape from XCI,no therefore novel XCI status call
+138286444    ,FGF13,S+U only,S+U only,U,S,S+U only,S,S,S,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,S+U only,S+U only,S,S,S+U only,S+U only,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+138287184    ,FGF13,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+139587224    ,SOX3,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+140271309    ,LDOC1,S+U only,S+U only,S+U only,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+142722318    ,SLITRK4,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+142723018    ,SLITRK4,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S,S+U only,S,S,S,S,S+U only,S,S+U only,S,S,S,S,S,S,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,no therefore novel XCI status call
+144899346    ,SLITRK2,S+U only,S+U only,U,S,S+U only,S,S+U only,S+U only,U,S+U only,S,S,U,S,S+U only,U,S+U only,S,S+U only,S,S,S,U,U,S,S+U only,S+U only,VE and subject to XCI,yes
+146993468    ,FMR1,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+147582138    ,AFF2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+148586883    ,IDS,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+148622518    ,CXorf40A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+148713486    ,TMEM185A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+149106691    ,CXorf40B,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+149106765    ,LOC100272228,S+U only,S+U only,S+U only,S,S,S+U only,S,S,S,S+U only,S+U only,S,S,S,S+U only,U,S+U only,S,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+149529835    ,MAMLD1,U,U,U,S+U only,U,S,S+U only,S,S+U only,S,S,S,S,S,S+U only,S+U only,S+U only,S+U only,S+U only,U,U,U,U,U,S,U,S+U only,VE and subject to XCI,yes
+149531550    ,MAMLD1,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+149737046    ,MTM1,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S+U only,subject to XCI in 27 tissues,yes
+149861868    ,MTMR1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+150151762    ,HMGB3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+150565656    ,VMA21,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+150863729    ,PRRG3,S+U only,U,S+U only,"VE, S+E only",S+U only,U,S,S,S,S+U only,S,S,S,S,S+U only,U,U,S+U only,U,S,S,S+U only,S+U only,U,S,S+U only,S+U only,VE and subject to XCI,no therefore novel XCI status call
+151143150    ,GABRE,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+151619830    ,GABRA3,"VE, S+U+E",S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+151806636    ,GABRQ,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+151999300    ,CETN2,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+151999510    ,NSDHL,S+U only,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+152224765    ,PNMA3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+152599612    ,ZNF275,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+152736602    ,HAUS7,S+U only,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+152907896    ,DUSP9,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+152912656    ,DUSP9,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+152938742    ,PNCK,U,U,S+U only,S,S+U only,U,S+U only,U,S,S+U only,S+U only,S+U only,S,S,U,U,U,S+U only,U,U,U,U,U,U,S,"VE, S+U+E",S+U only,VE and subject to XCI,no therefore novel XCI status call
+152939276    ,PNCK,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S,S,S+U only,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+152989548    ,BCAP31,S+U only,S+U only,S+U only,S,S+U only,S,S+U only,S,S+U only,S,S,S,U,S,S+U only,U,S+U only,S+U only,S+U only,S,S,S,S+U only,S+U only,S,S+U only,S+U only,VE and subject to XCI,yes
+153060018    ,SSR4,S+U only,S+U only,S+U only,S,S,S,S+U only,S,S,S+U only,S,S,S,S,S+U only,S+U only,S+U only,S,S+U only,S,S,S,S+U only,S,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+153141398    ,L1CAM,E+U only,E+U only,E+U only,"VE, S+U+E",E+U only,E,E,E,E,E,E,E,E,E,E,E,E+U only,E,E,E,E,E,E+U only,E+U only,E,E+U only,E+U only,VE and escape from XCI,yes
+153200467    ,NAA10,S+U only,S+U only,"VE, S+U+E",S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S,VE and subject to XCI,yes
+153285265    ,IRAK1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,"VE, S+U+E",S,S,S,S,S,S,S,S,S,VE and subject to XCI,yes
+153285439    ,MIR718,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+153363187    ,MECP2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+153603005    ,FLNA,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153607596    ,EMD,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+153626570    ,RPL10,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+153627678    ,RPL10,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+153639876    ,TAZ,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153640426    ,DNASE1L1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153656795    ,BC009467,S,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,no therefore novel XCI status call
+153656977    ,ATP6AP1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153657190    ,ATP6AP1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153665258    ,GDI1,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+153672472    ,FAM50A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153686622    ,PLXNA3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,subject to XCI in 27 tissues,yes
+153707595    ,LAGE3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153714931    ,UBL4A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153719001    ,SLC10A3,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153744565    ,FAM3A,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153775232    ,G6PD,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153775561    ,IKBKG,S+U only,S+U only,S+U only,"VE, S+U+E",S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,VE and subject to XCI,yes
+153775786    ,G6PD,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,subject to XCI in 27 tissues,yes
+153776061    ,IKBKG,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S+U only,subject to XCI in 27 tissues,yes
+153979347    ,GAB3,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S+U only,S+U only,S,S,S,S,S+U only,S+U only,S,S+U only,S+U only,subject to XCI in 27 tissues,yes
+153991030    ,DKC1,S,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+154033801    ,MPP1,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,subject to XCI in 27 tissues,yes
+154255063    ,FUNDC2,S+U only,S+U only,S+U only,S,S,S,S,S,S,S,S,S,S,S,S,S,S+U only,S,S,S,S,S,S+U only,S+U only,S,S,S,subject to XCI in 27 tissues,yes
