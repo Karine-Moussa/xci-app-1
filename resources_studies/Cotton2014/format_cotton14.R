@@ -60,11 +60,19 @@ for (row_num in 1:nrow(cotton_mDNA)){
     cotton_mDNA_pivot <- rbind(cotton_mDNA_pivot, 
                                data.frame(gene_object$gene, 
                                           gene_object$pos,
-                                          gene_object$pos_mapped,
+                                          gene_object$pos_mapped[1],
                                           names(gene_object$tiss),
                                           full_tiss_names,
                                           c(gene_object$tiss),
                                           gene_object$state))
 }
 colnames(cotton_mDNA_pivot) <- c("GENE", "POS_HG19", "POS", "TISS", "FULL_TISS", "TISS_STATE", "STATUS")
-saveRDS(cotton_mDNA_pivot, "resources_studies/Cotton2014/cotton_mDNA.rds")
+
+# Save information
+saveRDS(cotton_mDNA_pivot, "resources_studies/Cotton2014/cotton_mDNA_precolor.rds")
+
+# Clean up 
+rm(cotton_mDNA, cotton_mDNA_pivot, gene_object,
+   options_1, options_2, remapping_file, col_num,
+   file_path, full_tiss_names, new_name, row_num)
+

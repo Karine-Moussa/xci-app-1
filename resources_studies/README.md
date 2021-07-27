@@ -36,3 +36,8 @@ The source genome was hg19, the converted genome was hg38.
 *X-inactivation profile reveals extensive variability in X-linked gene expression in females*\
 [DOI: 10.1038/nature03479](https://doi.org/10.1038/nature03479)\
 Contains a data table with the original hybrid fibroblast escape states. 
+
+**Cotton et al 2014**\
+*Landscape of DNA methylation on the X chromosome reflects CpG density, functional chromatin state and X-chromosome inactivation*\
+[DOI: 10.1093/hmg/ddu564](https://doi.org/10.1093/hmg/ddu564)\
+Contains escape states for 27 tissues using DNA methylation approach. 

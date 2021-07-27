@@ -96,6 +96,11 @@ getAssocObjDisease <- function(){
                 if(TRUE %in% grepl(gene, mapped_genes)){returned_genes_list <- c(returned_genes_list, gene)}
             }
         }
+        if(study == "study7"){
+            returned_genes <- for(gene in c(study7_genes)){ 
+                if(TRUE %in% grepl(gene, mapped_genes)){returned_genes_list <- c(returned_genes_list, gene)}
+            }
+        }
         # for event conditioning syntax, returned_genes would need to be "" if empty
         ifelse(returned_genes_list != c(), rv$returned_genes_list <- returned_genes_list, rv$returned_genes_list <- "")
         df <- data.frame()

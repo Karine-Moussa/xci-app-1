@@ -10,6 +10,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                        "MANUAL UPLOAD" = "study0",
                                        "GEUVADIS: lymphoblast" = "study1",
                                        "GTEx Tukiainen et al: multi-tissue" = "study6",
+                                       "Cotton et al: mDNA multi-tissue" = "study7",
                                        "Cotton et al: lymphoblast & fibroblast" = "study2",
                                        "Carrel + Willard: hybrid fibroblast" = "study3",
                                        "Katsir + Linial: scRNA-seq lymphoblast" = "study4",
@@ -66,6 +67,12 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study6'",
                                  selectizeInput("geneofinterest1_6", "Gene of Interest:", study6_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # study 7
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study7'",
+                                 selectizeInput("geneofinterest1_7", "Gene of Interest:", study7_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # Disease search if the SearchType box exists
@@ -176,6 +183,10 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          conditionalPanel(
                              condition = "input.addStudies == 'study6'",
                              withSpinner(plotOutput(outputId = "plot_study6", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study7'",
+                             withSpinner(plotOutput(outputId = "plot_study7", height = "100px", click = "myclick", hover = "myhover"), type = 2)
                          ),
                          # Display the chromosome (image) if study is not selected
                          conditionalPanel(
@@ -316,6 +327,22 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                            value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study5"))
+                                         ),
+                                         conditionalPanel( # conditional panel within conditional panel
+                                             condition = "input.addStudies == 'study7'",
+                                             p("", style = "font-size:14px"),
+                                             p("Cotton et. al: mDNA multi-tissue (n = 27 tissues)  ", style = "font-size:18px", 
+                                               downloadLink('download_states_study7','[download table]', style = "font-size:14px")),
+                                             p(span(a("doi.org/10.1093/hmg/ddu564", href="https://academic.oup.com/hmg/article/24/6/1528/682766#supplementary-data", 
+                                                      target="_blank",)), style = "font-size:14px"),
+                                             checkboxInput("states_filter_study7", 
+                                                           "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
+                                                           value = TRUE),
+                                             checkboxInput("tissues_filter_study7", 
+                                                           "View all states within tissues", 
+                                                           value = FALSE),
+                                             br(),
+                                             (dataTableOutput(outputId = "status_table_study7"))
                                          )
                                 ),
                                 tabPanel("Association Data",

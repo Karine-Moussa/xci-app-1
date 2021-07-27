@@ -1,5 +1,8 @@
 # Consolidate all escape states for each gene in a table
 # to minimize loading speed for tab 2 in application
+
+num_of_studies = 7 # need to update each time a study is added
+
 library(data.table)
 # Read data tables for all studies
 # STUDY 1
@@ -37,7 +40,7 @@ study1_dt <- unique(study1_dt)
 # STUDY 2
 study2_dt <- data.table()
 study2_dt$GENE <- cott_carr_will_df$gene
-study2_dt$STUDY <- "Cotton et al. (multi-tissue)"
+study2_dt$STUDY <- "Cotton et al. (lymphoblast & fibroblast)"
 study2_dt$STATE <- cott_carr_will_df$status_cott
 study2_dt <- unique(study2_dt)
 
@@ -72,26 +75,39 @@ study6_dt$STATE <- ifelse(study6_dt$STATE == "E", "escape",
                                  ifelse(study6_dt$STATE == "V", "variable","")))
 study6_dt <- unique(study6_dt)
 
+# STUDY 7
+study7_dt <- data.table()
+study7_dt$GENE <- cotton_mDNA$GENE
+study7_dt$STUDY <- "Cotton et. al (mDNA multi-tissue)"
+study7_dt$STATE <- cotton_mDNA$STATUS
+study7_dt <- unique(study7_dt)
+
 # Get list of all genes
 if (!exists("all_genes")){
     all_genes <- unique(c(study1_dt$GENE, study2_dt$GENE, study3_dt$GENE,
-                        study4_dt$GENE, study5_dt$GENE, study6_dt$GENE))
+                        study4_dt$GENE, study5_dt$GENE, study6_dt$GENE,
+                        study7_dt$GENE))
 }
 
 # Create meta data frame
 studies_string <- c(study1_dt$STUDY[1], study2_dt$STUDY[1], study3_dt$STUDY[1],
-             study4_dt$STUDY[1], study5_dt$STUDY[1], study6_dt$STUDY[1])
-studies <- list(study1_dt, study2_dt, study3_dt, study4_dt, study5_dt, study6_dt)
+             study4_dt$STUDY[1], study5_dt$STUDY[1], study6_dt$STUDY[1], 
+             study7_dt$STUDY[1])
+studies <- list(study1_dt, study2_dt, study3_dt, study4_dt, study5_dt, study6_dt,
+                study7_dt)
 meta_dt <- data.table()
 for (gene in all_genes){
     gene_dt <- data.table()
-    gene_dt$GENE <- rep(gene, 6)
+    gene_dt$GENE <- rep(gene, 7)
     gene_dt$STUDY <- studies_string
     # Get statuses for each study
     status_entries <- list()
     for (study in studies){
         if(gene %in% study$GENE){
             status_entry <- study[GENE == gene, STATE]
+            status_entry <- paste(unlist(status_entry), collapse = ", ")
+            # ^this takes care of cases when the escape status
+            # varies across samples.
         } else {
             status_entry <- "NA"
         }

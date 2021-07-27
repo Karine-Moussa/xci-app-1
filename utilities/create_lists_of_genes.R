@@ -18,10 +18,11 @@ study3_genes <- cott_carr_will_df$gene[cott_carr_will_df$status_carrwill != "NA"
 study4_genes <- unique(kat_lin_df_lb$gene)
 study5_genes <- unique(kat_lin_df_fb$gene)
 study6_genes <- unique(TukGTExMod$`Gene name`)
+study7_genes <- unique(cotton_mDNA$GENE)
 
 # All genes
 all_genes <- unique(c(Xgenes, study1_genes, study2_genes, study3_genes,
-                    study4_genes, study5_genes, study6_genes))
+                    study4_genes, study5_genes, study6_genes, study7_genes))
 
 # Save rds 
 #saveRDS(Xgenes, "rds/Xgenes.rds")
@@ -31,4 +32,5 @@ saveRDS(study3_genes, "rds/study3_genes.rds")
 saveRDS(study4_genes, "rds/study4_genes.rds")
 saveRDS(study5_genes, "rds/study5_genes.rds")
 saveRDS(study6_genes, "rds/study6_genes.rds")
+saveRDS(study7_genes, "rds/study7_genes.rds")
 saveRDS(all_genes, "rds/all_genes.rds")

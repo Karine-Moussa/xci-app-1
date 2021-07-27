@@ -214,6 +214,12 @@ server <- function(input, output, session) {
     rv$searchType <- input$searchType
     rv$addStudies <- input$addStudies
   })
+  observeEvent(input$geneofinterest1_7, { # conditional panel for study 7
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_7, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
+  })
   observeEvent(input$diseaseofinterest1, { 
     rv$diseaseofinterest1 <- input$diseaseofinterest1
     if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS"){
@@ -333,6 +339,15 @@ server <- function(input, output, session) {
         rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
         rv$mapped_gene = TukGTExMod$`Gene name`[as.numeric(rv$closest_expr_index)]
       }
+      # Query study 7
+      if(rv$addStudies == "study7"){
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(cotton_mDNA$POS - rv$plot_coord_x[i]))
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = cotton_mDNA$GENE[as.numeric(rv$closest_expr_index)]
+      }
       
       if(rv$geneofinterest1[1] == ""){
         rv$geneofinterest1 = rv$mapped_gene
@@ -397,6 +412,12 @@ server <- function(input, output, session) {
   })
   observeEvent(input$states_filter_study5, {
     rv$states_filter_study5 <- input$states_filter_study5
+  })
+  observeEvent(input$states_filter_study7, {
+    rv$states_filter_study7 <- input$states_filter_study7
+  })
+  observeEvent(input$tissues_filter_study7, {
+    rv$tissues_filter_study7 <- input$tissues_filter_study7
   })
   # ObserveEvents Tab2
   observeEvent(input$geneofinterest2, {
@@ -557,7 +578,7 @@ server <- function(input, output, session) {
   output$download_states_study2 <- downloadHandler(
     filename =  function(){
       # Name of created file
-      "cott_escape_states.csv"
+      "cott_fibr_lymph_escape_states.csv"
     },
     content = function(file){
       # Get the data source
@@ -595,6 +616,17 @@ server <- function(input, output, session) {
     content = function(file){
       # Get the data source
       mydata <- readRDS('data_output/katsir_linial_fibroblast_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_study7 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "cott_mDNA_multi-tiss_xstates.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/cott_mDNA_xstates.rds')
       write.csv(mydata, file)
     }
   )
@@ -920,6 +952,38 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/gtex_v6p_xstates.rds')
     df
   })
+  ## Status Table (Study7) (similar to Study6)
+  output$status_table_study7 <- renderDataTable({
+    df <- data.frame("Gene" = cotton_mDNA$GENE,
+                     "Start (bp) [hg38]" = cotton_mDNA$POS,
+                     "Tissue" = cotton_mDNA$FULL_TISS,
+                     "Tissue State" = cotton_mDNA$TISS_STATE,
+                     "Escape Status" = cotton_mDNA$STATUS,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study7)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    # Filter out the Tissue column if only a summary is needed
+    if (!isTruthy(rv$tissues_filter_study7)){
+      df <- df[,-c(3,4)]
+      df <- unique(df)
+    }
+    saveRDS(df,'data_output/cott_mDNA_xstates.rds')
+    df
+  })
   ### TAB 2
   # Individual Escape Table
   output$ind_escape_states_table <- renderDataTable({
@@ -1051,8 +1115,6 @@ server <- function(input, output, session) {
     }
   })
   output$plot_study1 <- renderCachedPlot({
-  #output$plot_study1 <- renderPlot({
-      
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints
@@ -1596,6 +1658,81 @@ server <- function(input, output, session) {
     }
     p6
   })
+  output$plot_study7 <- renderPlot({
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Create gene of interest data frame
+    geneofinterest_df <- cotton_mDNA[cotton_mDNA$GENE %in% geneofinterest,] # change here
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$POS),] # change here
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+    }
+    mapped_genes <- unique(mapped_genes_gwas)
+    returned_genes_list <- c()
+    returned_genes <- for(gene in study7_genes){ # changed here
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- cotton_mDNA[cotton_mDNA$GENE %in% returned_genes_list,] # changed here
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$POS),] # changed here
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p7 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = cotton_mDNA, # changed here
+                   aes(x=cotton_mDNA[, "POS"], y=0, # chnaged here
+                       xend=cotton_mDNA[, "POS"], yend=ymax-1), # changed here
+                   color=cotton_mDNA[, "COLOR"]) + # changed here
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p7 <- p7 + geom_segment(data = geneofinterest_df, # changed here
+                              aes(x=geneofinterest_df[, "POS"], y=ymin, # changed here
+                                  xend=geneofinterest_df[, "POS"], yend=ymax-1), # changed here
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p7 <- p7 + geom_segment(data = disease_geneofinterest_df, # changed here
+                              aes(x=disease_geneofinterest_df[, "POS"], y=ymin, # changed here
+                                  xend=disease_geneofinterest_df[, "POS"], yend=ymax-1), # changed here
+                              color='red')
+    }
+    p7
+  })
   ## X chromosome "image"
   ## commented out for testing
   output$xchromosome <- renderCachedPlot({
@@ -1631,7 +1768,9 @@ server <- function(input, output, session) {
     xchromosome_plot
   }, cacheKeyExpr = { input$geneofinterest1 }
   )
-  ### TAB 2
+  ############
+  ### TAB 3
+  ############
   ## Violin Plots - Gene of Interest
   output$individual_gene_tau_plot <- renderPlot({
     validate(
@@ -1728,14 +1867,6 @@ server <- function(input, output, session) {
     }
     geneofinterest_tauplot
   })
-  ##################
-  ## TAB 3 OUTPUT
-  ##################
-
-  ##################
-  ## TAB 4 OUTPUT
-  ##################
-
 }
 
 #This lets script know its a shiny app

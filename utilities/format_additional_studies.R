@@ -234,6 +234,15 @@ kat_lin_df$end_mapped <- as.numeric(kat_lin_df$end_mapped)
 kat_lin_df_fb <- subset(kat_lin_df, snp_fb != "NA")
 kat_lin_df_lb <- subset(kat_lin_df, snp_lb != "NA")
 
+## Study 7: Cotton 2014
+cotton_mDNA <- readRDS("resources_studies/Cotton2014/cotton_mDNA_precolor.rds")
+for (row_num in 1:nrow(cotton_mDNA)){
+    if (cotton_mDNA$STATUS[row_num] == "escape"){row_color = col_escape}
+    if (cotton_mDNA$STATUS[row_num] == "variable"){row_color = col_variable}
+    if (cotton_mDNA$STATUS[row_num] == "inactive"){row_color = col_inactive}
+    cotton_mDNA$COLOR[row_num] = row_color
+}
+
 # Cleanup
 rm(col_check, col_escape, col_variable, col_inactive, col_na)
 
@@ -244,3 +253,4 @@ saveRDS(kat_lin_df, "rds/kat_lin_df.rds")
 saveRDS(kat_lin_df_fb, "rds/kat_lin_df_fb.rds")
 saveRDS(kat_lin_df_lb, "rds/kat_lin_df_lb.rds")
 saveRDS(TukGTExMod, "rds/TukGTExMod.rds")
+saveRDS(cotton_mDNA, "rds/cotton_mDNA.rds")
