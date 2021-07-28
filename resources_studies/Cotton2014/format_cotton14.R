@@ -25,7 +25,7 @@ options_2 <- rbind(options_2,
 options_1[2,][options_1[1,] %in% "U"] # should return "uncalled"
 options_2[2,][options_2[1,] %in% cotton_mDNA[14, 30]]
 
-# Update the sames of all escape calls
+# Update the names of all escape calls
 for (row_num in 1:nrow(cotton_mDNA)){
     for (col_num in 3:29){
         new_name <- options_1[2,][options_1[1,] %in% cotton_mDNA[row_num, col_num]]

@@ -34,7 +34,8 @@ kat_lin_df_fb <- readRDS("rds/kat_lin_df_fb.rds")
 kat_lin_df_lb <- readRDS("rds/kat_lin_df_lb.rds")
 TukGTExMod <- readRDS("rds/TukGTExMod.rds")
 cotton_mDNA <- readRDS("rds/cotton_mDNA.rds")
-
+balbrown_mCEMT <- readRDS("rds/balbrown_mCEMT.rds")
+balbrown_CREST <- readRDS("rds/balbrown_CREST.rds")
 
 # format_plot_aesthetics.R
 x_labels_genes_start <- readRDS("rds/x_labels_genes_start.rds")
@@ -61,6 +62,8 @@ study4_genes <- readRDS("rds/study4_genes.rds")
 study5_genes <- readRDS("rds/study5_genes.rds")
 study6_genes <- readRDS("rds/study6_genes.rds")
 study7_genes <- readRDS("rds/study7_genes.rds")
+study8_genes <- readRDS("rds/study8_genes.rds")
+study9_genes <- readRDS("rds/study9_genes.rds")
 all_genes <- readRDS("rds/all_genes.rds")
 
 # consolidate_escape_states.R

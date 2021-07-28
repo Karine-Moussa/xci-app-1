@@ -220,6 +220,18 @@ server <- function(input, output, session) {
     rv$searchType <- input$searchType
     rv$addStudies <- input$addStudies
   })
+  observeEvent(input$geneofinterest1_8, { # conditional panel for study 8
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_8, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
+  })
+  observeEvent(input$geneofinterest1_9, { # conditional panel for study 9
+    rv$geneofinterest1 <- unique(c(input$geneofinterest1_9, rv$mapped_gene))
+    rv$geneofinterest1 <- rv$geneofinterest1[rv$geneofinterest1 != ""]
+    rv$searchType <- input$searchType
+    rv$addStudies <- input$addStudies
+  })
   observeEvent(input$diseaseofinterest1, { 
     rv$diseaseofinterest1 <- input$diseaseofinterest1
     if (rv$diseaseofinterest1 == "ALL FEMALE BIAS TRAITS"){
@@ -348,7 +360,25 @@ server <- function(input, output, session) {
         rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
         rv$mapped_gene = cotton_mDNA$GENE[as.numeric(rv$closest_expr_index)]
       }
-      
+      # Query study 8
+      if(rv$addStudies == "study8"){ # change here
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(balbrown_mCEMT$START - rv$plot_coord_x[i])) # change here
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = balbrown_mCEMT$GENE[as.numeric(rv$closest_expr_index)] # change here
+      }
+      # Query study 9
+      if(rv$addStudies == "study9"){ # change here
+        for(i in 1:length(rv$plot_coord_x)){
+          index <- which.min(abs(balbrown_CREST$START - rv$plot_coord_x[i])) # change here
+          rv$closest_expr_index[i] <- index
+        }
+        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+        rv$mapped_gene = balbrown_CREST$GENE[as.numeric(rv$closest_expr_index)] # change here
+      }
+      ###
       if(rv$geneofinterest1[1] == ""){
         rv$geneofinterest1 = rv$mapped_gene
       } else {
@@ -418,6 +448,12 @@ server <- function(input, output, session) {
   })
   observeEvent(input$tissues_filter_study7, {
     rv$tissues_filter_study7 <- input$tissues_filter_study7
+  })
+  observeEvent(input$states_filter_study8, {
+    rv$states_filter_study8 <- input$states_filter_study8
+  })
+  observeEvent(input$states_filter_study9, {
+    rv$states_filter_study9 <- input$states_filter_study9
   })
   # ObserveEvents Tab2
   observeEvent(input$geneofinterest2, {
@@ -627,6 +663,28 @@ server <- function(input, output, session) {
     content = function(file){
       # Get the data source
       mydata <- readRDS('data_output/cott_mDNA_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_study8 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "balbrown_DNAm_CEMT.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/balbrown_CEMT_xstates.rds')
+      write.csv(mydata, file)
+    }
+  )
+  output$download_states_study9 <- downloadHandler(
+    filename =  function(){
+      # Name of created file
+      "balbrown_DNAme_CREST.csv"
+    },
+    content = function(file){
+      # Get the data source
+      mydata <- readRDS('data_output/balbrown_mCREST_xstates.rds')
       write.csv(mydata, file)
     }
   )
@@ -982,6 +1040,56 @@ server <- function(input, output, session) {
       df <- unique(df)
     }
     saveRDS(df,'data_output/cott_mDNA_xstates.rds')
+    df
+  })
+  ## Status Table (Study8) 
+  output$status_table_study8 <- renderDataTable({
+    df <- data.frame("Gene" = balbrown_mCEMT$GENE,
+                     "Start (bp) [hg38]" = balbrown_mCEMT$START,
+                     "Escape Status" = balbrown_mCEMT$STATUS,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study7)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    saveRDS(df,'data_output/balbrown_mCEMT_xstates.rds')
+    df
+  })
+  ## Status Table (Study9) 
+  output$status_table_study9 <- renderDataTable({
+    df <- data.frame("Gene" = balbrown_CREST$GENE,
+                     "Start (bp) [hg38]" = balbrown_CREST$START,
+                     "Escape Status" = balbrown_CREST$STATUS,
+                     check.names = FALSE
+    )
+    # Filter the df based on what genes are being displayed
+    # (only filter if the "filter" check box is true)
+    # a. By default, it displays ALL genes
+    to_display = df$Gene
+    if (isTruthy(rv$states_filter_study7)){
+      # b. If the study search is 'gene' use 'geneofinterest' reactive value
+      # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
+      if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
+        to_display <- rv$geneofinterest1
+      }
+      if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
+        to_display <- rv$returned_genes_list
+      }
+    }
+    df <- df[df$Gene %in% to_display,]
+    saveRDS(df,'data_output/balbrown_CREST_xstates.rds')
     df
   })
   ### TAB 2
@@ -1732,6 +1840,156 @@ server <- function(input, output, session) {
                               color='red')
     }
     p7
+  })
+  output$plot_study8 <- renderPlot({ # changed here
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Create gene of interest data frame
+    geneofinterest_df <- balbrown_mCEMT[balbrown_mCEMT$GENE %in% geneofinterest,] # change here
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$START),] # change here
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+    }
+    mapped_genes <- unique(mapped_genes_gwas)
+    returned_genes_list <- c()
+    returned_genes <- for(gene in study8_genes){ # changed here
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- balbrown_mCEMT[balbrown_mCEMT$GENE %in% returned_genes_list,] # changed here
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$START),] # changed here
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p8 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) + # changed here
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = balbrown_mCEMT, # changed here
+                   aes(x=balbrown_mCEMT[, "START"], y=0, # chnaged here
+                       xend=balbrown_mCEMT[, "START"], yend=ymax-1), # changed here
+                   color=balbrown_mCEMT[, "COLOR"]) + # changed here
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p8 <- p8 + geom_segment(data = geneofinterest_df, # changed here
+                              aes(x=geneofinterest_df[, "START"], y=ymin, # changed here
+                                  xend=geneofinterest_df[, "START"], yend=ymax-1), # changed here
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p8 <- p8 + geom_segment(data = disease_geneofinterest_df, # changed here
+                              aes(x=disease_geneofinterest_df[, "START"], y=ymin, # changed here
+                                  xend=disease_geneofinterest_df[, "START"], yend=ymax-1), # changed here
+                              color='red')
+    }
+    p8
+  })
+  output$plot_study9 <- renderPlot({ # changed here
+    # Save geneofinterest
+    geneofinterest <- rv$geneofinterest1
+    # Save disease of interest datapoints
+    diseaseofinterest <- rv$diseaseofinterest1
+    # Select either geneofinterest or diseaseofinterest depending on the search engine
+    searchType <- rv$searchType
+    # Create gene of interest data frame
+    geneofinterest_df <- balbrown_CREST[balbrown_CREST$GENE %in% geneofinterest,] # change here
+    geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$START),] # change here
+    # Create disease of interest data frame
+    mapped_genes_gwas <- c()
+    for(d in diseaseofinterest){
+      mg_gwas <- GWAS_ASSOCIATIONS[tolower(GWAS_ASSOCIATIONS$DISEASE.TRAIT) == d,'MAPPED_GENE']
+      if(!identical(mg_gwas, character(0))){
+        ifelse(is.null(mapped_genes_gwas), mapped_genes_gwas <- mg_gwas, mapped_genes_gwas <- c(mapped_genes_gwas, mg_gwas))
+      }
+    }
+    mapped_genes <- unique(mapped_genes_gwas)
+    returned_genes_list <- c()
+    returned_genes <- for(gene in study9_genes){ # changed here
+      ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
+    }
+    rv$returned_genes_list <- returned_genes_list
+    disease_geneofinterest_df <- balbrown_CREST[balbrown_CREST$GENE %in% returned_genes_list,] # changed here
+    disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$START),] # changed here
+    # Get Range of plot
+    ymin = 0
+    ymax = 10
+    # Get axis breaks
+    x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
+    first_label <- x_breaks[1]
+    rest_of_labels <- x_breaks[2:length(x_breaks)]
+    x_labels <- c(paste(first_label, "bp"),
+                  paste(formatC(rest_of_labels/(10^6), format = "f", big.mark = ",", digits = 0),"Mbp"))
+    # Create theme
+    mytheme <- theme(plot.title = element_text(family = "serif", face = "bold", size = (20), hjust = 0, vjust = -1),
+                     legend.title = element_text(face = "bold", colour = "steelblue", family = "Helvetica", size = (15)),
+                     legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
+                     legend.position = "none",
+                     axis.title.y = element_text(family = "Helvetica", size = (14), colour = "steelblue4", face = "bold"),
+                     axis.text.y = element_text(family = "Courier", colour = "steelblue4", size = (10), face = "bold", angle=0),
+                     axis.title.x = element_blank(), # Removing X-title
+                     axis.text.x = element_text(family = "Helvetica", colour = "steelblue4", size = (10),
+                                                face = "bold", angle=0, hjust=0.5),
+                     axis.ticks = element_blank(),
+                     panel.background = element_rect(fill = "white"))
+    # Create plot
+    p9 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) + # changed here
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome Position") + ylab("") + 
+      # Add points
+      geom_segment(data = balbrown_CREST, # changed here
+                   aes(x=balbrown_CREST[, "START"], y=0, # chnaged here
+                       xend=balbrown_CREST[, "START"], yend=ymax-1), # changed here
+                   color=balbrown_CREST[, "COLOR"]) + # changed here
+      # Scaling and Legends
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p9 <- p9 + geom_segment(data = geneofinterest_df, # changed here
+                              aes(x=geneofinterest_df[, "START"], y=ymin, # changed here
+                                  xend=geneofinterest_df[, "START"], yend=ymax-1), # changed here
+                              color='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p9 <- p9 + geom_segment(data = disease_geneofinterest_df, # changed here
+                              aes(x=disease_geneofinterest_df[, "START"], y=ymin, # changed here
+                                  xend=disease_geneofinterest_df[, "START"], yend=ymax-1), # changed here
+                              color='red')
+    }
+    p9 # changed here
   })
   ## X chromosome "image"
   ## commented out for testing

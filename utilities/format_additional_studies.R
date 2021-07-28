@@ -243,6 +243,41 @@ for (row_num in 1:nrow(cotton_mDNA)){
     cotton_mDNA$COLOR[row_num] = row_color
 }
 
+## Study 8: BalBrown 2021 - DNAme_CEMT
+balbrown_rds <- readRDS("resources_studies/BalBrown2021/balbrown_mod.rds")
+# Cancer cell DNAme method
+balbrown_mCEMT <- data.frame(cbind(balbrown_rds$gene, balbrown_rds$start,
+                                        balbrown_rds$stop, balbrown_rds$`DNAme CEMT`))
+colnames(balbrown_mCEMT) <- c("GENE", "START", "STOP", "STATUS")
+balbrown_mCEMT = balbrown_mCEMT[balbrown_mCEMT$STATUS != "NA",]
+balbrown_mCEMT = balbrown_mCEMT[!is.na(balbrown_mCEMT$START),]
+balbrown_mCEMT$START <- as.numeric(balbrown_mCEMT$START)
+balbrown_mCEMT$STOP <- as.numeric(balbrown_mCEMT$STOP)
+for (row_num in 1:nrow(balbrown_mCEMT)){
+    if (balbrown_mCEMT$STATUS[row_num] == "escape"){row_color = col_escape}
+    if (balbrown_mCEMT$STATUS[row_num] == "variable"){row_color = col_variable}
+    if (balbrown_mCEMT$STATUS[row_num] == "inactive"){row_color = col_inactive}
+    if (grepl(",", balbrown_mCEMT$STATUS[row_num])){row_color = col_variable}
+    balbrown_mCEMT$COLOR[row_num] = row_color
+}
+
+## Study 9: BalBrown 2021 - Epigenetic Predictor CREST
+balbrown_CREST <- data.frame(cbind(balbrown_rds$gene, balbrown_rds$start,
+                                        balbrown_rds$stop, balbrown_rds$epigeneticPredictorCREST))
+colnames(balbrown_CREST) <- c("GENE", "START", "STOP", "STATUS")
+balbrown_CREST = balbrown_CREST[balbrown_CREST$STATUS != "NA",]
+balbrown_CREST = balbrown_CREST[!is.na(balbrown_CREST$START),]
+balbrown_CREST$START <- as.numeric(balbrown_CREST$START)
+balbrown_CREST$STOP <- as.numeric(balbrown_CREST$STOP)
+for (row_num in 1:nrow(balbrown_CREST)){
+    if (balbrown_CREST$STATUS[row_num] == "escape"){row_color = col_escape}
+    if (balbrown_CREST$STATUS[row_num] == "variable"){row_color = col_variable}
+    if (balbrown_CREST$STATUS[row_num] == "inactive"){row_color = col_inactive}
+    if (grepl(",", balbrown_CREST$STATUS[row_num])){row_color = col_variable}
+    balbrown_CREST$COLOR[row_num] = row_color
+}
+rm(balbrown_rds)
+
 # Cleanup
 rm(col_check, col_escape, col_variable, col_inactive, col_na)
 
@@ -254,3 +289,5 @@ saveRDS(kat_lin_df_fb, "rds/kat_lin_df_fb.rds")
 saveRDS(kat_lin_df_lb, "rds/kat_lin_df_lb.rds")
 saveRDS(TukGTExMod, "rds/TukGTExMod.rds")
 saveRDS(cotton_mDNA, "rds/cotton_mDNA.rds")
+saveRDS(balbrown_mCEMT, "rds/balbrown_mCEMT.rds")
+saveRDS(balbrown_CREST, "rds/balbrown_CREST.rds")
