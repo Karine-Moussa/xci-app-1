@@ -1,3 +1,4 @@
+## STUDIES
 **Tuketal2017**\
 *Landscape of X chromosome inactivation across human tissues*\
 [https://doi.org/10.1038/nature24265](https://www.nature.com/articles/nature24265#citeas)\
@@ -41,3 +42,18 @@ Contains a data table with the original hybrid fibroblast escape states.
 *Landscape of DNA methylation on the X chromosome reflects CpG density, functional chromatin state and X-chromosome inactivation*\
 [DOI: 10.1093/hmg/ddu564](https://doi.org/10.1093/hmg/ddu564)\
 Contains escape states for 27 tissues using DNA methylation approach. 
+
+**Balaton & Brown 2021**\
+*Contribution of genetic and epigenetic changes to escape from X-chromosome inactivation*\
+[DOI: 10.1186/s13072-021-00404-9](https://doi.org/10.1186/s13072-021-00404-9)\
+Contains escape state predictions for several data sets based upon epigenetic marks.
+
+## HOW TO INTEGRATE IN APPLICATION
+ - format_additional_studies.R
+ - create_list_of_genes.R
+ - read_rds.R (two locations)
+ - consolidate_escape_states.R
+ - uncomment source_all_scripts.R, run all, then re-comment
+ - myServer_Tab1_assocTables.R (line 64)
+ - myUI_Tab1.R 
+ - myUI_Tab2.R (line 7, line 17)
