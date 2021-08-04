@@ -49,11 +49,11 @@ Contains escape states for 27 tissues using DNA methylation approach.
 Contains escape state predictions for several data sets based upon epigenetic marks.
 
 ## HOW TO INTEGRATE IN APPLICATION
- - format_additional_studies.R
- - create_list_of_genes.R
- - read_rds.R (two locations)
- - consolidate_escape_states.R
- - uncomment source_all_scripts.R, run all, then re-comment
- - myServer_Tab1_assocTables.R (line 64)
- - myUI_Tab1.R 
- - myUI_Tab2.R (line 7, line 17)
+ - [ ] format_additional_studies.R
+ - [ ] create_list_of_genes.R
+ - [ ] read_rds.R (two locations)
+ - [ ] consolidate_escape_states.R
+ - [ ] uncomment source_all_scripts.R, run all, then re-comment
+ - [ ] myServer_Tab1_assocTables.R (line 64)
+ - [ ] myUI_Tab1.R 
+ - [ ] myUI_Tab2.R (line 7, line 17)
