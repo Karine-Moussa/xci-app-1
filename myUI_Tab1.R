@@ -9,11 +9,12 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                      c(" " = "empty",
                                        "MANUAL UPLOAD" = "study0",
                                        "GEUVADIS: lymphoblast" = "study1",
-                                       "GTEx Tukiainen et al: multi-tissue" = "study6",
+                                       "Tukiainen et al: GTEx multi-tissue" = "study6",
+                                       "Tukiainen et al: DEG male-female" = "study10",
                                        "Cotton et al: mDNA multi-tissue" = "study7",
                                        "Cotton et al: lymphoblast & fibroblast" = "study2",
-                                       "Balaton + Brown: DNAme Cancer Cells" = "study8",
-                                       "Balaton + Brown: Epig. Predictor CREST" = "study9",
+                                       "Balaton + Brown: DNAme (cancer cells)" = "study8",
+                                       "Balaton + Brown: Epigenetic Predictor (healthy cels)" = "study9",
                                        "Carrel + Willard: hybrid fibroblast" = "study3",
                                        "Katsir + Linial: scRNA-seq lymphoblast" = "study4",
                                        "Katsir + Linial: scRNA-seq fibroblast" = "study5"
@@ -87,6 +88,12 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study9'",
                                  selectizeInput("geneofinterest1_9", "Gene of Interest:", study9_genes, multiple = TRUE),
+                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                             ),
+                             # study 10
+                             conditionalPanel(
+                                 condition = "input.searchType == 'gene' & input.addStudies == 'study10'",
+                                 selectizeInput("geneofinterest1_10", "Gene of Interest:", study10_genes, multiple = TRUE),
                                  p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # Disease search if the SearchType box exists
@@ -210,6 +217,10 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              condition = "input.addStudies == 'study9'",
                              withSpinner(plotOutput(outputId = "plot_study9", height = "100px", click = "myclick", hover = "myhover"), type = 2)
                          ),
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study10'",
+                             withSpinner(plotOutput(outputId = "plot_study10", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                         ),
                          # Display the chromosome (image) if study is not selected
                          conditionalPanel(
                              condition = "input.addStudies == 'empty'",
@@ -286,7 +297,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'study6'",
                                              p("", style = "font-size:14px"),
-                                             p("GTEx (v6p) Tukiainen et al: multi-tissue (n=29)  ", style = "font-size:18px", 
+                                             p("GTEx (v6p) Tukiainen et al: multi-tissue (n=16)  ", style = "font-size:18px", 
                                                downloadLink('download_states_study6', '[download table]', style = "font-size:14px")),
                                              p(span(a("doi.org/10.1038/nature24265", href="https://doi.org/10.1038/nature24265", target="_blank",)), style = "font-size:14px"),
                                              checkboxInput("states_filter_study6", 
@@ -369,8 +380,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'study8'",
                                              p("", style = "font-size:14px"),
-                                             p("Balaton + Brown:", style = "font-size:18px",
-                                               p("DNAme in Center for Epigenome Mapping Technologies (CEMT) Cancer Cells", style ="font-size:18px"),
+                                             p("Balaton + Brown: Promoter DNA methylation", style = "font-size:18px",
+                                               p("Center for Epigenome Mapping Technologies (CEMT) Cancer Cells", style ="font-size:14px"),
+                                               p("Tissues: tonsils, thyroid, blood, breast, colon, brain", style ="font-size:14px"),
                                                downloadLink('download_states_study8','[download table]', style = "font-size:14px")),
                                              p(span(a("doi.org/10.1186/s13072-021-00404-9", href="https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-021-00404-9", 
                                                       target="_blank",)), style = "font-size:14px"),
@@ -383,8 +395,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                          conditionalPanel( # conditional panel within conditional panel
                                              condition = "input.addStudies == 'study9'",
                                              p("", style = "font-size:14px"),
-                                             p("Balaton + Brown:", style = "font-size:18px",
-                                               p("Core Research for Evolutional Science and Technology (CREST) n = 9 females", style = "font-size:18px"), 
+                                             p("Balaton + Brown: random forest epigenetic predictor model", style = "font-size:18px",
+                                               p("Core Research for Evolutional Science and Technology (CREST)", style = "font-size:14px"), 
+                                               p("Tissues: hepatocytes, normal human colon absorptive epithelial cells", style = "font-size:14px"), 
                                                downloadLink('download_states_study9','[download table]', style = "font-size:14px")),
                                              p(span(a("doi.org/10.1186/s13072-021-00404-9", href="https://epigeneticsandchromatin.biomedcentral.com/articles/10.1186/s13072-021-00404-9", 
                                                       target="_blank",)), style = "font-size:14px"),
@@ -393,6 +406,18 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                            value = TRUE),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study9"))
+                                         ),
+                                         conditionalPanel( # conditional panel within conditional panel
+                                             condition = "input.addStudies == 'study10'",
+                                             p("", style = "font-size:14px"),
+                                             p("Differential Expression - Tukiainen et al. (n=29 tissues)  ", style = "font-size:18px", 
+                                               downloadLink('download_states_study10', '[download table]', style = "font-size:14px")),
+                                             p(span(a("doi.org/10.1038/nature24265", href="https://doi.org/10.1038/nature24265", target="_blank",)), style = "font-size:14px"),
+                                             checkboxInput("states_filter_study10", 
+                                                           "Filter by displayed genes (if no genes/diseases are selected, returns all genes)", 
+                                                           value = TRUE),
+                                             br(),
+                                             (dataTableOutput(outputId = "status_table_study10"))
                                          )
                                 ),
                                 tabPanel("Association Data",

@@ -21,11 +21,14 @@ hg19_to_hg38_cotcar <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38_cott
 hg19_to_hg38_cotcar <- hg19_to_hg38_cotcar[hg19_to_hg38_cotcar$recip != "Second Pass",] # for now remove repeated mapping
 
 # TUK ET AL 2017 (Tuk et al study GTEx findings)
-TukGTEx <- read_xlsx("resources_studies/Tuketal2017/TukSupTables/Suppl.Table.5.xlsx")
-saveRDS(TukGTEx, "rds/TukGTEx.rds")
+#TukGTEx <- read_xlsx("resources_studies/Tuketal2017/TukSupTables/Suppl.Table.5.xlsx")
+#saveRDS(TukGTEx, "rds/TukGTEx.rds")
 TukGTEx <- readRDS("rds/TukGTEx.rds")
 TukGTExMod <- TukGTEx
 hg19_to_hg38_tuk <- read.csv("resources_studies/Tuketal2017/hg19_to_hg38_tuk.csv")
+
+# TUK ET AL 2017 (Tuk et al study DEG findings)
+TukDEG_full <- read_xlsx("resources_studies/Tuketal2017/TukSupTables/Suppl.Table.13_mod.xlsx")
 
 # MERIT ET AL 2020 (the GTEx papers)
 path <- "resources_studies/Meritxelletal2020/aba3066-Table-S3.xlsx"
@@ -91,7 +94,7 @@ cott_carr_will_df$status_cott <- ifelse(cott_carr_will_df$status_cott == "variab
                                         ifelse(cott_carr_will_df$status_cott == "subject", "inactive",
                                                ifelse(cott_carr_will_df$status_cott == "escape", "escape", "NA")))
 
-# Get color
+# Create color pallete
 col_escape = "purple"
 col_variable = "turquoise3"
 col_inactive = "lightsteelblue3"
@@ -181,6 +184,30 @@ for(gene in unique(TukGTExMod$`Gene name`)){
         }
     }
 }
+
+## Study 10 Tuk et al 2017 (DEG analysis)
+TukDEG <- data.frame("GENE" = TukDEG_full$`Gene name`,
+                       "START" = TukDEG_full$Start_mapped,
+                       "STOP" = TukDEG_full$End_mapped,
+                       "BIAS" = as.character(TukDEG_full$`Sex-bias in GTEx`))
+# Create color pallete
+col_malebias = "green"
+col_femalebias = "purple"
+col_het = "turquoise3"
+col_nobias = "lightsteelblue3"
+for (row_num in 1:nrow(TukDEG)){
+    if (is.na(TukDEG$BIAS[row_num])){row_color = col_na}
+    else {
+        if (TukDEG$BIAS[row_num] == "Male-bias"){row_color = col_malebias}
+        if (TukDEG$BIAS[row_num] == "No significant bias"){row_color = col_nobias}
+        if (TukDEG$BIAS[row_num] == "Female-bias"){row_color = col_femalebias}
+        if (TukDEG$BIAS[row_num] == "Heterogeneous"){row_color = col_het}
+        if (TukDEG$BIAS[row_num] == "NA"){row_color = col_na}
+    }
+    TukDEG$COLOR[row_num] = row_color
+}
+rm(col_malebias, col_femalebias, col_nobias, col_het)
+rm(TukDEG_full)
 
 ## Katsir + Linial 2019
 kat_lin_df <- data.frame(gene = katsir_linail_s3$`geneSymbol`,
@@ -288,6 +315,7 @@ saveRDS(kat_lin_df, "rds/kat_lin_df.rds")
 saveRDS(kat_lin_df_fb, "rds/kat_lin_df_fb.rds")
 saveRDS(kat_lin_df_lb, "rds/kat_lin_df_lb.rds")
 saveRDS(TukGTExMod, "rds/TukGTExMod.rds")
+saveRDS(TukDEG, "rds/TukDEG.rds")
 saveRDS(cotton_mDNA, "rds/cotton_mDNA.rds")
 saveRDS(balbrown_mCEMT, "rds/balbrown_mCEMT.rds")
 saveRDS(balbrown_CREST, "rds/balbrown_CREST.rds")

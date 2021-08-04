@@ -1,7 +1,7 @@
 # Consolidate all escape states for each gene in a table
 # to minimize loading speed for tab 2 in application
 
-num_of_studies = 9 # need to update each time a study is added
+num_of_studies = 10 # change here (when a new study is added)
 
 library(data.table)
 # Read data tables for all studies
@@ -25,6 +25,13 @@ if (!exists("kat_lin_df_lb")) {
 if (!exists("TukGTExMod")) {
     TukGTExMod <- readRDS("rds/TukGTExMod.rds")
 }
+
+# STUDY 10
+if (!exists("TukDEG")) {
+    TukDEG<- readRDS("rds/TukDEG.rds")
+}
+
+# change here (add study)
 
 # Organize GENE | STUDY | STATE for each study
 # STUDY 1
@@ -68,7 +75,7 @@ study5_dt <- unique(study5_dt)
 # STUDY 6
 study6_dt <- data.table()
 study6_dt$GENE <- TukGTExMod$`Gene name`
-study6_dt$STUDY <- "GTEx (multi-tissue)"
+study6_dt$STUDY <- "Tukiainen et al.: GTEx (multi-tissue)"
 study6_dt$STATE <- TukGTExMod$status_adv
 study6_dt$STATE <- ifelse(study6_dt$STATE == "E", "escape", 
                           ifelse(study6_dt$STATE == "S", "inactive",
@@ -78,36 +85,45 @@ study6_dt <- unique(study6_dt)
 # STUDY 7
 study7_dt <- data.table()
 study7_dt$GENE <- cotton_mDNA$GENE
-study7_dt$STUDY <- "Cotton et. al (mDNA multi-tissue)"
+study7_dt$STUDY <- "Cotton et al.: mDNA (multi-tissue)"
 study7_dt$STATE <- cotton_mDNA$STATUS
 study7_dt <- unique(study7_dt)
 
 # STUDY 8
 study8_dt <- data.table()
 study8_dt$GENE <- balbrown_mCEMT$GENE
-study8_dt$STUDY <- "Balaton + Brown (DNAme Cancer Cells)"
+study8_dt$STUDY <- "Balaton + Brown: DNAme (Cancer Cells)"
 study8_dt$STATE <- balbrown_mCEMT$STATUS
 
 # STUDY 9
 study9_dt <- data.table()
 study9_dt$GENE <- balbrown_CREST$GENE
-study9_dt$STUDY <- "Balaton + Brown (Epig. Predictor CREST)"
+study9_dt$STUDY <- "Balaton + Brown: Epig. Predictor (CREST)"
 study9_dt$STATE <- balbrown_CREST$STATUS
 
+# STUDY 10
+study10_dt <- data.table()
+study10_dt$GENE <- TukDEG$GENE
+study10_dt$STUDY <- "Tukiainen et al.: Male-Female DEG analysis"
+study10_dt$STATE <- TukDEG$BIAS
+
+# change here (add the study)
 
 # Get list of all genes
 if (!exists("all_genes")){
     all_genes <- unique(c(study1_dt$GENE, study2_dt$GENE, study3_dt$GENE,
                         study4_dt$GENE, study5_dt$GENE, study6_dt$GENE,
-                        study7_dt$GENE, study8_dt$GENE, study9_dt$GENE)) # change here
+                        study10_dt$GENE, study7_dt$GENE, study8_dt$GENE, 
+                        study9_dt$GENE)) # change here
 }
 
 # Create meta data frame
 studies_string <- c(study1_dt$STUDY[1], study2_dt$STUDY[1], study3_dt$STUDY[1],
              study4_dt$STUDY[1], study5_dt$STUDY[1], study6_dt$STUDY[1], 
-             study7_dt$STUDY[1], study8_dt$STUDY[1], study9_dt$STUDY[1]) # change here
+             study10_dt$STUDY[1], study7_dt$STUDY[1], study8_dt$STUDY[1], 
+             study9_dt$STUDY[1]) # change here
 studies <- list(study1_dt, study2_dt, study3_dt, study4_dt, study5_dt, study6_dt,
-                study7_dt, study8_dt, study9_dt) # change here
+                study10_dt,study7_dt, study8_dt, study9_dt) # change here
 meta_dt <- data.table()
 for (gene in all_genes){
     gene_dt <- data.table()
