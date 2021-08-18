@@ -104,7 +104,7 @@ study9_dt$STATE <- balbrown_CREST$STATUS
 # STUDY 10
 study10_dt <- data.table()
 study10_dt$GENE <- TukDEG$GENE
-study10_dt$STUDY <- "Tukiainen et al. Male-Female DEG (multi-tissue)"
+study10_dt$STUDY <- "Tukiainen et al. Male-Female DGEA (multi-tissue)"
 study10_dt$STATE <- TukDEG$BIAS
 
 # change here (add the study)

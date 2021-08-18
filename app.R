@@ -709,11 +709,11 @@ server <- function(input, output, session) {
   output$download_states_study10 <- downloadHandler(
     filename =  function(){
       # Name of created file
-      "tuk_DEG.csv"
+      "tuk_DGEA.csv"
     },
     content = function(file){
       # Get the data source
-      mydata <- readRDS('data_output/tuk_DEG_xstates.rds') # come back here
+      mydata <- readRDS('data_output/tuk_DGEA_xstates.rds') # come back here
       write.csv(mydata, file)
     }
   )
@@ -1143,7 +1143,7 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
-    saveRDS(df,'data_output/tuk_DEG_xstates.rds')
+    saveRDS(df,'data_output/tuk_DGEA_xstates.rds')
     df
   })
   ### TAB 2
