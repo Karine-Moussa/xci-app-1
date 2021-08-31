@@ -293,7 +293,8 @@ server <- function(input, output, session) {
       rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
       rv$plot_coord_y = c(rv$plot_coord_y, input$myclick$y)
       # Query study 0
-      if(rv$addStudies == "study0"){
+      study0_tempdf <- readRDS("rds/study0_df.rds") # make sure there's start column
+      if(rv$addStudies == "study0" & "start" %in% colnames(study0_tempdf)){
         for(i in 1:length(rv$plot_coord_x)){
           index <- which.min(abs(rv$study0_df$start - rv$plot_coord_x[i]))
           rv$closest_expr_index[i] <- index

@@ -37,7 +37,7 @@ if (!exists("TukDEG")) {
 # STUDY 1
 study1_dt <- data.table()
 study1_dt$GENE <- x_expr_mod$GENE
-study1_dt$STUDY <- "GEUVADIS (lymphoblast)"
+study1_dt$STUDY <- "Sauteraud et al. GEUVADIS (lymphoblast)"
 study1_dt$STATE <- x_expr_mod$status_adv
 study1_dt$STATE <- ifelse(study1_dt$STATE == "E", "escape", 
                           ifelse(study1_dt$STATE == "S", "inactive",
