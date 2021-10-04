@@ -125,7 +125,8 @@ server <- function(input, output, session) {
     tissues_filter_study1 = "on",
     states_filter_study6 = "on",
     tissues_filter_study6 = "on",
-    states_filter_study2 = "on",
+    #states_filter_study2 = "on",
+    filter_study2 = 1,
     states_filter_study3 = "on",
     states_filter_study4 = "on",
     states_filter_study5 = "on",
@@ -135,6 +136,9 @@ server <- function(input, output, session) {
     includes_start = TRUE,
     ready1 = FALSE
   )
+  # zoom in out
+  ranges <- reactiveValues(x = NULL, y = NULL)
+  
   # ObserveEvents Tab 1
   observeEvent(input$file1, {
     # need to reset settings if input$file1 changes
@@ -288,6 +292,17 @@ server <- function(input, output, session) {
       rv$study0_flag = FALSE
     }
   })
+  observeEvent(input$study2_dblclick, {
+    # Zoom in out
+    brush <- input$study2_brush # will need to change if more studies
+    if (!is.null(brush)) {
+      ranges$x <- c(brush$xmin, brush$xmax)
+      ranges$y <- c(brush$ymin, brush$ymax)
+    } else {
+      ranges$x <- NULL
+      ranges$y <- NULL
+    }
+  })
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
       rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
@@ -312,15 +327,16 @@ server <- function(input, output, session) {
         rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
       }
       # Query study 2
-      if(rv$addStudies == "study2"){
-        for(i in 1:length(rv$plot_coord_x)){
-          cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
-          index <- which.min(abs(cott_df$start_mapped - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = cott_df$gene[as.numeric(rv$closest_expr_index)]
-      }
+      # zoom in out
+      # if(rv$addStudies == "study2"){
+      #   for(i in 1:length(rv$plot_coord_x)){
+      #     cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
+      #     index <- which.min(abs(cott_df$start_mapped - rv$plot_coord_x[i]))
+      #     rv$closest_expr_index[i] <- index
+      #   }
+      #   rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+      #   rv$mapped_gene = cott_df$gene[as.numeric(rv$closest_expr_index)]
+      # }
       # Query study 3
       if(rv$addStudies == "study3"){
         for(i in 1:length(rv$plot_coord_x)){
@@ -447,8 +463,8 @@ server <- function(input, output, session) {
   observeEvent(input$tissues_filter_study6, {
     rv$tissues_filter_study6 <- input$tissues_filter_study6
   })
-  observeEvent(input$states_filter_study2, {
-    rv$states_filter_study2 <- input$states_filter_study2
+  observeEvent(input$filter_study2, {
+    rv$filter_study2 <- input$filter_study2
   })
   observeEvent(input$states_filter_study3, {
     rv$states_filter_study3 <- input$states_filter_study3
@@ -877,6 +893,7 @@ server <- function(input, output, session) {
   output$status_table_study2 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
+                     "End (bp) [hg38]" = cott_carr_will_df$end_mapped,
                      State = cott_carr_will_df$status_cott,
                      check.names = FALSE
     )
@@ -884,7 +901,7 @@ server <- function(input, output, session) {
     # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df$Gene
-    if (isTruthy(rv$states_filter_study2)){
+    if (rv$filter_study2 == 1){
     # b. If the study search is 'gene' use 'geneofinterest' reactive value
     # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
       if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
@@ -892,6 +909,13 @@ server <- function(input, output, session) {
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
         to_display <- rv$returned_genes_list
+      }
+    } 
+    if (rv$filter_study2 == 2){ # zoom in out
+      # Return only the genes that are between the min and max of the plot
+      if(!is.null(ranges$x)){ # make sure we have ranges
+        to_display <- df$Gene[(as.numeric(df$`Start (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`End (bp) [hg38]`) < ranges$x[2])]
+        to_display <- to_display[!is.na(to_display)]
       }
     }
     df <- df[df$Gene %in% to_display,]
@@ -1444,8 +1468,23 @@ server <- function(input, output, session) {
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
-    # Create gene of interest data frame
+    # Get Range of plot (zoom in out)
+    ymin = 0
+    ymax = 10
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+    }
+    # Create this study's data frame
     cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
+    cott_df$end_mapped <- as.numeric(cott_df$end_mapped)
+    # Account for if a gene is cut off (due to zoom in zoom out):
+    cott_df$start_mapped <- ifelse(cott_df$start_mapped < xmin, xmin, cott_df$start_mapped)
+    cott_df$end_mapped <- ifelse(cott_df$end_mapped > xmax, xmax, cott_df$end_mapped)
+    # Create gene of interest data frame
     geneofinterest_df <- cott_df[cott_df$gene %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
     # Create disease of interest data frame
@@ -1464,9 +1503,6 @@ server <- function(input, output, session) {
     rv$returned_genes_list <- returned_genes_list
     disease_geneofinterest_df <- cott_df[cott_df$gene %in% returned_genes_list,]
     disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
-    # Get Range of plot
-    ymin = 0
-    ymax = 10
     # Get axis breaks
     x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
     first_label <- x_breaks[1]
@@ -1486,30 +1522,32 @@ server <- function(input, output, session) {
                      axis.ticks = element_blank(),
                      panel.background = element_rect(fill = "white"))
     # Create plot
-    p2 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+    p2 <- ggplot(data = cott_df, aes(x=0, y=0)) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome") + ylab("") + 
       # Add points
-      geom_segment(data = cott_df, 
-                   aes(x=cott_df[, "start_mapped"], y=0,
-                       xend=cott_df[, "start_mapped"], yend=ymax-1),
-                   color=cott_df[, "color_cott"]) + 
+      geom_rect(data = NULL, 
+                   aes(xmin=cott_df[, "start_mapped"], ymin=0,
+                       xmax=cott_df[, "end_mapped"], ymax=ymax-1),
+                   fill=cott_df[, "color_cott"]) + 
       # Scaling and Legends
-      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
+      # zoom in out
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
+      # scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
       scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
-      p2 <- p2 + geom_segment(data = geneofinterest_df, 
-                              aes(x=geneofinterest_df[, "start_mapped"], y=ymin,
-                                  xend=geneofinterest_df[, "start_mapped"], yend=ymax-1),
-                              color='red')
+      p2 <- p2 + geom_rect(data = geneofinterest_df, 
+                              aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
+                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax-1),
+                              fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
-      p2 <- p2 + geom_segment(data = disease_geneofinterest_df, 
-                              aes(x=disease_geneofinterest_df[, "start_mapped"], y=ymin,
-                                  xend=disease_geneofinterest_df[, "start_mapped"], yend=ymax-1),
-                              color='red')
+      p2 <- p2 + geom_rect(data = disease_geneofinterest_df, 
+                           aes(xmin=disease_geneofinterest_df[, "start_mapped"], ymin=ymin,
+                               xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax-1),
+                           fill='red')
     }
     p2
   })
@@ -2124,6 +2162,32 @@ server <- function(input, output, session) {
   ## X chromosome "image"
   ## commented out for testing
   output$xchromosome <- renderCachedPlot({
+    # Scaling zoom in out
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+      chrom_segments_mod <- chrom_segments
+      chrom_segments_colored_mod <- chrom_segments_colored
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+      # Update the chrom segment objects
+      chrom_segments_colored_mod <- chrom_segments_colored # for now
+      for ( i in 3:39 ){
+        # if start position of chrom segment is less than xmin
+        if ( chrom_segments[[paste0("seg",i)]]$mapping$x < xmin ){
+          chrom_segments_mod[[paste0("seg",i)]]$mapping$x <- xmin
+        } else {
+          chrom_segments_mod[[paste0("seg",i)]]$mapping$x <- chrom_segments[[paste0("seg",i)]]$mapping$x
+        }
+        # if end position of chrom segment is greater than xmax
+        if ( chrom_segments[[paste0("seg",i)]]$mapping$xend > xmax ){
+          chrom_segments_mod[[paste0("seg",i)]]$mapping$xend <- xmax
+        } else {
+          chrom_segments_mod[[paste0("seg",i)]]$mapping$xend <- chrom_segments[[paste0("seg",i)]]$mapping$xend
+        }
+      }
+    } # come back here
     # Create theme for plot
     mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
@@ -2140,7 +2204,7 @@ server <- function(input, output, session) {
       mytheme +
       xlab("X Chromosome") + ylab(" ") +
       # Scaling and Legends
-      scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(plot1_xmin, plot1_xmax)) +
+      scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(xmin, xmax)) + # zoom in out
       scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) +
       # Add annotions
       annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) +
@@ -2148,13 +2212,13 @@ server <- function(input, output, session) {
       annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5,
                label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
       # Add chromosome map (yes the ordering is important)
-      chrom_segments_colored[c('start','end')] +
-      chrom_segments +
-      chrom_segments_colored[c('par1','par2','centre')]
+      chrom_segments_colored_mod[c('start','end')] +
+      chrom_segments_mod +
+      chrom_segments_colored_mod[c('par1','par2','centre')]
     # ^these objects contains geom_segment() layers for each band.
     #  Created in utilities/format_plot_aesthetics.R
     xchromosome_plot
-  }, cacheKeyExpr = { input$geneofinterest1 }
+  }, cacheKeyExpr = { c(input$geneofinterest1, ranges$x) }
   )
   ############
   ### TAB 3
