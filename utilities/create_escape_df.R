@@ -7,8 +7,16 @@ create_escape_df <- function(geneofinterest) {
     # ####################################################
     # geneofinterest can be multiple genes
     #
-    dt <- meta_dt[GENE %in% c(geneofinterest),]
+    # Make sure empty spaces are "NA"
+    for (i in 1:nrow(meta_dt)) {
+        if (meta_dt$STATUS[i] == "") {
+            meta_dt$STATUS[i] <- "NA"
+        }
+    }
     
+    # set up dt
+    dt <- meta_dt[GENE %in% c(geneofinterest),]
+
     # Add STUDY 0
     ref_table <- readRDS("rds/study0_df.rds")
     query <- "state"
@@ -33,5 +41,6 @@ create_escape_df <- function(geneofinterest) {
     # Combine STUDY 0 with meta_dt
     dt <- rbind(dt, study0_entries)
     dt <- dt[order(dt$GENE)]
+    
     return(dt)
 }

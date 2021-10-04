@@ -9,7 +9,9 @@
 # source("utilities/format_plot_aesthetics.R", local = TRUE)
 # source("utilities/create_lists_of_genes.R", local = TRUE)
 # source("utilities/consolidate_escape_states.R", local = TRUE)
-rm("rds/study0_df.rds") # clear out the last study0 df
+if ( exists("rds/study0_df.rds") ){
+    rm("rds/study0_df.rds") # clear out the last study0 df
+}
 source("utilities/read_rds.R", local = TRUE)
 
 # Functions

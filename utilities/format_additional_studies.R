@@ -68,6 +68,7 @@ cott_carr_will_df <- data.frame(gene = tuketal_suppl_table_1_combined$`Gene name
                                 color_cott = rep("",nrow(tuketal_suppl_table_1_combined)),
                                 color_carrwill = rep("",nrow(tuketal_suppl_table_1_combined))
                                 )
+cott_carr_will_df[457, 1] <- "SEPTIN6" # fix the september 6 format error
                               
 # Get the remapped versions
 for(i in 1:length(cott_carr_will_df$start)){
