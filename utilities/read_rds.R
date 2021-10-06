@@ -22,11 +22,13 @@ P_MIN <- readRDS("rds/P_MIN.rds")
 P_SIG <- readRDS("rds/P_SIG.rds")
 SV_threshold <- readRDS("rds/SV_threshold.rds")
 VE_threshold <- readRDS("rds/VE_threshold.rds")
+ens_base_loc <- readRDS("rds/ens_base_loc.rds")
+ens_base_gene <- readRDS("rds/ens_base_gene.rds")
 
 # x_expr_mods.R
 x_expr_mod <- readRDS("rds/x_expr_mod.rds")
 
-# format_additonal_studies.R
+# create_gene_links.R
 MANUAL_STUDIES <- readRDS("rds/MANUAL_STUDIES.rds")
 cott_carr_will_df <- readRDS("rds/cott_carr_will_df.rds")
 kat_lin_df <- readRDS("rds/kat_lin_df.rds")

@@ -895,6 +895,7 @@ server <- function(input, output, session) {
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
                      "End (bp) [hg38]" = cott_carr_will_df$end_mapped,
                      State = cott_carr_will_df$status_cott,
+                     "Gene Link" = cott_carr_will_df$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -914,20 +915,28 @@ server <- function(input, output, session) {
     if (rv$filter_study2 == 2){ # zoom in out
       # Return only the genes that are between the min and max of the plot
       if(!is.null(ranges$x)){ # make sure we have ranges
-        to_display <- df$Gene[(as.numeric(df$`Start (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`End (bp) [hg38]`) < ranges$x[2])]
+        to_display <- df$Gene[(as.numeric(df$`End (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`Start (bp) [hg38]`) < ranges$x[2])]
         to_display <- to_display[!is.na(to_display)]
       }
     }
     df <- df[df$Gene %in% to_display,]
     df <- df[df$State != "NA",]
     saveRDS(df,'data_output/cott_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$`Gene Link`,'" target="_blank">', df$`Gene`, '</a>')
+      df <- df[, -5] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE # this allows hyperlinks to be active
+  )
   ## Status Table (Study3) (similar to Study2)
   output$status_table_study3 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
+                     "End (bp) [hg38]" = cott_carr_will_df$end_mapped,
                      State = cott_carr_will_df$status_carrwill,
+                     "Gene Link" = cott_carr_will_df$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -947,8 +956,14 @@ server <- function(input, output, session) {
     df <- df[df$Gene %in% to_display,]
     df <- df[df$State != "NA",]
     saveRDS(df,'data_output/carr_will_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$`Gene Link`,'" target="_blank">', df$`Gene`, '</a>')
+      df <- df[, -5] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE # this allows hyperlinks to be active
+  )
   ## Status Table (Study4)
   output$status_table_study4 <- renderDataTable({
     df <- data.frame(Gene = kat_lin_df_lb$gene,
@@ -2163,6 +2178,8 @@ server <- function(input, output, session) {
   ## commented out for testing
   output$xchromosome <- renderCachedPlot({
     # Scaling zoom in out
+    chrom_segments_mod <- chrom_segments
+    chrom_segments_colored_mod <- chrom_segments_colored
     if (is.null(ranges$x)){
       xmin <- plot1_xmin
       xmax <- plot1_xmax
