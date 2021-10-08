@@ -98,6 +98,7 @@ cott_carr_will_df$status_cott <- ifelse(cott_carr_will_df$status_cott == "variab
 # Create color pallete
 col_escape = "purple"
 col_variable = "turquoise3"
+#col_inactive = "black"
 col_inactive = "lightsteelblue3"
 col_na = "white"
 col_check = "green"
