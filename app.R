@@ -834,14 +834,18 @@ server <- function(input, output, session) {
     if (!isTruthy(rv$tissues_filter_study1)){
       df <- data.frame("Gene" = distinct(x_expr_mod, GENE),
                        "Start (bp) [hg38]" = distinct(x_expr_mod, GENE, start)[,'start'],
+                       "End (bp) [hg38]" = distinct(x_expr_mod, GENE, end)[,'end'],
                        "Escape Freq" = distinct(x_expr_mod, GENE, perc_samples_esc)[,'perc_samples_esc'],
+                       "gene_link" = distinct(x_expr_mod, GENE, gene_link)[,'gene_link'],
                        check.names = FALSE)
     } else {
       df <- data.frame("Gene" = x_expr_mod$GENE[order(x_expr_mod$start)],
                        "Start (bp) [hg38]" = x_expr_mod$start[order(x_expr_mod$start)],
+                       "End (bp) [hg38]" = x_expr_mod$end[order(x_expr_mod$start)],
                        "Sample" = x_expr_mod$sample[order(x_expr_mod$start)],
                        "Sample State" = x_expr_mod$status[order(x_expr_mod$start)],
                        "Escape Freq" = x_expr_mod$perc_samples_esc[order(x_expr_mod$start)],
+                       "gene_link" = x_expr_mod$gene_link[order(x_expr_mod$start)],
                        check.names = FALSE)
     }
     # Filter the df based on what genes are being displayed
@@ -887,15 +891,20 @@ server <- function(input, output, session) {
       df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
     }
     saveRDS(df,'data_output/geuvadis_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$GENE <- paste0('<a href="', df$gene_link,'" target="_blank">', df$GENE, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE)
   ## Status Table (Study2)
   output$status_table_study2 <- renderDataTable({
     df <- data.frame(Gene = cott_carr_will_df$gene,
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
                      "End (bp) [hg38]" = cott_carr_will_df$end_mapped,
                      State = cott_carr_will_df$status_cott,
-                     "Gene Link" = cott_carr_will_df$gene_link,
+                     "gene_link" = cott_carr_will_df$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -924,8 +933,8 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/cott_xstates.rds')
     # If df isn't empty, make hyperlinks for genes
     if(nrow(df) != 0){
-      df$Gene <- paste0('<a href="', df$`Gene Link`,'" target="_blank">', df$`Gene`, '</a>')
-      df <- df[, -5] # remove Hyperlink column 
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$`Gene`, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
     }
     df
   }, escape = FALSE # this allows hyperlinks to be active
@@ -936,7 +945,7 @@ server <- function(input, output, session) {
                      "Start (bp) [hg38]" = cott_carr_will_df$start_mapped,
                      "End (bp) [hg38]" = cott_carr_will_df$end_mapped,
                      State = cott_carr_will_df$status_carrwill,
-                     "Gene Link" = cott_carr_will_df$gene_link,
+                     "gene_link" = cott_carr_will_df$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -958,8 +967,8 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/carr_will_xstates.rds')
     # If df isn't empty, make hyperlinks for genes
     if(nrow(df) != 0){
-      df$Gene <- paste0('<a href="', df$`Gene Link`,'" target="_blank">', df$`Gene`, '</a>')
-      df <- df[, -5] # remove Hyperlink column 
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$`Gene`, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
     }
     df
   }, escape = FALSE # this allows hyperlinks to be active
@@ -968,7 +977,9 @@ server <- function(input, output, session) {
   output$status_table_study4 <- renderDataTable({
     df <- data.frame(Gene = kat_lin_df_lb$gene,
                      "Start (bp) [hg38]" = kat_lin_df_lb$start_mapped,
+                     "End (bp) [hg38]" = kat_lin_df_lb$end_mapped,
                      State = kat_lin_df_lb$status_lb,
+                     "gene_link" = kat_lin_df_lb$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -988,13 +999,20 @@ server <- function(input, output, session) {
     df <- df[df$Gene %in% to_display,]
     df <- df[!grepl("TCON", df$Gene),]
     saveRDS(df,'data_output/katsir_linial_lymphoblast_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE)
   ## Status Table (Study5) (similar to Study4)
   output$status_table_study5 <- renderDataTable({
     df <- data.frame(Gene = kat_lin_df_fb$gene,
                      "Start (bp) [hg38]" = kat_lin_df_fb$start_mapped,
+                     "End (bp) [hg38]" = kat_lin_df_fb$end_mapped,
                      State = kat_lin_df_fb$status_fb,
+                     gene_link = kat_lin_df_fb$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -1012,17 +1030,24 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
-    df <- df[!grepl("TCON", df$Gene),]
+    #df <- df[!grepl("TCON", df$Gene),]
     saveRDS(df,'data_output/katsir_linial_fibroblast_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE)
   ## Status Table (Study6) (similar to Study1)
   output$status_table_study6 <- renderDataTable({
-    df <- data.frame("Gene" = TukGTExMod$`Gene name`,
-                     "Start (bp) [hg38]" = TukGTExMod$`start_mapped`,
-                     "Tissue" = TukGTExMod$Tissue,
-                     "Tissue State" = TukGTExMod$`Incomplete XCI`,
-                     "Escape Freq" = TukGTExMod$perc_tissues_esc,
+    df <- data.frame("Gene" = TukGTExMod_merge$`Gene name`,
+                     "Start (bp) [hg38]" = TukGTExMod_merge$`START`,
+                     "Stop (bp) [hg38]" = TukGTExMod_merge$`STOP`,
+                     "Tissue" = TukGTExMod_merge$Tissue,
+                     "Tissue State" = TukGTExMod_merge$`Incomplete XCI`,
+                     "Escape Freq" = TukGTExMod_merge$perc_tissues_esc,
+                     "gene_link" = TukGTExMod_merge$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -1042,7 +1067,7 @@ server <- function(input, output, session) {
     df <- df[df$Gene %in% to_display,]
     # Filter out the Tissue column if only a summary is needed
     if (!isTruthy(rv$tissues_filter_study6)){
-      df <- df[,-c(3,4)]
+      df <- df[,-c(4,5)]
       df <- unique(df)
     }
     # The rest can only be performed if the data table is populated
@@ -1073,19 +1098,26 @@ server <- function(input, output, session) {
       }
       # Update format of frequency column
       df$`Escape Freq` <- sprintf("%1.3f", as.numeric(df$`Escape Freq`))
-      # Update name of state column
+      # Update name of state column (NEED TO FIX THIS)
       colnames(df) <- c(colnames(df)[-ncol(df)], "State (based on esc freq)")
-    }
+    } 
     saveRDS(df,'data_output/gtex_v6p_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE)
   ## Status Table (Study7) (similar to Study6)
   output$status_table_study7 <- renderDataTable({
-    df <- data.frame("Gene" = cotton_mDNA$GENE,
-                     "Start (bp) [hg38]" = cotton_mDNA$POS,
-                     "Tissue" = cotton_mDNA$FULL_TISS,
-                     "Tissue State" = cotton_mDNA$TISS_STATE,
-                     "Escape Status" = cotton_mDNA$STATUS,
+    df <- data.frame("Gene" = cotton_mDNA_merge_b$GENE,
+                     "Start (bp) [hg38]" = cotton_mDNA_merge_b$START,
+                     "Stop (bp) [hg38]" = cotton_mDNA_merge_b$STOP,
+                     "Tissue" = cotton_mDNA_merge_b$FULL_TISS,
+                     "Tissue State" = cotton_mDNA_merge_b$TISS_STATE,
+                     "Escape Status" = cotton_mDNA_merge_b$STATUS,
+                     "gene_link" = cotton_mDNA_merge_b$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -1105,17 +1137,25 @@ server <- function(input, output, session) {
     df <- df[df$Gene %in% to_display,]
     # Filter out the Tissue column if only a summary is needed
     if (!isTruthy(rv$tissues_filter_study7)){
-      df <- df[,-c(3,4)]
+      df <- df[,-c(4,5)]
       df <- unique(df)
     }
     saveRDS(df,'data_output/cott_mDNA_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
+    df <- df[order(df$`Start (bp) [hg38]`),]
     df
-  })
+  }, escape = FALSE)
   ## Status Table (Study8) 
   output$status_table_study8 <- renderDataTable({
     df <- data.frame("Gene" = balbrown_mCEMT$GENE,
                      "Start (bp) [hg38]" = balbrown_mCEMT$START,
+                     "Stop (bp) [hg38]" = balbrown_mCEMT$STOP,
                      "Escape Status" = balbrown_mCEMT$STATUS,
+                     "gene_link" = balbrown_mCEMT$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -1134,13 +1174,20 @@ server <- function(input, output, session) {
     }
     df <- df[df$Gene %in% to_display,]
     saveRDS(df,'data_output/balbrown_mCEMT_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE)
   ## Status Table (Study9) 
   output$status_table_study9 <- renderDataTable({
     df <- data.frame("Gene" = balbrown_CREST$GENE,
                      "Start (bp) [hg38]" = balbrown_CREST$START,
+                     "Stop (bp) [hg38]" = balbrown_CREST$STOP,
                      "Escape Status" = balbrown_CREST$STATUS,
+                     "gene_link" = balbrown_CREST$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -1159,13 +1206,20 @@ server <- function(input, output, session) {
     }
     df <- df[df$Gene %in% to_display,]
     saveRDS(df,'data_output/balbrown_CREST_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE)
   ## Status Table (Study10) 
   output$status_table_study10 <- renderDataTable({
     df <- data.frame("Gene" = TukDEG$GENE, # change here
                      "Start (bp) [hg38]" = TukDEG$START, # change here
+                     "Stop (bp) [hg38]" = TukDEG$STOP, # change here
                      "Bias Status" = TukDEG$BIAS, # change here
+                     "gene_link" = TukDEG$gene_link, # change here
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -1184,8 +1238,13 @@ server <- function(input, output, session) {
     }
     df <- df[df$Gene %in% to_display,]
     saveRDS(df,'data_output/tuk_DGEA_xstates.rds')
+    # If df isn't empty, make hyperlinks for genes
+    if(nrow(df) != 0){
+      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
+    }
     df
-  })
+  }, escape = FALSE)
   ### TAB 2
   # Individual Escape Table
   output$ind_escape_states_table <- renderDataTable({
@@ -1493,6 +1552,8 @@ server <- function(input, output, session) {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
     }
+    # Get labels for genes in plot
+    #...
     # Create this study's data frame
     cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
     cott_df$end_mapped <- as.numeric(cott_df$end_mapped)
@@ -1541,10 +1602,10 @@ server <- function(input, output, session) {
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome") + ylab("") + 
       # Add points
-      geom_rect(data = NULL, 
-                   aes(xmin=cott_df[, "start_mapped"], ymin=0,
-                       xmax=cott_df[, "end_mapped"], ymax=ymax-1),
-                   fill=cott_df[, "color_cott"]) + 
+      geom_rect(data = cott_df, 
+                aes(xmin=cott_df[, "start_mapped"], ymin=0,
+                    xmax=cott_df[, "end_mapped"], ymax=ymax-1),
+                fill=cott_df[, "color_cott"]) + 
       # Scaling and Legends
       # zoom in out
       scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +

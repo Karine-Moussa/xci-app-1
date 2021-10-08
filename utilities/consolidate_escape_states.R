@@ -1,5 +1,6 @@
 # Consolidate all escape states for each gene in a table
-# to minimize loading speed for tab 2 in application
+# to minimize loading speed for tab 2 in application.
+# Also summarizes studies statistics
 
 num_of_studies = 10 # change here (when a new study is added)
 
@@ -25,13 +26,25 @@ if (!exists("kat_lin_df_lb")) {
 if (!exists("TukGTExMod")) {
     TukGTExMod <- readRDS("rds/TukGTExMod.rds")
 }
-
+# STUDY 7
+if (!exists("cotton_mDNA_merge_b")) {
+    cotton_mDNA_merge_b <- readRDS("rds/cotton_mDNA_merge_b.rds")
+}
+# STUDY 8
+if (!exists("balbrown_mCEMT")) {
+    balbrown_mCEMT <- readRDS("rds/balbrown_mCEMT.rds")
+}
+# STUDY 9
+if (!exists("balbrown_CREST")) {
+    balbrown_CREST <- readRDS("rds/balbrown_CREST.rds")
+}
 # STUDY 10
 if (!exists("TukDEG")) {
     TukDEG<- readRDS("rds/TukDEG.rds")
 }
 
-# change here (add study)
+
+# change here (when adding study)
 
 # Organize GENE | STUDY | STATE for each study
 # STUDY 1
@@ -84,16 +97,16 @@ study6_dt <- unique(study6_dt)
 
 # STUDY 7
 study7_dt <- data.table()
-study7_dt$GENE <- cotton_mDNA$GENE
+study7_dt$GENE <- cotton_mDNA_merge_b$GENE
 study7_dt$STUDY <- "Cotton et al. mDNA (multi-tissue)"
-study7_dt$STATE <- cotton_mDNA$STATUS
+study7_dt$STATE <- cotton_mDNA_merge_b$STATUS
 study7_dt <- unique(study7_dt)
 
 # STUDY 8
 study8_dt <- data.table()
 study8_dt$GENE <- balbrown_mCEMT$GENE
 study8_dt$STUDY <- "Balaton + Brown DNAme (Cancer Cells)"
-study8_dt$STATE <- balbrown_mCEMT$STATUS
+study8_dt$NUM_TISS <- 6
 
 # STUDY 9
 study9_dt <- data.table()
