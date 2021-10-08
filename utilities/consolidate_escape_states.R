@@ -106,7 +106,7 @@ study7_dt <- unique(study7_dt)
 study8_dt <- data.table()
 study8_dt$GENE <- balbrown_mCEMT$GENE
 study8_dt$STUDY <- "Balaton + Brown DNAme (Cancer Cells)"
-study8_dt$NUM_TISS <- 6
+study8_dt$STATE <- balbrown_mCEMT$STATUS
 
 # STUDY 9
 study9_dt <- data.table()

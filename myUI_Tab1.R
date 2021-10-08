@@ -247,7 +247,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              p("", style = "font-size:4px"),
                              fluidRow(
                                  column(4, offset = 1,
-                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", height = 23))
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal_update.png", height = 23))
                              ),
                              br(),
                          ),
@@ -268,7 +268,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              fluidRow(
                                  column(4, offset = 1,
                                         img(src = "mainplot_legend_horizontal.png", height = 23)),
-                                 column(4, offset = 2,
+                                 column(4, offset = 2, # for GEUVADIS
                                         img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", height = 23))
                                  ),
                              br(),

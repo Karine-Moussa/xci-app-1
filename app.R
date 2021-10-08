@@ -20,6 +20,11 @@ library(magrittr)
 ### Source Data/Functions ###
 source("utilities/source_all_scripts.R", local = TRUE)
 
+### Global variables
+col_escape = "purple"
+col_variable = "turquoise3"
+col_inactive = "grey80"
+
 ### Save publication date
 publication_date <- Sys.time()
 
@@ -810,15 +815,15 @@ server <- function(input, output, session) {
       for(i in 1:nrow(df)) {
         if(df$`escape_freq`[i] <= rv$SV_threshold){
           df$state[i] <- 'inactive'
-          df$color[i] <- 'lightsteelblue'
+          df$color[i] <- col_inactive
         }
         if(df$`escape_freq`[i] > rv$SV_threshold & df$`escape_freq`[i] <= rv$VE_threshold){
           df$state[i] <- 'variable'
-          df$color[i] <- 'turquoise3'
+          df$color[i] <- col_variable
         }
         if(df$`escape_freq`[i] > rv$VE_threshold){
           df$state[i] <- 'escape'
-          df$color[i] <- 'purple'
+          df$color[i] <- col_escape
         }
       }
       last_column <- length(colnames(df)) - 1
@@ -1508,8 +1513,8 @@ server <- function(input, output, session) {
         genepvalue_1 <- genepvalue_1 +
           # Add Escape State information after Main Data Points
           geom_point(escape_states, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-                     fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, "lightsteelblue3",
-                                 ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, "turquoise3", "purple")),
+                     fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, col_inactive,
+                                 ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, col_variable, col_escape)),
                      size=3, group=2)
       }
       # Data points added by user reactive values: Gene of Interest
@@ -1912,9 +1917,9 @@ server <- function(input, output, session) {
                    aes(x=as.numeric(unlist(TukGTExMod[, "start_mapped"])), y=0,
                        xend=as.numeric(unlist(TukGTExMod[, "start_mapped"])), yend=ymax-1),
                    color=ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= SV_threshold, 
-                                "lightsteelblue3",
+                                col_inactive,
                                 ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) > SV_threshold & as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= VE_threshold, 
-                                       "turquoise3", "purple"))) + 
+                                       col_variable, col_escape))) + 
       # Scaling and Legends
       scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
       scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
@@ -2376,7 +2381,7 @@ server <- function(input, output, session) {
       annotate("text", x=2,y=-.03,
                label=paste0('escapes in ',sprintf("%3.1f",perc_samples_esc_tauplus*100),'% of samples'),
                family = 'Courier', color = "black", size = 6, hjust = 0.5, alpha = 0.5) +
-      scale_fill_manual("", values = c("cornflowerblue","purple"))
+      scale_fill_manual("", values = c("cornflowerblue",col_escape))
     # Remove legend if only one violin plot will be displayed
     if(sum(tautable$tau__tauplus == "TAU+") < 2){
       geneofinterest_tauplot <- geneofinterest_tauplot +
@@ -2390,8 +2395,8 @@ server <- function(input, output, session) {
                  label=c(paste0('avg tau+: ', sprintf("%1.2f", avg_tauplus)),
                          paste0('min tau+: ', sprintf("%1.2f", min_tauplus)),
                          paste0('max tau+: ', sprintf("%1.2f", max_tauplus))),
-                 family = 'Courier', color = "purple", size = 4, hjust = 1) +
-        scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue","purple"),
+                 family = 'Courier', color = col_escape, size = 4, hjust = 1) +
+        scale_fill_manual("TAU vs TAU+", values = c("cornflowerblue",col_escape),
                           labels=c("For all skew values", "Skew < 25%")) +
         scale_x_discrete(limits = c("TAU","TAU+"))
     }

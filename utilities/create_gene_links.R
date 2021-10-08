@@ -15,9 +15,11 @@ balbrown_CREST <- readRDS("rds/balbrown_CREST.rds") # done
 
 # biomaRt
 library(biomaRt)
-ensembl <- useEnsembl(biomart = "genes", 
-                      dataset = "hsapiens_gene_ensembl", 
-                      mirror = "useast")
+#ensembl <- useEnsembl(biomart = "genes", 
+#                      dataset = "hsapiens_gene_ensembl") 
+                      #mirror = "useast")
+saveRDS(ensembl, "rds/ensembl.rds")
+ensembl <- readRDS("rds/ensembl.rds")
 filters = listFilters(ensembl)
 attributes = listAttributes(ensembl)
 

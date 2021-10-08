@@ -74,3 +74,6 @@ all_genes <- readRDS("rds/all_genes.rds")
 
 # consolidate_escape_states.R
 meta_dt <- readRDS("rds/meta_dt.rds")
+
+# create_study_stats.R
+meta_stat_dt <- readRDS("rds/meta_stat_dt.rds")
