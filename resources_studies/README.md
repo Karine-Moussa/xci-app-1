@@ -52,6 +52,8 @@ Contains escape state predictions for several data sets based upon epigenetic ma
  - [ ] format_additional_studies.R
  - [ ] create_list_of_genes.R
  - [ ] read_rds.R (two locations)
+ - [ ] create_gene_links.R
+ - [ ] create_study_stats.R
  - [ ] consolidate_escape_states.R
  - [ ] uncomment source_all_scripts.R, run all, then re-comment
  - [ ] myServer_Tab1_assocTables.R (line 64)
