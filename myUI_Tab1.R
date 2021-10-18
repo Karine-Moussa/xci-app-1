@@ -187,7 +187,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study2'",
-                             withSpinner(plotOutput(outputId = "plot_study2", height = "100px", width = "1000px", #here
+                             withSpinner(plotOutput(outputId = "plot_study2", height = "175px", width = "1000px", #here
                                                     dblclick = "study2_dblclick",
                                                     brush = brushOpts(id = "study2_brush", resetOnNew = TRUE)
                              ), type = 2) # spinner type = 2

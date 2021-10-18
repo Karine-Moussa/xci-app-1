@@ -1547,9 +1547,12 @@ server <- function(input, output, session) {
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
-    # Get Range of plot (zoom in out)
+    # Get Y range of segments (zoom in out)
     ymin = 0
-    ymax = 10
+    plot_ymin = 0
+    ymax = 8
+    plot_ymax = 18
+    # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
       xmin <- plot1_xmin
       xmax <- plot1_xmax
@@ -1557,15 +1560,14 @@ server <- function(input, output, session) {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
     }
-    # Get labels for genes in plot
-    #...
     # Create this study's data frame
     cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
     cott_df$end_mapped <- as.numeric(cott_df$end_mapped)
     # Account for if a gene is cut off (due to zoom in zoom out):
-    cott_df$start_mapped <- ifelse(cott_df$start_mapped < xmin, xmin, cott_df$start_mapped)
-    cott_df$end_mapped <- ifelse(cott_df$end_mapped > xmax, xmax, cott_df$end_mapped)
-    # Create gene of interest data frame
+    cott_df_mod <- cott_df[cott_df$end_mapped >= xmin & cott_df$start_mapped <= xmax,]
+    cott_df_mod$start_mapped <- ifelse(cott_df_mod$start_mapped < xmin, xmin, cott_df_mod$start_mapped)
+    cott_df_mod$end_mapped <- ifelse(cott_df_mod$end_mapped > xmax, xmax, cott_df_mod$end_mapped)
+    # Create gene of interest df
     geneofinterest_df <- cott_df[cott_df$gene %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
     # Create disease of interest data frame
@@ -1607,27 +1609,42 @@ server <- function(input, output, session) {
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome") + ylab("") + 
       # Add points
-      geom_rect(data = cott_df, 
-                aes(xmin=cott_df[, "start_mapped"], ymin=0,
-                    xmax=cott_df[, "end_mapped"], ymax=ymax-1),
-                fill=cott_df[, "color_cott"]) + 
+      geom_rect(data = cott_df_mod, 
+                aes(xmin=cott_df_mod[, "start_mapped"], ymin=0,
+                    xmax=cott_df_mod[, "end_mapped"], ymax=ymax),
+                fill=cott_df_mod[, "color_cott"]) + 
       # Scaling and Legends
       # zoom in out
       scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
-      # scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+      scale_y_continuous(limits = c(plot_ymin, plot_ymax), breaks = c(plot_ymin, plot_ymax), labels= c("  ","  "))
+    # Add gene names for zoom in out
+    if (nrow(cott_df_mod) <= 25){
+      p2 <- p2 +
+      # Add annotations
+      annotate("text", label = cott_df_mod$gene, x = colMeans(rbind(cott_df_mod$start_mapped, cott_df_mod$end_mapped)), 
+               y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(cott_df_mod)],
+               color = cott_df_mod$color_cott, vjust = -1, group = 2)
+    }
+    # Add axis labels for zoom in out
+    if (xmax - xmin < 1.5*10^7){
+      p2 <- p2 +
+        scale_x_continuous(breaks=seq(xmin, xmax, 10^6), 
+                           labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"), 
+                           limits = c(xmin, xmax)) + 
+        theme(axis.ticks.x = element_line())
+    }
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
       p2 <- p2 + geom_rect(data = geneofinterest_df, 
                               aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
-                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax-1),
+                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax),
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p2 <- p2 + geom_rect(data = disease_geneofinterest_df, 
                            aes(xmin=disease_geneofinterest_df[, "start_mapped"], ymin=ymin,
-                               xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax-1),
+                               xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax),
                            fill='red')
     }
     p2
@@ -2273,18 +2290,21 @@ server <- function(input, output, session) {
                      panel.background = element_rect(fill = "white"))
     xchromosome_plot <- ggplot(data = xchrom_map_colored_mod, aes(x=0, y=0)) +
       mytheme +
-      xlab("X Chromosome") + ylab(" ") +
+      xlab("X Chromosome") + ylab(" ") + 
       # Scaling and Legends
       scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(xmin, xmax)) + # zoom in out
-      scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0)) +
-      # Add annotions
-      annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) +
-      annotate("text", x=max(x_expr$start), y=-0.5, label="PAR2", size=4, color = "steelblue", hjust=.9) +
-      annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5,
-               label="CENTROMERE", size=4, color = "red", alpha = 0.5)
+      scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0))
+    # Add annotions (if not zoomed in)
+    if (xmin == plot1_xmin & xmax == plot1_xmax) {
+      xchromosome_plot <- xchromosome_plot +
+        annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) +
+        annotate("text", x=max(x_expr$start), y=-0.5, label="PAR2", size=4, color = "steelblue", hjust=.9) +
+        annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5,
+                 label="CENTROMERE", size=4, color = "red", alpha = 0.5)      
+    }
     # Add chromosome map (yes the ordering is important)
     # 1. "start" "end"   2. "segments"  3."par1" "par2" "centre"
-    # 1) start,end
+    # 1) start,end - only plot them if we're not zoomed in
     if ( xmin == plot1_xmin ) {
       xchromosome_plot <- xchromosome_plot + 
         geom_segment(data = xchrom_map_colored_mod,
