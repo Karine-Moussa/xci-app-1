@@ -2244,33 +2244,21 @@ server <- function(input, output, session) {
   ## commented out for testing
   output$xchromosome <- renderCachedPlot({
     # Scaling zoom in out
-    chrom_segments_mod <- chrom_segments
-    chrom_segments_colored_mod <- chrom_segments_colored
+    #chrom_segments_mod <- chrom_segments
+    xchrom_map_colored_mod <- xchrom_map_colored
     if (is.null(ranges$x)){
       xmin <- plot1_xmin
       xmax <- plot1_xmax
-      chrom_segments_mod <- chrom_segments
-      chrom_segments_colored_mod <- chrom_segments_colored
-    } else {
+      } 
+    else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
-      # Update the chrom segment objects
-      chrom_segments_colored_mod <- chrom_segments_colored # for now
-      for ( i in 3:39 ){
-        # if start position of chrom segment is less than xmin
-        if ( chrom_segments[[paste0("seg",i)]]$mapping$x < xmin ){
-          chrom_segments_mod[[paste0("seg",i)]]$mapping$x <- xmin
-        } else {
-          chrom_segments_mod[[paste0("seg",i)]]$mapping$x <- chrom_segments[[paste0("seg",i)]]$mapping$x
-        }
-        # if end position of chrom segment is greater than xmax
-        if ( chrom_segments[[paste0("seg",i)]]$mapping$xend > xmax ){
-          chrom_segments_mod[[paste0("seg",i)]]$mapping$xend <- xmax
-        } else {
-          chrom_segments_mod[[paste0("seg",i)]]$mapping$xend <- chrom_segments[[paste0("seg",i)]]$mapping$xend
-        }
-      }
-    } # come back here
+    }
+    # Account for if a segment is cut off (due to zoom in out):
+    # filter the table first
+    xchrom_map_colored_mod <- xchrom_map_colored[xchrom_map_colored$bp_stop >= xmin  & xchrom_map_colored$bp_start <= xmax,]
+    xchrom_map_colored_mod$bp_start <- ifelse(xchrom_map_colored_mod$bp_start < xmin, xmin, xchrom_map_colored_mod$bp_start)
+    xchrom_map_colored_mod$bp_stop <- ifelse(xchrom_map_colored_mod$bp_stop > xmax, xmax, xchrom_map_colored_mod$bp_stop)
     # Create theme for plot
     mytheme <- theme(plot.title = element_text(family = "Courier", face = "bold", size = (20), hjust = 0.0),
                      legend.text = element_text(face = "bold", colour="steelblue4",family = "Helvetica", size = (12)),
@@ -2283,7 +2271,7 @@ server <- function(input, output, session) {
                                                 colour = "steelblue4", size = (10), face = "bold", angle=90, hjust=1, vjust = 1),
                      axis.ticks.y = element_blank(),
                      panel.background = element_rect(fill = "white"))
-    xchromosome_plot <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod), group=1)) +
+    xchromosome_plot <- ggplot(data = xchrom_map_colored_mod, aes(x=0, y=0)) +
       mytheme +
       xlab("X Chromosome") + ylab(" ") +
       # Scaling and Legends
@@ -2293,11 +2281,50 @@ server <- function(input, output, session) {
       annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) +
       annotate("text", x=max(x_expr$start), y=-0.5, label="PAR2", size=4, color = "steelblue", hjust=.9) +
       annotate("text", x=mean(centre_boundaries[1],centre_boundaries[2])+3e6, y=-0.5,
-               label="CENTROMERE", size=4, color = "red", alpha = 0.5) +
-      # Add chromosome map (yes the ordering is important)
-      chrom_segments_colored_mod[c('start','end')] +
-      chrom_segments_mod +
-      chrom_segments_colored_mod[c('par1','par2','centre')]
+               label="CENTROMERE", size=4, color = "red", alpha = 0.5)
+    # Add chromosome map (yes the ordering is important)
+    # 1. "start" "end"   2. "segments"  3."par1" "par2" "centre"
+    # 1) start,end
+    if ( xmin == plot1_xmin ) {
+      xchromosome_plot <- xchromosome_plot + 
+        geom_segment(data = xchrom_map_colored_mod,
+                     aes(x = max(xmin, 1), y = -1.5, 
+                         xend = min(par1_boundaries[2], xmin), yend = -1.5),
+                     size = 9, color = "lightblue", lineend = "round")
+    }
+    if ( xmax == plot1_xmax) {
+    xchromosome_plot <- xchromosome_plot + 
+      geom_segment(data = xchrom_map_colored_mod,
+                   aes(x = max(par2_boundaries[1], xmin), y = -1.5, 
+                       xend = min((max(bp_stop)), xmax), yend = -1.5),
+                   size = 9, color = "lightblue", lineend = "round")
+    }
+      # 2) segments
+    xchromosome_plot <- xchromosome_plot + 
+      geom_rect(data = xchrom_map_colored_mod, 
+                aes(xmin=xchrom_map_colored_mod[, "bp_start"], ymin=-2,
+                    xmax=xchrom_map_colored_mod[, "bp_stop"], ymax=-1),
+                fill=xchrom_map_colored_mod[, "BandColor"])
+      # 3) par1,par2,centre
+    if ( xmin < par1_boundaries[2]) {
+      xchromosome_plot <- xchromosome_plot + 
+        geom_segment(data = xchrom_map_colored_mod,
+                     aes(x = max(xmin, 1), y = -1.5, 
+                         xend = min(par1_boundaries[2], xmax), yend = -1.5),
+                     size = 9, color = "lightblue")
+    }
+    if ( xmax > par2_boundaries[1] ) {
+      xchromosome_plot <- xchromosome_plot + 
+      geom_rect(data = xchrom_map_colored_mod,
+                aes(xmin = max(par2_boundaries[1], xmin), ymin = -2, 
+                    xmax = min(par2_boundaries[2], xmax), ymax = -1),
+                fill = "lightblue")
+    }
+    xchromosome_plot <- xchromosome_plot + 
+      geom_rect(data = xchrom_map_colored_mod, 
+                aes(xmin=max(centre_boundaries[1], xmin), ymin=-2,
+                    xmax=min(centre_boundaries[2], xmax), ymax=-1),
+                fill="pink")
     # ^these objects contains geom_segment() layers for each band.
     #  Created in utilities/format_plot_aesthetics.R
     xchromosome_plot

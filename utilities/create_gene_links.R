@@ -18,7 +18,7 @@ library(biomaRt)
 #ensembl <- useEnsembl(biomart = "genes", 
 #                      dataset = "hsapiens_gene_ensembl") 
                       #mirror = "useast")
-saveRDS(ensembl, "rds/ensembl.rds")
+#saveRDS(ensembl, "rds/ensembl.rds")
 ensembl <- readRDS("rds/ensembl.rds")
 filters = listFilters(ensembl)
 attributes = listAttributes(ensembl)

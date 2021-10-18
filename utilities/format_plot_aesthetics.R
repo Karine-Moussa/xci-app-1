@@ -36,6 +36,7 @@ rm(i)
 
 # Tab 1 Par Region Shading (in bp)
 # Note these are MANUALLY ENTERRED LATER ON
+# These are also included in GLOBAL VARIABLES
 par1_boundaries <- c(100001,2781479)
 par2_boundaries <- c(155701383,156030895)
 centre_boundaries <- c(58100001,63800000)
