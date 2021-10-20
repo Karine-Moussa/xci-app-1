@@ -308,6 +308,45 @@ server <- function(input, output, session) {
       ranges$y <- NULL
     }
   })
+  # If xranges are changed, update that numbers displayed in the numeric input
+  observeEvent(ranges$x, {
+    updateNumericInput(
+      session, 
+      inputId = 'xstart',
+      label = NULL, value = ranges$x[1],
+      min = 0, max = par2_boundaries[2]
+    )
+    updateNumericInput(
+      session, 
+      inputId = 'xend',
+      label = NULL, value = ranges$x[2],
+      min = 0, max = par2_boundaries[2]
+    )
+  })
+  # Submit zoom in out positions
+  observeEvent(input$submitPos, {
+    if(input$xstart < input$xend){
+      ranges$x <- c(input$xstart, input$xend)
+    }
+  })
+  # Reset zoom in out positions
+  observeEvent(input$resetPos, {
+    ranges$x <- NULL
+    ranges$y <- NULL
+    updateNumericInput(
+      session, 
+      inputId = 'xstart',
+      label = NULL, value = 0,
+      min = 0, max = par2_boundaries[2]
+    )
+    updateNumericInput(
+      session, 
+      inputId = 'xend',
+      label = NULL, value = par2_boundaries[2],
+      min = 0, max = par2_boundaries[2]
+    )
+  })
+  # MyClick (this is probably going to go away zoom in out)
   observeEvent(input$myclick, {
     if(rv$searchType == 'gene'){
       rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
@@ -553,12 +592,17 @@ server <- function(input, output, session) {
     rv$study0_flag == TRUE
   })
   outputOptions(output, "plotStudy0", suspendWhenHidden = FALSE)
-  
   # The logic for the slider warning message
   output$sliderWarning <- reactive({
     rv$slider1 >= rv$slider2
   })
   outputOptions(output, "sliderWarning", suspendWhenHidden = FALSE)
+  
+  # The logic for the xstart xend range wanring
+  output$posWarning <- reactive({
+    input$xstart > input$xend
+  })
+  outputOptions(output, "posWarning", suspendWhenHidden = FALSE)
   ##############################
   ## OUTPUT TEXT ###############
   ##############################
@@ -1620,10 +1664,10 @@ server <- function(input, output, session) {
     # Add gene names for zoom in out
     if (nrow(cott_df_mod) <= 25){
       p2 <- p2 +
-      # Add annotations
-      annotate("text", label = cott_df_mod$gene, x = colMeans(rbind(cott_df_mod$start_mapped, cott_df_mod$end_mapped)), 
-               y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(cott_df_mod)],
-               color = cott_df_mod$color_cott, vjust = -1, group = 2)
+        # Add annotations
+        annotate("text", label = cott_df_mod$gene, x = colMeans(rbind(cott_df_mod$start_mapped, cott_df_mod$end_mapped)), 
+                 y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(cott_df_mod)],
+                 color = cott_df_mod$color_cott, vjust = -1, group = 2)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -1636,9 +1680,9 @@ server <- function(input, output, session) {
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
       p2 <- p2 + geom_rect(data = geneofinterest_df, 
-                              aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
-                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax),
-                              fill='red')
+                           aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
+                               xmax=geneofinterest_df[, "end_mapped"], ymax=ymax),
+                           fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
@@ -1647,7 +1691,9 @@ server <- function(input, output, session) {
                                xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax),
                            fill='red')
     }
-    p2
+    if (nrow(cott_df_mod) > 0){ # only build plot if zoom in actually has genes
+      p2
+    }
   })
   output$plot_study3 <- renderPlot({
     # Save geneofinterest

@@ -177,6 +177,14 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                      ),
                      # Create plot and Action Buttons in Main Panel
                      mainPanel(
+                         # Warning message if xstart > xend
+                         conditionalPanel(
+                             condition = "output.posWarning",
+                             #   verbatimTextOutput("sliderWarningMessage"),
+                             h2("Warning: X start position cannot be greater than X end position.
+                                Please adjust and resubmit.", style="font-size:14px;color:purple")
+                         ),
+                         # Plots
                          conditionalPanel(
                              condition = "output.plotStudy0",
                              withSpinner(plotOutput(outputId = "plot_study0", height = "100px", click = "myclick", hover = "myhover"), type = 2)
@@ -247,16 +255,32 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              p("", style = "font-size:4px"),
                              fluidRow(
                                  column(4, offset = 1,
-                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal_update.png", height = 23))
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal_update.png", 
+                                            height = 19))
                              ),
                              br(),
+                             fluidRow(
+                                 column(3, offset = 1,
+                                        numericInput('xstart', 'Start bp:',
+                                                     0, min = 0, max = par2_boundaries[2])),
+                                 column(3, offset = 0,
+                                        numericInput('xend', 'End bp:',
+                                                     par2_boundaries[2], min = 0, max = par2_boundaries[2])),
+                                 column(1, offset = 0,
+                                        p(" l", style = "font-size:10px;color:white"),
+                                        actionButton("submitPos", "Search")),
+                                 column(2, offset = 1,
+                                        p(" l", style = "font-size:10px;color:white"),
+                                        actionButton("resetPos", "Reset"))
+                             ),
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study10'",
                              p("", style = "font-size:4px"),
                              fluidRow(
                                  column(8, offset = 1,
-                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal_deg.png", height = "20", width = "425"))
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal_deg.png", 
+                                            height = "20", width = "425"))
                              ),
                              br(),
                          ),
@@ -269,7 +293,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                  column(4, offset = 1,
                                         img(src = "mainplot_legend_horizontal.png", height = 23)),
                                  column(4, offset = 2, # for GEUVADIS
-                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", height = 23))
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", 
+                                            height = 23))
                                  ),
                              br(),
                          ),
