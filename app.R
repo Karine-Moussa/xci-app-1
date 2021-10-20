@@ -128,7 +128,7 @@ server <- function(input, output, session) {
     states_filter_study0 = "on",
     states_filter_study1 = "on",
     tissues_filter_study1 = "on",
-    states_filter_study6 = "on",
+    filter_study6 = 1,
     tissues_filter_study6 = "on",
     filter_study2 = 1,
     filter_study3 = 1,
@@ -503,8 +503,8 @@ server <- function(input, output, session) {
   observeEvent(input$tissues_filter_study1, {
     rv$tissues_filter_study1 <- input$tissues_filter_study1
   })
-  observeEvent(input$states_filter_study6, {
-    rv$states_filter_study6 <- input$states_filter_study6
+  observeEvent(input$filter_study6, {
+    rv$filter_study6 <- input$filter_study6
   })
   observeEvent(input$tissues_filter_study6, {
     rv$tissues_filter_study6 <- input$tissues_filter_study6
@@ -781,7 +781,7 @@ server <- function(input, output, session) {
     },
     content = function(file){
       # Get the data source
-      mydata <- readRDS('data_output/tuk_DGEA_xstates.rds') # come back here
+      mydata <- readRDS('data_output/tuk_DGEA_xstates.rds')
       write.csv(mydata, file)
     }
   )
@@ -1115,7 +1115,7 @@ server <- function(input, output, session) {
   output$status_table_study6 <- renderDataTable({
     df <- data.frame("Gene" = TukGTExMod_merge$`Gene name`,
                      "Start (bp) [hg38]" = TukGTExMod_merge$`START`,
-                     "Stop (bp) [hg38]" = TukGTExMod_merge$`STOP`,
+                     "End (bp) [hg38]" = TukGTExMod_merge$`STOP`,
                      "Tissue" = TukGTExMod_merge$Tissue,
                      "Tissue State" = TukGTExMod_merge$`Incomplete XCI`,
                      "Escape Freq" = TukGTExMod_merge$perc_tissues_esc,
@@ -1126,7 +1126,7 @@ server <- function(input, output, session) {
     # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df$Gene
-    if (isTruthy(rv$states_filter_study6)){
+    if (rv$filter_study6 == 1){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
       if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
@@ -1134,6 +1134,13 @@ server <- function(input, output, session) {
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
         to_display <- rv$returned_genes_list
+      }
+    }
+    if (rv$filter_study6 == 2){ # zoom in out
+      # Return only the genes that are between the min and max of the plot
+      if(!is.null(ranges$x)){ # make sure we have ranges
+        to_display <- df$Gene[(as.numeric(df$`End (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`Start (bp) [hg38]`) < ranges$x[2])]
+        to_display <- to_display[!is.na(to_display)]
       }
     }
     df <- df[df$Gene %in% to_display,]
@@ -2053,11 +2060,28 @@ server <- function(input, output, session) {
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
+    # Get Y range of segments (zoom in out)
+    ymin = 0
+    plot_ymin = 0
+    ymax = 8
+    plot_ymax = 18
+    # Get X range of plot (zoom in out)
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+    }
+    # Account for if a gene is cut off (due to zoom in zoom out):
+    TukGTExMod_merge_mod <- TukGTExMod_merge[TukGTExMod_merge$STOP >= xmin & TukGTExMod_merge$START <= xmax,]
+    TukGTExMod_merge_mod$START <- ifelse(TukGTExMod_merge_mod$START < xmin, xmin, TukGTExMod_merge_mod$START)
+    TukGTExMod_merge_mod$STOP <- ifelse(TukGTExMod_merge_mod$STOP > xmax, xmax, TukGTExMod_merge_mod$STOP)
     # Save threshold information for colorizing
     SV_threshold <- rv$SV_threshold
     VE_threshold <- rv$VE_threshold
     # Create gene of interest data frame
-    geneofinterest_df <- TukGTExMod[TukGTExMod$`Gene name` %in% geneofinterest,]
+    geneofinterest_df <- TukGTExMod_merge_mod[TukGTExMod_merge_mod$`Gene name` %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$`start_mapped`),]
     # Create disease of interest data frame
     mapped_genes_gwas <- c()
@@ -2073,11 +2097,8 @@ server <- function(input, output, session) {
       ifelse(TRUE %in% grepl(paste0("\\b",gene,"\\b"), mapped_genes), returned_genes_list <- c(returned_genes_list,gene),"")
     }
     rv$returned_genes_list <- returned_genes_list
-    disease_geneofinterest_df <- TukGTExMod[TukGTExMod$`Gene name` %in% returned_genes_list,]
+    disease_geneofinterest_df <- TukGTExMod_merge_mod[TukGTExMod_merge_mod$`Gene name` %in% returned_genes_list,]
     disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$`start_mapped`),]
-    # Get Range of plot
-    ymin = 0
-    ymax = 10
     # Get axis breaks
     x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
     first_label <- x_breaks[1]
@@ -2097,36 +2118,62 @@ server <- function(input, output, session) {
                      axis.ticks = element_blank(),
                      panel.background = element_rect(fill = "white"))
     # Create plot
-    p6 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+    p6 <- ggplot(data = TukGTExMod_merge_mod, aes(x=0, y=0)) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome") + ylab("") + 
       # Add points
-      geom_segment(data = TukGTExMod, 
-                   aes(x=as.numeric(unlist(TukGTExMod[, "start_mapped"])), y=0,
-                       xend=as.numeric(unlist(TukGTExMod[, "start_mapped"])), yend=ymax-1),
-                   color=ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= SV_threshold, 
+      geom_rect(data = TukGTExMod_merge_mod, 
+                   aes(xmin=as.numeric(unlist(TukGTExMod_merge_mod[, "START"])), ymin=ymin,
+                       xmax=as.numeric(unlist(TukGTExMod_merge_mod[, "STOP"])), ymax=ymax),
+                   fill=ifelse(as.numeric(unlist(TukGTExMod_merge_mod[, "perc_tissues_esc"])) <= SV_threshold, 
                                 col_inactive,
-                                ifelse(as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) > SV_threshold & as.numeric(unlist(TukGTExMod[, "perc_tissues_esc"])) <= VE_threshold, 
+                                ifelse(as.numeric(unlist(TukGTExMod_merge_mod[, "perc_tissues_esc"])) > SV_threshold & as.numeric(unlist(TukGTExMod_merge_mod[, "perc_tissues_esc"])) <= VE_threshold, 
                                        col_variable, col_escape))) + 
-      # Scaling and Legends
-      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+      # zoom in out
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
+      scale_y_continuous(limits = c(plot_ymin, plot_ymax), breaks = c(plot_ymin, plot_ymax), labels= c("  ","  "))    
+    # Add gene names for zoom in out
+    # For multi-tissue study first need to simplify table
+    TukGTExMod_merge_mod_simple <- TukGTExMod_merge_mod[,c("Gene name", "START", "STOP", "perc_tissues_esc")]
+    TukGTExMod_merge_mod_simple <- unique(TukGTExMod_merge_mod_simple)
+    if (nrow(TukGTExMod_merge_mod_simple) <= 20){
+      p6 <- p6 + 
+        # Add annotations
+        annotate("text", label = TukGTExMod_merge_mod_simple$`Gene name`, 
+                 x = colMeans(rbind(TukGTExMod_merge_mod_simple$START, TukGTExMod_merge_mod_simple$STOP)), 
+                 y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(TukGTExMod_merge_mod_simple)],
+                 color = ifelse(as.numeric(unlist(TukGTExMod_merge_mod_simple[, "perc_tissues_esc"])) <= SV_threshold, 
+                                col_inactive,
+                                ifelse(as.numeric(unlist(TukGTExMod_merge_mod_simple[, "perc_tissues_esc"])) > SV_threshold & as.numeric(unlist(TukGTExMod_merge_mod_simple[, "perc_tissues_esc"])) <= VE_threshold, 
+                                       col_variable, col_escape)), 
+                 vjust = -1, group = 2)
+    }
+    # Add axis labels for zoom in out
+    if (xmax - xmin < 1.5*10^7){
+      p6 <- p6 +
+        scale_x_continuous(breaks=seq(xmin, xmax, 10^6), 
+                           labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"), 
+                           limits = c(xmin, xmax)) + 
+        theme(axis.ticks.x = element_line())
+    }
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
-      p6 <- p6 + geom_segment(data = geneofinterest_df, 
-                              aes(x=as.numeric(unlist(geneofinterest_df[, "start_mapped"])), y=ymin,
-                                  xend=as.numeric(unlist(geneofinterest_df[, "start_mapped"])), yend=ymax-1),
-                              color='red')
+      p6 <- p6 + geom_rect(data = geneofinterest_df, 
+                              aes(xmin=as.numeric(unlist(geneofinterest_df[, "START"])), ymin=ymin,
+                                  xmax=as.numeric(unlist(geneofinterest_df[, "STOP"])), ymax=ymax),
+                              fill='red')
       
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
-      p6 <- p6 + geom_segment(data = disease_geneofinterest_df, 
-                              aes(x=as.numeric(unlist(disease_geneofinterest_df[, "start_mapped"])), y=ymin,
-                                  xend=as.numeric(unlist(disease_geneofinterest_df[, "start_mapped"])), yend=ymax-1),
-                              color='red')
+      p6 <- p6 + geom_rect(data = disease_geneofinterest_df, 
+                              aes(xmin=as.numeric(unlist(disease_geneofinterest_df[, "START"])), ymin=ymin,
+                                  xmax=as.numeric(unlist(disease_geneofinterest_df[, "STOP"])), ymax=ymax-1),
+                              fill='red')
     }
-    p6
+    if (nrow(TukGTExMod_merge_mod) > 0){
+      p6
+    }
   })
   output$plot_study7 <- renderPlot({
     # Save geneofinterest
