@@ -187,17 +187,19 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          # Plots
                          conditionalPanel(
                              condition = "output.plotStudy0",
-                             withSpinner(plotOutput(outputId = "plot_study0", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study0", height = "175px", width = "1000px", 
+                                                    click = "myclick", hover = "myhover"), type = 2)
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study1'",
-                             withSpinner(plotOutput(outputId = "plot_study1", height = "500px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study1", height = "500px", width = "1000px", 
+                                                    click = "myclick", hover = "myhover"), type = 2)
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study2'",
                              withSpinner(plotOutput(outputId = "plot_study2", height = "175px", width = "1000px", #here
-                                                    dblclick = "study2_dblclick",
-                                                    brush = brushOpts(id = "study2_brush", resetOnNew = TRUE)
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
                              ), type = 2) # spinner type = 2
                          ),
                          # plot 2 before zooming in
@@ -207,35 +209,59 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          # ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study3'",
-                             withSpinner(plotOutput(outputId = "plot_study3", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study3", height = "175px", width = "1000px", 
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study4'",
-                             withSpinner(plotOutput(outputId = "plot_study4", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study4", height = "175px", width = "1000px", 
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study5'",
-                             withSpinner(plotOutput(outputId = "plot_study5", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study5", height = "175px", width = "1000px",
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study6'",
-                             withSpinner(plotOutput(outputId = "plot_study6", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study6", height = "175px", width = "1000px",
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study7'",
-                             withSpinner(plotOutput(outputId = "plot_study7", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study7", height = "175px", width = "1000px",
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study8'",
-                             withSpinner(plotOutput(outputId = "plot_study8", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study8", height = "175px", width = "1000px",
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study9'",
-                             withSpinner(plotOutput(outputId = "plot_study9", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study9", height = "175px", width = "1000px",
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study10'",
-                             withSpinner(plotOutput(outputId = "plot_study10", height = "100px", click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study10", height = "175px", width = "1000px",
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
+                             ), type = 2) # spinner type = 2
                          ),
                          # Display the chromosome (image) if study is not selected
                          conditionalPanel(
@@ -373,7 +399,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                         p(paste(meta_stat_dt$NUM_GENES[meta_stat_dt$NUMBER == 2], "genes"), style = "font-size:16px"),
                                                         p(paste(meta_stat_dt$NUM_CALLS[meta_stat_dt$NUMBER == 2], "total calls"), style = "font-size:16px"),
                                                         p(paste(meta_stat_dt$NUM_TISS[meta_stat_dt$NUMBER == 2], "tissue(s)"), style = "font-size:16px"),
-                                             ),
+                                                ),
                                              ),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study2"))
@@ -385,9 +411,24 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                downloadLink('download_states_study3','[download table]', style = "font-size:14px")),
                                              p(span(a("doi.org/10.1038/nature03479", href="https://doi.org/10.1038/nature03479", target="_blank",)), style = "font-size:14px"),
                                              p("escape states obtained from Suppl.Table.1 of ", span(a("doi.org/10.1038/nature24265", href="https://doi.org/10.1038/nature24265", target="_blank",)), style = "font-size:14px"),
-                                             checkboxInput("states_filter_study3", 
-                                                           "Filter by selected genes (if no genes/diseases are selected, returns all genes)", 
+                                             checkboxInput("states_filter_study3",
+                                                           "Filter by selected genes (if no genes/diseases are selected, returns all genes)",
                                                            value = TRUE),
+                                             fluidRow(
+                                                 column(4, offset = 0,
+                                                        radioButtons("filter_study3", "Filter results",
+                                                                     choices = c("Filter by searched genes (if no genes/diseases are selected, returns all genes)" = 1,
+                                                                                 "Filter by displayed genes (zoom in plot)" = 2, 
+                                                                                 "No filters (return all genes)" = 3),
+                                                                     selected = 1),
+                                                 ),
+                                                 column(4, offset = 2,
+                                                        br(),
+                                                        p(paste(meta_stat_dt$NUM_GENES[meta_stat_dt$NUMBER == 3], "genes"), style = "font-size:16px"),
+                                                        p(paste(meta_stat_dt$NUM_CALLS[meta_stat_dt$NUMBER == 3], "total calls"), style = "font-size:16px"),
+                                                        p(paste(meta_stat_dt$NUM_TISS[meta_stat_dt$NUMBER == 3], "tissue(s)"), style = "font-size:16px"),
+                                                 ),
+                                             ),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study3"))
                                          ),
