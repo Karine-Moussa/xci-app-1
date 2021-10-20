@@ -68,8 +68,62 @@ for (row_num in 1:nrow(cotton_mDNA)){
 }
 colnames(cotton_mDNA_pivot) <- c("GENE", "POS_HG19", "POS", "TISS", "FULL_TISS", "TISS_STATE", "STATUS")
 
+# Get START and STOP of genes
+library(biomaRt)
+ensembl <- readRDS("rds/ensembl.rds")
+filters = listFilters(ensembl)
+attributes = listAttributes(ensembl)
+
+pos_ids_3 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
+                  filters =  c('external_gene_name', 'chromosome_name'),
+                  values = list(genes = c(cotton_mDNA_pivot$GENE), chromosome = "X"), 
+                  mart = ensembl)
+colnames(pos_ids_3) <- c("GENE", "START", "STOP")
+cotton_mDNA_pivot_merge_a <- merge(cotton_mDNA_pivot, pos_ids_3, all.x = T)
+# 47 TSSs need to have locations manually added
+write.csv(cotton_mDNA_pivot_merge_a, "sandbox/cotton_mDNA_merge_a.csv", row.names = FALSE)
+# ran gene_locator.py on TSSs missing start and stop positions.
+# output is in: returned resources_studies/Cotton14/gene_locations_cotton14.xlsx
+
+# First: handle non-duplicates 
+gene_loc_no_dup <- read_xlsx("resources_studies/Cotton2014/gene_locations_cotton14_no_dup.xlsx")
+for ( i_row in 1:nrow(cotton_mDNA_pivot_merge_a) ) {
+    if ( is.na(cotton_mDNA_pivot_merge_a$START[i_row]) ){
+        for (j_row in 1:nrow(gene_loc_no_dup)){
+            if (cotton_mDNA_pivot_merge_a[i_row,]$POS == gene_loc_no_dup[j_row,]$POS){
+                cotton_mDNA_pivot_merge_a[i_row,]$START <- gene_loc_no_dup[j_row,]$START
+                cotton_mDNA_pivot_merge_a[i_row,]$STOP <- gene_loc_no_dup[j_row,]$STOP
+                cotton_mDNA_pivot_merge_a[i_row,]$GENE <- gene_loc_no_dup[j_row,]$SYMBOL
+            }   
+        }
+    }
+}
+# Second: handle genes with duplicates
+gene_loc_dup <- read_xlsx("resources_studies/Cotton2014/gene_locations_cotton14_dup.xlsx")
+for ( i_row in 1:nrow(cotton_mDNA_pivot_merge_a) ) {
+    if ( is.na(cotton_mDNA_pivot_merge_a$START[i_row]) ){ # if no START or STOP
+        for (j_row in seq(1, nrow(gene_loc_dup),2)){ # every other row in j
+            if (cotton_mDNA_pivot_merge_a[i_row,]$POS == gene_loc_dup[j_row,]$POS){
+                # Add the START and STOP and FIRST GENE NAME for the original row
+                cotton_mDNA_pivot_merge_a[i_row,]$START <- gene_loc_dup[j_row,]$START
+                cotton_mDNA_pivot_merge_a[i_row,]$STOP <- gene_loc_dup[j_row,]$STOP
+                cotton_mDNA_pivot_merge_a[i_row,]$GENE <- gene_loc_dup[j_row,]$SYMBOL
+                # Create a row with the START and STOP and SECOND GENE NAME 
+                # Then add to the bottom of full df
+                temp_row <- cotton_mDNA_pivot_merge_a[i_row,]
+                temp_row$START <- gene_loc_dup[j_row+1,]$START
+                temp_row$STOP <- gene_loc_dup[j_row+1,]$STOP
+                temp_row$GENE <- gene_loc_dup[j_row+1,]$SYMBOL
+                cotton_mDNA_pivot_merge_a <- rbind(cotton_mDNA_pivot_merge_a, temp_row)
+                rm(temp_row)
+            }   
+        }
+    }
+}
+rm(i_row, j_row) 
+
 # Save information
-saveRDS(cotton_mDNA_pivot, "resources_studies/Cotton2014/cotton_mDNA_precolor.rds")
+saveRDS(cotton_mDNA_pivot_merge_a, "resources_studies/Cotton2014/cotton_mDNA_precolor.rds")
 
 # Clean up 
 rm(cotton_mDNA, cotton_mDNA_pivot, gene_object,

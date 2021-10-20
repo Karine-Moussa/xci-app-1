@@ -68,8 +68,6 @@ for (i in 1:nrow(kat_lin_df_lb)){
 }
 
 # STUDY 5 TukGTEx (fully skewed individual) 
-# come back to this
-# maybe try with the ensembl_gene_id instead of ensembl_gene_id_version
 TukGTExMod_genes <- c(TukGTExMod$`Gene ID clean`)
 pos_ids_1 = getBM(attributes = c('ensembl_gene_id', 'start_position', 'end_position'), 
             filters =  c('ensembl_gene_id', 'chromosome_name'),
@@ -95,24 +93,28 @@ for (i in 1:nrow(TukGTExMod_merge)){
 }
 
 # STUDY 7 Cotton mDNA
-pos_ids_3 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
-                  filters =  c('external_gene_name', 'chromosome_name'),
-                  values = list(genes = c(cotton_mDNA$GENE), chromosome = "X"), 
-                  mart = ensembl)
-colnames(pos_ids_3) <- c("GENE", "START", "STOP")
-cotton_mDNA_merge_a <- merge(cotton_mDNA, pos_ids_3, all.x = T) # TukGTExMod with start and end
-# 47 TSSs may need to have locations manually added
-write.csv(cotton_mDNA_merge_a, "sandbox/cotton_mDNA_merge_a.csv", row.names = FALSE)
-# Current approach: set start and end value as POS
-cotton_mDNA_merge_b <- cotton_mDNA_merge_a
-cotton_mDNA_merge_b$START  <- ifelse(is.na(cotton_mDNA_merge_b$START), cotton_mDNA_merge_b$POS, cotton_mDNA_merge_b$START)  
-cotton_mDNA_merge_b$STOP  <- ifelse(is.na(cotton_mDNA_merge_b$STOP), cotton_mDNA_merge_b$POS, cotton_mDNA_merge_b$STOP)  
+# This study required more involved efforts. 
+# START and STOP position additions are in resources_studies/Cotton2014/format_cotton14.R
+
+# pos_ids_3 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
+#                   filters =  c('external_gene_name', 'chromosome_name'),
+#                   values = list(genes = c(cotton_mDNA$GENE), chromosome = "X"), 
+#                   mart = ensembl)
+# colnames(pos_ids_3) <- c("GENE", "START", "STOP")
+# cotton_mDNA_merge_a <- merge(cotton_mDNA, pos_ids_3, all.x = T) # TukGTExMod with start and end
+# # 47 TSSs may need to have locations manually added
+# write.csv(cotton_mDNA_merge_a, "sandbox/cotton_mDNA_merge_a.csv", row.names = FALSE)
+# # Current approach: set start and end value as POS
+# cotton_mDNA_merge_b <- cotton_mDNA_merge_a
+# cotton_mDNA_merge_b$START  <- ifelse(is.na(cotton_mDNA_merge_b$START), cotton_mDNA_merge_b$POS, cotton_mDNA_merge_b$START)  
+# cotton_mDNA_merge_b$STOP  <- ifelse(is.na(cotton_mDNA_merge_b$STOP), cotton_mDNA_merge_b$POS, cotton_mDNA_merge_b$STOP)  
+
 # Create gene links
-for (i in 1:nrow(cotton_mDNA_merge_b)){
-    cotton_mDNA_merge_b$gene_link[i] = paste0(ens_base_loc, 
-                                              cotton_mDNA_merge_b$START[i],
-                                              "-",
-                                              cotton_mDNA_merge_b$STOP[i])
+for (i in 1:nrow(cotton_mDNA)){
+    cotton_mDNA$gene_link[i] = paste0(ens_base_loc, 
+                                      cotton_mDNA$START[i],
+                                      "-",
+                                      cotton_mDNA$STOP[i])
 }
 
 # STUDY 8 Balaton and Brown (mDNA)
@@ -149,6 +151,6 @@ saveRDS(kat_lin_df_lb, "rds/kat_lin_df_lb.rds")
 saveRDS(TukGTExMod_merge, "rds/TukGTExMod_merge.rds") # NEW
 saveRDS(TukDEG, "rds/TukDEG.rds")
 #saveRDS(cotton_mDNA, "rds/cotton_mDNA.rds")
-saveRDS(cotton_mDNA_merge_b, "rds/cotton_mDNA_merge_b.rds")
+saveRDS(cotton_mDNA, "rds/cotton_mDNA.rds")
 saveRDS(balbrown_mCEMT, "rds/balbrown_mCEMT.rds")
 saveRDS(balbrown_CREST, "rds/balbrown_CREST.rds")

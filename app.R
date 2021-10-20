@@ -1160,13 +1160,14 @@ server <- function(input, output, session) {
   }, escape = FALSE)
   ## Status Table (Study7) (similar to Study6)
   output$status_table_study7 <- renderDataTable({
-    df <- data.frame("Gene" = cotton_mDNA_merge_b$GENE,
-                     "Start (bp) [hg38]" = cotton_mDNA_merge_b$START,
-                     "Stop (bp) [hg38]" = cotton_mDNA_merge_b$STOP,
-                     "Tissue" = cotton_mDNA_merge_b$FULL_TISS,
-                     "Tissue State" = cotton_mDNA_merge_b$TISS_STATE,
-                     "Escape Status" = cotton_mDNA_merge_b$STATUS,
-                     "gene_link" = cotton_mDNA_merge_b$gene_link,
+    df <- data.frame("Gene*" = cotton_mDNA$GENE,
+                     "Position (DNAme)" = cotton_mDNA$POS,
+                     "Start (bp) [hg38]" = cotton_mDNA$START,
+                     "Stop (bp) [hg38]" = cotton_mDNA$STOP,
+                     "Tissue" = cotton_mDNA$FULL_TISS,
+                     "Tissue State" = cotton_mDNA$TISS_STATE,
+                     "Escape Status" = cotton_mDNA$STATUS,
+                     "gene_link" = cotton_mDNA$gene_link,
                      check.names = FALSE
     )
     # Filter the df based on what genes are being displayed
@@ -1186,13 +1187,13 @@ server <- function(input, output, session) {
     df <- df[df$Gene %in% to_display,]
     # Filter out the Tissue column if only a summary is needed
     if (!isTruthy(rv$tissues_filter_study7)){
-      df <- df[,-c(4,5)]
+      df <- df[,-c(5,6)]
       df <- unique(df)
     }
     saveRDS(df,'data_output/cott_mDNA_xstates.rds')
     # If df isn't empty, make hyperlinks for genes
     if(nrow(df) != 0){
-      df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
+      df$`Gene*` <- paste0('<a href="', df$gene_link,'" target="_blank">', df$`Gene*`, '</a>')
       df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
     }
     df <- df[order(df$`Start (bp) [hg38]`),]
