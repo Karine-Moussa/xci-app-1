@@ -530,8 +530,8 @@ server <- function(input, output, session) {
   observeEvent(input$filter_study8, {
     rv$filter_study8 <- input$filter_study8
   })
-  observeEvent(input$states_filter_study9, {
-    rv$states_filter_study9 <- input$states_filter_study9
+  observeEvent(input$filter_study9, {
+    rv$filter_study9 <- input$filter_study9
   })
   observeEvent(input$states_filter_study10, {
     rv$states_filter_study10 <- input$states_filter_study10
@@ -1288,7 +1288,7 @@ server <- function(input, output, session) {
     # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df$Gene
-    if (isTruthy(rv$states_filter_study9)){
+    if (rv$filter_study9 == 1){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
       if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
@@ -1296,6 +1296,13 @@ server <- function(input, output, session) {
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
         to_display <- rv$returned_genes_list
+      }
+    }
+    if (rv$filter_study9 == 2){ # zoom in out
+      # Return only the genes that are between the min and max of the plot
+      if(!is.null(ranges$x)){ # make sure we have ranges
+        to_display <- df$Gene[(as.numeric(df$`End (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`Start (bp) [hg38]`) < ranges$x[2])]
+        to_display <- to_display[!is.na(to_display)]
       }
     }
     df <- df[df$Gene %in% to_display,]
@@ -2414,6 +2421,23 @@ server <- function(input, output, session) {
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
+    # Get Y range of segments (zoom in out)
+    ymin = 0
+    plot_ymin = 0
+    ymax = 8
+    plot_ymax = 18
+    # Get X range of plot (zoom in out)
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+    }
+    # Account for if a gene is cut off (due to zoom in zoom out):
+    balbrown_CREST_mod <- balbrown_CREST[balbrown_CREST$STOP >= xmin & balbrown_CREST$START <= xmax,]
+    balbrown_CREST_mod$start_mapped <- ifelse(balbrown_CREST_mod$START < xmin, xmin, balbrown_CREST_mod$START)
+    balbrown_CREST_mod$end_mapped <- ifelse(balbrown_CREST_mod$STOP > xmax, xmax, balbrown_CREST_mod$STOP)
     # Create gene of interest data frame
     geneofinterest_df <- balbrown_CREST[balbrown_CREST$GENE %in% geneofinterest,] # change here
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$START),] # change here
@@ -2433,9 +2457,6 @@ server <- function(input, output, session) {
     rv$returned_genes_list <- returned_genes_list
     disease_geneofinterest_df <- balbrown_CREST[balbrown_CREST$GENE %in% returned_genes_list,] # changed here
     disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$START),] # changed here
-    # Get Range of plot
-    ymin = 0
-    ymax = 10
     # Get axis breaks
     x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
     first_label <- x_breaks[1]
@@ -2455,32 +2476,51 @@ server <- function(input, output, session) {
                      axis.ticks = element_blank(),
                      panel.background = element_rect(fill = "white"))
     # Create plot
-    p9 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) + # changed here
+    p9 <- ggplot(data = balbrown_CREST_mod, aes(x=0, y=0)) + # changed here
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome Position") + ylab("") + 
       # Add points
-      geom_segment(data = balbrown_CREST, # changed here
-                   aes(x=balbrown_CREST[, "START"], y=0, # chnaged here
-                       xend=balbrown_CREST[, "START"], yend=ymax-1), # changed here
-                   color=balbrown_CREST[, "COLOR"]) + # changed here
+      geom_rect(data = balbrown_CREST_mod, # changed here
+                   aes(xmin=balbrown_CREST_mod[, "START"], ymin=ymin, # chnaged here
+                       xmax=balbrown_CREST_mod[, "STOP"], ymax=ymax), # changed here
+                   fill=balbrown_CREST_mod[, "COLOR"]) + # changed here
       # Scaling and Legends
-      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+      # zoom in out
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
+      scale_y_continuous(limits = c(plot_ymin, plot_ymax), breaks = c(plot_ymin, plot_ymax), labels= c("  ","  "))
+    # Add gene names for zoom in out
+    if (nrow(balbrown_CREST_mod) <= 25){
+      p9 <- p9 + 
+        # Add annotations
+        annotate("text", label = balbrown_CREST_mod$GENE, x = colMeans(rbind(balbrown_CREST_mod$START, balbrown_CREST_mod$STOP)), 
+                 y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(balbrown_CREST_mod)],
+                 color = balbrown_CREST_mod$COLOR, vjust = -1, group = 2)
+    }
+    # Add axis labels for zoom in out
+    if (xmax - xmin < 1.5*10^7){
+      p9 <- p9 +
+        scale_x_continuous(breaks=seq(xmin, xmax, 10^6), 
+                           labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"), 
+                           limits = c(xmin, xmax)) + 
+        theme(axis.ticks.x = element_line())
+    }
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
-      p9 <- p9 + geom_segment(data = geneofinterest_df, # changed here
-                              aes(x=geneofinterest_df[, "START"], y=ymin, # changed here
-                                  xend=geneofinterest_df[, "START"], yend=ymax-1), # changed here
-                              color='red')
+      p9 <- p9 + geom_rect(data = geneofinterest_df, # changed here
+                              aes(xmin=geneofinterest_df[, "START"], ymin=ymin, # changed here
+                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                              fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
-      p9 <- p9 + geom_segment(data = disease_geneofinterest_df, # changed here
-                              aes(x=disease_geneofinterest_df[, "START"], y=ymin, # changed here
-                                  xend=disease_geneofinterest_df[, "START"], yend=ymax-1), # changed here
-                              color='red')
+      p9 <- p9 + geom_rect(data = disease_geneofinterest_df, # changed here
+                              aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin, # changed here
+                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                              fill='red')
     }
-    p9 # changed here
+    if (balbrown_CREST_mod > 0){ # change here (when adding new study)
+      p9
+    }
   })
   output$plot_study10 <- renderPlot({ # changed here
     # Save geneofinterest
