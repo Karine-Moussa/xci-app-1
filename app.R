@@ -2306,6 +2306,23 @@ server <- function(input, output, session) {
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
+    # Get Y range of segments (zoom in out)
+    ymin = 0
+    plot_ymin = 0
+    ymax = 8
+    plot_ymax = 18
+    # Get X range of plot (zoom in out)
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+    }
+    # Account for if a gene is cut off (due to zoom in zoom out):
+    balbrown_mCEMT_mod <- balbrown_mCEMT[balbrown_mCEMT$STOP >= xmin & balbrown_mCEMT$START <= xmax,]
+    balbrown_mCEMT_mod$start_mapped <- ifelse(balbrown_mCEMT_mod$START < xmin, xmin, balbrown_mCEMT_mod$START)
+    balbrown_mCEMT_mod$end_mapped <- ifelse(balbrown_mCEMT_mod$STOP > xmax, xmax, balbrown_mCEMT_mod$STOP)
     # Create gene of interest data frame
     geneofinterest_df <- balbrown_mCEMT[balbrown_mCEMT$GENE %in% geneofinterest,] # change here
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$START),] # change here
@@ -2344,32 +2361,51 @@ server <- function(input, output, session) {
                      axis.ticks = element_blank(),
                      panel.background = element_rect(fill = "white"))
     # Create plot
-    p8 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) + # changed here
+    p8 <- ggplot(data = balbrown_mCEMT_mod, aes(x=0, y=0)) + # changed here
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome Position") + ylab("") + 
       # Add points
-      geom_segment(data = balbrown_mCEMT, # changed here
-                   aes(x=balbrown_mCEMT[, "START"], y=0, # chnaged here
-                       xend=balbrown_mCEMT[, "START"], yend=ymax-1), # changed here
-                   color=balbrown_mCEMT[, "COLOR"]) + # changed here
+      geom_rect(data = balbrown_mCEMT_mod, # changed here
+                   aes(xmin=balbrown_mCEMT_mod[, "START"], ymin=ymin, # chnaged here
+                       xmax=balbrown_mCEMT_mod[, "STOP"], ymax=ymax), # changed here
+                   fill=balbrown_mCEMT_mod[, "COLOR"]) + # changed here
       # Scaling and Legends
-      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+      # zoom in out
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
+      scale_y_continuous(limits = c(plot_ymin, plot_ymax), breaks = c(plot_ymin, plot_ymax), labels= c("  ","  "))
+    # Add gene names for zoom in out
+    if (nrow(balbrown_mCEMT_mod) <= 25){
+      p8 <- p8 + 
+        # Add annotations
+        annotate("text", label = balbrown_mCEMT_mod$GENE, x = colMeans(rbind(balbrown_mCEMT_mod$START, balbrown_mCEMT_mod$STOP)), 
+                 y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(balbrown_mCEMT_mod)],
+                 color = balbrown_mCEMT_mod$COLOR, vjust = -1, group = 2)
+    }
+    # Add axis labels for zoom in out
+    if (xmax - xmin < 1.5*10^7){
+      p8 <- p8 +
+        scale_x_continuous(breaks=seq(xmin, xmax, 10^6), 
+                           labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"), 
+                           limits = c(xmin, xmax)) + 
+        theme(axis.ticks.x = element_line())
+    }
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
-      p8 <- p8 + geom_segment(data = geneofinterest_df, # changed here
-                              aes(x=geneofinterest_df[, "START"], y=ymin, # changed here
-                                  xend=geneofinterest_df[, "START"], yend=ymax-1), # changed here
-                              color='red')
+      p8 <- p8 + geom_rect(data = geneofinterest_df, # changed here
+                              aes(xmin=geneofinterest_df[, "START"], ymin=ymin, # changed here
+                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                              fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
-      p8 <- p8 + geom_segment(data = disease_geneofinterest_df, # changed here
-                              aes(x=disease_geneofinterest_df[, "START"], y=ymin, # changed here
-                                  xend=disease_geneofinterest_df[, "START"], yend=ymax-1), # changed here
-                              color='red')
+      p8 <- p8 + geom_rect(data = disease_geneofinterest_df, # changed here
+                              aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin, # changed here
+                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                              fill='red')
     }
-    p8
+    if (nrow(balbrown_mCEMT_mod) > 0) {
+      p8
+    }
   })
   output$plot_study9 <- renderPlot({ # changed here
     # Save geneofinterest
