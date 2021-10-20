@@ -130,11 +130,9 @@ server <- function(input, output, session) {
     tissues_filter_study1 = "on",
     states_filter_study6 = "on",
     tissues_filter_study6 = "on",
-    #states_filter_study2 = "on",
     filter_study2 = 1,
-    #states_filter_study3 = "on",
     filter_study3 = 1,
-    states_filter_study4 = "on",
+    filter_study4 = 1,
     states_filter_study5 = "on",
     study0_df = data.frame(),
     study0_genes = c(),
@@ -517,8 +515,8 @@ server <- function(input, output, session) {
   observeEvent(input$filter_study3, {
     rv$filter_study3 <- input$filter_study3
   })
-  observeEvent(input$states_filter_study4, {
-    rv$states_filter_study4 <- input$states_filter_study4
+  observeEvent(input$filter_study4, {
+    rv$filter_study4 <- input$filter_study4
   })
   observeEvent(input$states_filter_study5, {
     rv$states_filter_study5 <- input$states_filter_study5
@@ -1046,7 +1044,7 @@ server <- function(input, output, session) {
     # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df$Gene
-    if (isTruthy(rv$states_filter_study4)){
+    if (rv$filter_study4 == 1){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
       if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
@@ -1054,6 +1052,13 @@ server <- function(input, output, session) {
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
         to_display <- rv$returned_genes_list
+      }
+    }
+    if (rv$filter_study4 == 2){ # zoom in out
+      # Return only the genes that are between the min and max of the plot
+      if(!is.null(ranges$x)){ # make sure we have ranges
+        to_display <- df$Gene[(as.numeric(df$`End (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`Start (bp) [hg38]`) < ranges$x[2])]
+        to_display <- to_display[!is.na(to_display)]
       }
     }
     df <- df[df$Gene %in% to_display,]
@@ -1826,6 +1831,23 @@ server <- function(input, output, session) {
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
+    # Get Y range of segments (zoom in out)
+    ymin = 0
+    plot_ymin = 0
+    ymax = 8
+    plot_ymax = 18
+    # Get X range of plot (zoom in out)
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+    }
+    # Account for if a gene is cut off (due to zoom in zoom out):
+    kat_lin_df_lb_mod <- kat_lin_df_lb[kat_lin_df_lb$end_mapped >= xmin & kat_lin_df_lb$start_mapped <= xmax,]
+    kat_lin_df_lb_mod$start_mapped <- ifelse(kat_lin_df_lb_mod$start_mapped < xmin, xmin, kat_lin_df_lb_mod$start_mapped)
+    kat_lin_df_lb_mod$end_mapped <- ifelse(kat_lin_df_lb_mod$end_mapped > xmax, xmax, kat_lin_df_lb_mod$end_mapped)
     # Create gene of interest data frame
     geneofinterest_df <- kat_lin_df_lb[kat_lin_df_lb$gene %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
@@ -1845,9 +1867,6 @@ server <- function(input, output, session) {
     rv$returned_genes_list <- returned_genes_list
     disease_geneofinterest_df <- kat_lin_df_lb[kat_lin_df_lb$gene %in% returned_genes_list,]
     disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
-    # Get Range of plot
-    ymin = 0
-    ymax = 10
     # Get axis breaks
     x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
     first_label <- x_breaks[1]
@@ -1867,32 +1886,51 @@ server <- function(input, output, session) {
                      axis.ticks = element_blank(),
                      panel.background = element_rect(fill = "white"))
     # Create plot
-    p4 <- ggplot(data = x_expr_mod, aes(x=start, y=-log10(p_value_mod))) +
+    p4 <- ggplot(data = kat_lin_df_lb, aes(x=0, y=0)) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
       xlab("X-Chromosome Position") + ylab("") + 
       # Add points
-      geom_segment(data = kat_lin_df_lb, 
-                   aes(x=kat_lin_df_lb[, "start_mapped"], y=0,
-                       xend=kat_lin_df_lb[, "start_mapped"], yend=ymax-1),
-                   color=kat_lin_df_lb[, "color_lb"]) + 
-      # Scaling and Legends
-      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-      scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
+      geom_rect(data = kat_lin_df_lb_mod, 
+                   aes(xmin=kat_lin_df_lb_mod[, "start_mapped"], ymin=0,
+                       xmax=kat_lin_df_lb_mod[, "end_mapped"], ymax=ymax),
+                   fill=kat_lin_df_lb_mod[, "color_lb"]) + 
+      # zoom in out
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
+      scale_y_continuous(limits = c(plot_ymin, plot_ymax), breaks = c(plot_ymin, plot_ymax), labels= c("  ","  "))
+    # Add gene names for zoom in out
+    if (nrow(kat_lin_df_lb_mod) <= 25){
+      p4 <- p4 + 
+      # Add annotations
+      annotate("text", label = kat_lin_df_lb_mod$gene, x = colMeans(rbind(kat_lin_df_lb_mod$start_mapped, kat_lin_df_lb_mod$end_mapped)), 
+               y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(kat_lin_df_lb_mod)],
+               color = kat_lin_df_lb_mod$color_lb, vjust = -1, group = 2)
+    }
+    # Add axis labels for zoom in out
+    if (xmax - xmin < 1.5*10^7){
+      p4 <- p4 +
+        scale_x_continuous(breaks=seq(xmin, xmax, 10^6), 
+                           labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"), 
+                           limits = c(xmin, xmax)) + 
+        theme(axis.ticks.x = element_line())
+    }
     # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
-      p4 <- p4 + geom_segment(data = geneofinterest_df, 
-                              aes(x=geneofinterest_df[, "start_mapped"], y=ymin,
-                                  xend=geneofinterest_df[, "start_mapped"], yend=ymax-1),
-                              color='red')
+      p4 <- p4 + geom_rect(data = geneofinterest_df, 
+                              aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
+                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax),
+                              fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
-      p4 <- p4 + geom_segment(data = disease_geneofinterest_df, 
-                              aes(x=disease_geneofinterest_df[, "start_mapped"], y=ymin,
-                                  xend=disease_geneofinterest_df[, "start_mapped"], yend=ymax-1),
-                              color='red')
+      p4 <- p4 + geom_rect(data = disease_geneofinterest_df, 
+                              aes(xmin=disease_geneofinterest_df[, "start_mapped"], ymin=ymin,
+                                  xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax),
+                              fill='red')
     }
-    p4
+    # Only plot of genes are in zoom in out
+    if (nrow(kat_lin_df_lb_mod) > 0 ){
+      p4
+    }
   })
   output$plot_study5 <- renderPlot({
     # Save geneofinterest
