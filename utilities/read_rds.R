@@ -14,12 +14,6 @@ xchrom_map_colored <- readRDS("rds/xchrom_map_colored.rds")
 gene_stat_table <- readRDS("rds/gene_stat_table.rds")
 
 # create_global_variables.R
-STATUS <- readRDS("rds/STATUS.rds")
-GENE <- readRDS("rds/GENE.rds")
-SAMPLE_NAMES <- readRDS("rds/SAMPLE_NAMES.rds")
-LIST_OF_GENES <- readRDS("rds/LIST_OF_GENES.rds")
-P_MIN <- readRDS("rds/P_MIN.rds")
-P_SIG <- readRDS("rds/P_SIG.rds")
 SV_threshold <- readRDS("rds/SV_threshold.rds")
 VE_threshold <- readRDS("rds/VE_threshold.rds")
 ens_base_loc <- readRDS("rds/ens_base_loc.rds")

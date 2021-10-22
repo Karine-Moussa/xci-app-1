@@ -2720,7 +2720,8 @@ server <- function(input, output, session) {
     # ^these objects contains geom_segment() layers for each band.
     #  Created in utilities/format_plot_aesthetics.R
     xchromosome_plot
-  }, cacheKeyExpr = { c(input$geneofinterest1, ranges$x) }
+  }, 
+  cacheKeyExpr = { c(input$geneofinterest1, ranges$x) }
   )
   ############
   ### TAB 3

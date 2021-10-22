@@ -265,19 +265,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                     brush = brushOpts(id = "study_brush", resetOnNew = TRUE)
                              ), type = 2) # spinner type = 2
                          ),
-                         # Display the chromosome (image) if study is not selected
-                         conditionalPanel(
-                             condition = "input.addStudies == 'empty'",
-                             img(src = "x-chrom-img.png", width = "750px"),
-                         ),
-                         # Display the chromosome (graph) if study is selected
-                         conditionalPanel(
-                             condition = "input.addStudies != 'empty' || output.plotStudy0", #here
-                             withSpinner(plotOutput(outputId = "xchromosome", height = "100px", width = "1000px"), type = 1, size = 1)
-                         ),
-                         # LEGENDS
-                         # Show this panel if we're looking at escape states
-                         # for non-DGEA studies
+                         # Display X-chromosome
+                         withSpinner(plotOutput(outputId = "xchromosome", 
+                                                height = "100px", width = "1000px"), type = 1, size = 1),
                          conditionalPanel(
                              condition = "input.addStudies != 'empty' & input.addStudies != 'study10'",
                              p("", style = "font-size:4px"),
@@ -535,7 +525,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              checkboxInput("tissues_filter_study7", 
                                                            "View states within each tissue", 
                                                            value = FALSE),
-                                             br(),
+                                             a('Why are there duplicate genes?', href = "Tutorial-Dup-Genes.pdf", target="_blank", style = "font-size:14px;font-style:italic"),
+                                             br(),br(),
                                              (dataTableOutput(outputId = "status_table_study7"))
                                          ),
                                          conditionalPanel( # conditional panel within conditional panel

@@ -82,9 +82,6 @@ chrom_segments_colored$end <- geom_segment(aes(x = as.numeric(par2_boundaries[1]
                                             size = chrom_size, color = "lightblue", alpha=0.25, lineend = "round")
 
 # Regularly shade
-par1_boundaries <- c(100001,2781479)
-par2_boundaries <- c(155701383,156030895)
-centre_boundaries <- c(58100001,63800000)
 chrom_segments_colored$par1 <- geom_segment(aes(x = 0, y = y_place, xend = 2781479, yend = y_place),
                                     size = chrom_size, color = "lightblue", alpha=0.25)
 chrom_segments_colored$par2 <- geom_segment(aes(x = 155701383, y = y_place, xend = 156030895, yend = y_place),

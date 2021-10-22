@@ -1,27 +1,27 @@
 # This script creates the gene hyperlinks for all studies
 
-## Comment out this section when not in development mode ##
-setwd("~/xci-app-1-symlink")
-x_expr_mod <- readRDS("rds/x_expr_mod.rds") # done
-cott_carr_will_df <- readRDS("rds/cott_carr_will_df.rds") # done
-kat_lin_df <- readRDS("rds/kat_lin_df.rds") # done
-kat_lin_df_fb <- readRDS("rds/kat_lin_df_fb.rds") # done
-kat_lin_df_lb <- readRDS("rds/kat_lin_df_lb.rds") # done
-TukGTExMod <- readRDS("rds/TukGTExMod.rds") # done
-TukDEG <- readRDS("rds/TukDEG.rds") # done
-cotton_mDNA <- readRDS("rds/cotton_mDNA.rds") ####### need end positions
-balbrown_mCEMT <- readRDS("rds/balbrown_mCEMT.rds") # done
-balbrown_CREST <- readRDS("rds/balbrown_CREST.rds") # done
+# ## Comment out this section when not in development mode ##
+# setwd("~/xci-app-1-symlink")
+# x_expr_mod <- readRDS("rds/x_expr_mod.rds") 
+# cott_carr_will_df <- readRDS("rds/cott_carr_will_df.rds") 
+# kat_lin_df <- readRDS("rds/kat_lin_df.rds") 
+# kat_lin_df_fb <- readRDS("rds/kat_lin_df_fb.rds") 
+# kat_lin_df_lb <- readRDS("rds/kat_lin_df_lb.rds") 
+# TukGTExMod <- readRDS("rds/TukGTExMod.rds") 
+# TukDEG <- readRDS("rds/TukDEG.rds") 
+# cotton_mDNA <- readRDS("rds/cotton_mDNA.rds")
+# balbrown_mCEMT <- readRDS("rds/balbrown_mCEMT.rds") 
+# balbrown_CREST <- readRDS("rds/balbrown_CREST.rds")
 
-# biomaRt
-library(biomaRt)
-#ensembl <- useEnsembl(biomart = "genes", 
-#                      dataset = "hsapiens_gene_ensembl") 
-                      #mirror = "useast")
-#saveRDS(ensembl, "rds/ensembl.rds")
-ensembl <- readRDS("rds/ensembl.rds")
-filters = listFilters(ensembl)
-attributes = listAttributes(ensembl)
+### biomaRt commented out to eliminate library(biomaRt) from compilation
+# library(biomaRt)
+# #ensembl <- useEnsembl(biomart = "genes", 
+# #                      dataset = "hsapiens_gene_ensembl") 
+#                       #mirror = "useast")
+# #saveRDS(ensembl, "rds/ensembl.rds")
+# ensembl <- readRDS("rds/ensembl.rds")
+# filters = listFilters(ensembl)
+# attributes = listAttributes(ensembl)
 
 # Ensemble base links
 ens_base_loc <- readRDS("rds/ens_base_loc.rds")
@@ -69,17 +69,21 @@ for (i in 1:nrow(kat_lin_df_lb)){
 
 # STUDY 5 TukGTEx (fully skewed individual) 
 TukGTExMod_genes <- c(TukGTExMod$`Gene ID clean`)
-pos_ids_1 = getBM(attributes = c('ensembl_gene_id', 'start_position', 'end_position'), 
-            filters =  c('ensembl_gene_id', 'chromosome_name'),
-            values = list(genes = c(TukGTExMod_genes), chromosome = "X"), 
-              mart = ensembl)
-colnames(pos_ids_1) <- c("Gene ID clean", "START", "STOP")
+# pos_ids_1 = getBM(attributes = c('ensembl_gene_id', 'start_position', 'end_position'), 
+#             filters =  c('ensembl_gene_id', 'chromosome_name'),
+#             values = list(genes = c(TukGTExMod_genes), chromosome = "X"), 
+#               mart = ensembl)
+# colnames(pos_ids_1) <- c("Gene ID clean", "START", "STOP")
+# saveRDS(pos_ids_1, "rds/pos_ids_1.rds")
+pos_ids_1 <- readRDS("rds/pos_ids_1.rds")
 TukGTExMod_merge <- merge(TukGTExMod, pos_ids_1, all.x = T) # TukGTExMod with start and end
 # manually fill in the three NA entries
-pos_ids_2 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
-                filters =  c('external_gene_name', 'chromosome_name'),
-                values = list(genes = c("SLC6A14", "SLC25A53"), chromosome = "X"), 
-                mart = ensembl) # manually printed and copied results below
+# pos_ids_2 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
+#                 filters =  c('external_gene_name', 'chromosome_name'),
+#                 values = list(genes = c("SLC6A14", "SLC25A53"), chromosome = "X"), 
+#                 mart = ensembl) # manually printed and copied results below
+# saveRDS(pos_ids_2, "rds/pos_ids_2.rds")
+# pos_ids_2 <- readRDS("rds/pos_ids_2.rds")
 TukGTExMod_merge$START[TukGTExMod_merge$`Gene name` == "SLC6A14"] <- 116436606
 TukGTExMod_merge$END[TukGTExMod_merge$`Gene name` == "SLC6A14"] <- 116461458
 TukGTExMod_merge$START[TukGTExMod_merge$`Gene name` == "SLC25A53"] <- 104099214
@@ -95,19 +99,6 @@ for (i in 1:nrow(TukGTExMod_merge)){
 # STUDY 7 Cotton mDNA
 # This study required more involved efforts. 
 # START and STOP position additions are in resources_studies/Cotton2014/format_cotton14.R
-
-# pos_ids_3 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
-#                   filters =  c('external_gene_name', 'chromosome_name'),
-#                   values = list(genes = c(cotton_mDNA$GENE), chromosome = "X"), 
-#                   mart = ensembl)
-# colnames(pos_ids_3) <- c("GENE", "START", "STOP")
-# cotton_mDNA_merge_a <- merge(cotton_mDNA, pos_ids_3, all.x = T) # TukGTExMod with start and end
-# # 47 TSSs may need to have locations manually added
-# write.csv(cotton_mDNA_merge_a, "sandbox/cotton_mDNA_merge_a.csv", row.names = FALSE)
-# # Current approach: set start and end value as POS
-# cotton_mDNA_merge_b <- cotton_mDNA_merge_a
-# cotton_mDNA_merge_b$START  <- ifelse(is.na(cotton_mDNA_merge_b$START), cotton_mDNA_merge_b$POS, cotton_mDNA_merge_b$START)  
-# cotton_mDNA_merge_b$STOP  <- ifelse(is.na(cotton_mDNA_merge_b$STOP), cotton_mDNA_merge_b$POS, cotton_mDNA_merge_b$STOP)  
 
 # Create gene links
 for (i in 1:nrow(cotton_mDNA)){

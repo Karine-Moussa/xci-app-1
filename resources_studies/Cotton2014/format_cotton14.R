@@ -68,17 +68,20 @@ for (row_num in 1:nrow(cotton_mDNA)){
 }
 colnames(cotton_mDNA_pivot) <- c("GENE", "POS_HG19", "POS", "TISS", "FULL_TISS", "TISS_STATE", "STATUS")
 
-# Get START and STOP of genes
-library(biomaRt)
-ensembl <- readRDS("rds/ensembl.rds")
-filters = listFilters(ensembl)
-attributes = listAttributes(ensembl)
-
-pos_ids_3 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
-                  filters =  c('external_gene_name', 'chromosome_name'),
-                  values = list(genes = c(cotton_mDNA_pivot$GENE), chromosome = "X"), 
-                  mart = ensembl)
-colnames(pos_ids_3) <- c("GENE", "START", "STOP")
+## Get START and STOP of genes
+## Comment out biomaRt to elminate it during compiling
+# library(biomaRt)
+# ensembl <- readRDS("rds/ensembl.rds")
+# filters = listFilters(ensembl)
+# attributes = listAttributes(ensembl)
+# 
+# pos_ids_3 = getBM(attributes = c('external_gene_name', 'start_position', 'end_position'), 
+#                   filters =  c('external_gene_name', 'chromosome_name'),
+#                   values = list(genes = c(cotton_mDNA_pivot$GENE), chromosome = "X"), 
+#                   mart = ensembl)
+# colnames(pos_ids_3) <- c("GENE", "START", "STOP")
+# saveRDS(pos_ids_3, "rds/pos_ids_3.rds")
+pos_ids_3 <- readRDS("rds/pos_ids_3.rds")
 cotton_mDNA_pivot_merge_a <- merge(cotton_mDNA_pivot, pos_ids_3, all.x = T)
 # 47 TSSs need to have locations manually added
 write.csv(cotton_mDNA_pivot_merge_a, "sandbox/cotton_mDNA_merge_a.csv", row.names = FALSE)
@@ -129,4 +132,4 @@ saveRDS(cotton_mDNA_pivot_merge_a, "resources_studies/Cotton2014/cotton_mDNA_pre
 rm(cotton_mDNA, cotton_mDNA_pivot, gene_object,
    options_1, options_2, remapping_file, col_num,
    file_path, full_tiss_names, new_name, row_num)
-
+rm(pos_ids_3)
