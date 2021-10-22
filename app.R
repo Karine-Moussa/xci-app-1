@@ -127,7 +127,7 @@ server <- function(input, output, session) {
     previous_val2 = "",
     SV_threshold = SV_threshold,
     VE_threshold = VE_threshold,
-    states_filter_study0 = "on",
+    filter_study0 = 1,
     filter_study1 = 1,
     tissues_filter_study1 = "on",
     filter_study6 = 1,
@@ -139,7 +139,6 @@ server <- function(input, output, session) {
     study0_df = data.frame(),
     study0_genes = c(),
     study0_flag = FALSE,
-    includes_start = TRUE,
     ready1 = FALSE
   )
   # zoom in out
@@ -157,17 +156,14 @@ server <- function(input, output, session) {
     rv$study0_flag = FALSE
     rv$study0_df = data.frame()
     rv$study0_genes = c()
-    create_template(input$template, rv$includes_start)
-  })
-  observeEvent(input$includes_start, {
-    rv$includes_start <- input$includes_start
-    create_template(input$template, rv$includes_start)
+    create_template(input$template)
   })
   observeEvent(input$submitButton1, { # submit study 0
     rv$study0_df <- read.csv(input$file1$datapath,
                              sep = ",",
                              #sep = input$sep, # uncomment in myUI_Tab1.R
                              check.names = FALSE)
+    # Create study0_genes
     rv$study0_genes <- toupper(rv$study0_df[,1]) # first column of input df
     rv$study0_flag <- TRUE
     updateSelectizeInput(session,
@@ -350,122 +346,6 @@ server <- function(input, output, session) {
       min = 0, max = par2_boundaries[2]
     )
   })
-  # MyClick (this is probably going to go away zoom in out)
-  # observeEvent(input$myclick, {
-  #   if(rv$searchType == 'gene'){
-  #     rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
-  #     rv$plot_coord_y = c(rv$plot_coord_y, input$myclick$y)
-  #     # Query study 0
-  #     study0_tempdf <- readRDS("rds/study0_df.rds") # make sure there's start column
-  #     if(rv$addStudies == "study0" & "start" %in% colnames(study0_tempdf)){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(rv$study0_df$start - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = rv$study0_df$gene[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 1
-  #     if(rv$addStudies == "study1"){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(x_expr$start - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 2
-  #     # zoom in out
-  #     if(rv$addStudies == "study2"){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
-  #         index <- which.min(abs(cott_df$start_mapped - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = cott_df$gene[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 3
-  #     if(rv$addStudies == "study3"){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         carrwill_df <- cott_carr_will_df[cott_carr_will_df$status_carrwill != "NA",]
-  #         index <- which.min(abs(carrwill_df$start_mapped - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = carrwill_df$gene[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 4
-  #     if(rv$addStudies == "study4"){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(kat_lin_df_lb$start_mapped - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = kat_lin_df_lb$gene[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 5
-  #     if(rv$addStudies == "study5"){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(kat_lin_df_fb$start_mapped - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = kat_lin_df_fb$gene[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 6
-  #     if(rv$addStudies == "study6"){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(TukGTExMod$`start_mapped` - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = TukGTExMod$`Gene name`[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 7
-  #     if(rv$addStudies == "study7"){
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(cotton_mDNA$POS - rv$plot_coord_x[i]))
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = cotton_mDNA$GENE[as.numeric(rv$closest_expr_index)]
-  #     }
-  #     # Query study 8
-  #     if(rv$addStudies == "study8"){ # change here
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(balbrown_mCEMT$START - rv$plot_coord_x[i])) # change here
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = balbrown_mCEMT$GENE[as.numeric(rv$closest_expr_index)] # change here
-  #     }
-  #     # Query study 9
-  #     if(rv$addStudies == "study9"){ # change here
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(balbrown_CREST$START - rv$plot_coord_x[i])) # change here
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = balbrown_CREST$GENE[as.numeric(rv$closest_expr_index)] # change here
-  #     }
-  #     # Query study 10
-  #     if(rv$addStudies == "study10"){ # change here
-  #       for(i in 1:length(rv$plot_coord_x)){
-  #         index <- which.min(abs(TukDEG$START - rv$plot_coord_x[i])) # change here
-  #         rv$closest_expr_index[i] <- index
-  #       }
-  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-  #       rv$mapped_gene = TukDEG$GENE[as.numeric(rv$closest_expr_index)] # change here
-  #     }
-  #     ###
-  #     if(rv$geneofinterest1[1] == ""){
-  #       rv$geneofinterest1 = rv$mapped_gene
-  #     } else {
-  #       rv$geneofinterest1 = unique(c(rv$geneofinterest1, rv$mapped_gene))
-  #     }
-  #   }
-  # })
   observeEvent(input$resetButton1, {
     rv$mapped_gene = ""
     rv$geneofinterest1 = ""
@@ -496,8 +376,8 @@ server <- function(input, output, session) {
     }
   })
   # If "filter" check box is changed, updated escape states table
-  observeEvent(input$states_filter_study0, {
-    rv$states_filter_study0 <- input$states_filter_study0
+  observeEvent(input$filter_study0, {
+    rv$filter_study0 <- input$filter_study0
   })
   observeEvent(input$filter_study1, {
     rv$filter_study1 <- input$filter_study1
@@ -662,6 +542,16 @@ server <- function(input, output, session) {
     },
     content = function(file){
       mydata <- readRDS('rds/usr_temp.rds')
+      write.csv(mydata, file, row.names = FALSE)
+    }
+  )
+  ## Download manual study templates
+  output$example_download <- downloadHandler(
+    filename = function(){
+      "TEMPLATE-2-EXAMPLE.csv"
+    },
+    content = function(file){
+      mydata <- read.csv('rds/EXAMPLE-2.csv')
       write.csv(mydata, file, row.names = FALSE)
     }
   )
@@ -835,21 +725,21 @@ server <- function(input, output, session) {
     # the input df
     if(rv$study0_flag == FALSE){
       df <- input_df
-      colnames(df) <- c("gene", colnames(df)[2:length(colnames(df))]) # fix first col name
+      colnames(df) <- toupper(colnames(df))
       saveRDS(df, "data_output/uploaded_study_escape_states.rds")
       df
     } else {
       # Calculate escape freq 
       df <- input_df
-      colnames(df) <- c("gene", colnames(df)[2:length(colnames(df))]) # fix first col name
-      df[,"samp_state"] <- tolower(df[,"samp_state"])
+      colnames(df) <- toupper(colnames(df))
+      df[,"STATE"] <- tolower(df[,"STATE"]) # lowercase escape state
       for(row in 1:nrow(df)){
-        subset_df <- subset(df, gene == df[row,1])
-        df$escape_freq[row] <- mean(subset_df$`samp_state` == "escape")
+        subset_df <- subset(df, GENE == df[row,1])
+        df$ESCAPE_FREQ[row] <- mean(subset_df$`STATE` == "escape")
       }
       # Filter out non-genes of interest
-      to_display = df$gene
-      if (isTruthy(rv$states_filter_study0)){
+      to_display = df$GENE
+      if (rv$filter_study0 == 1){
         # b. If the study search is 'gene' use 'geneofinterest' reactive value
         # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
         if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
@@ -859,29 +749,52 @@ server <- function(input, output, session) {
           to_display <- rv$returned_genes_list
         }
       }
+      # need to add if (rv$filter_study0 == 2) condition here. 
+      if (rv$filter_study0 == 2){ # zoom in out
+        # Return only the genes that are between the min and max of the plot
+        if(!is.null(ranges$x)){ # make sure we have ranges
+          to_display <- df$GENE[(as.numeric(df$`END`) > ranges$x[1] & as.numeric(df$`START`) < ranges$x[2])]
+          to_display <- to_display[!is.na(to_display)]
+        }
+      }
       # Add final escape states and color
       for(i in 1:nrow(df)) {
-        if(df$`escape_freq`[i] <= rv$SV_threshold){
-          df$state[i] <- 'inactive'
-          df$color[i] <- col_inactive
+        if(df$`ESCAPE_FREQ`[i] <= rv$SV_threshold){
+          df$STATE[i] <- 'inactive'
+          df$COLOR[i] <- col_inactive
         }
-        if(df$`escape_freq`[i] > rv$SV_threshold & df$`escape_freq`[i] <= rv$VE_threshold){
-          df$state[i] <- 'variable'
-          df$color[i] <- col_variable
+        if(df$`ESCAPE_FREQ`[i] > rv$SV_threshold & df$`ESCAPE_FREQ`[i] <= rv$VE_threshold){
+          df$STATE[i] <- 'variable'
+          df$COLOR[i] <- col_variable
         }
-        if(df$`escape_freq`[i] > rv$VE_threshold){
-          df$state[i] <- 'escape'
-          df$color[i] <- col_escape
+        if(df$`ESCAPE_FREQ`[i] > rv$VE_threshold){
+          df$STATE[i] <- 'escape'
+          df$COLOR[i] <- col_escape
         }
+        # Also add hyperlinks for gene location
+        df$gene_link[i] = paste0(ens_base_loc, 
+                                 df$START[i],
+                                 "-",
+                                 df$END[i])
       }
       last_column <- length(colnames(df)) - 1
       rv$study0_df <- df # save the reactive value for plotting later
-      df <- df[df$gene %in% to_display,]
+      df <- df[df$GENE %in% to_display,]
       saveRDS(df[,1:last_column], "data_output/uploaded_study_escape_states.rds") # save for downloading
       saveRDS(df[,1:last_column], "rds/study0_df.rds") # save for tab 2
-      df[,1:last_column] # display table, exclude the color
+      # remove the ESCAPE_FREQ column if there wasn't a SAMPLE column
+      if(!"SAMPLE" %in% colnames(df)){
+        df <- df[, -which(names(df) %in% c("ESCAPE_FREQ"))]
+      } 
+      # Display the table, excluding the color and gene_link
+      # If df isn't empty, make hyperlinks for genes, then remove the column
+      if(nrow(df) != 0){
+        df$GENE <- paste0('<a href="', df$gene_link,'" target="_blank">', df$GENE, '</a>')
+        df <- df[, -which(names(df) %in% c("gene_link", "COLOR"))] # remove Hyperlink and COLOR column 
+      }
+      df
     } # end of "if rv$study0_flag == TRUE"
-  })
+  }, escape = FALSE)
   ## Status Table (Study1)
   output$status_table_study1 <- renderDataTable({
     if (!isTruthy(rv$tissues_filter_study1)){
@@ -1414,9 +1327,27 @@ server <- function(input, output, session) {
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
+    # Get Y range of segments (zoom in out)
+    ymin = 0
+    plot_ymin = 0
+    ymax = 8
+    plot_ymax = 18
+    # Get X range of plot (zoom in out)
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+    }
     # Study0 genes / df
     study0_genes <- rv$study0_genes
     study0_df <- rv$study0_df
+    # Account for if a gene is cut off (due to zoom in zoom out):
+    study0_df_mod <- study0_df[study0_df$END >= xmin & study0_df$START <= xmax,]
+    study0_df_mod$START <- ifelse(study0_df_mod$START < xmin, xmin, study0_df_mod$START)
+    study0_df_mod$END <- ifelse(study0_df_mod$END > xmax, xmax, study0_df_mod$END)
+    study0_df_mod <- study0_df_mod[order(study0_df_mod$START),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- study0_df[study0_genes %in% geneofinterest,]
     if("start" %in% colnames(study0_df)){
@@ -1440,9 +1371,6 @@ server <- function(input, output, session) {
     if("start" %in% colnames(study0_df)){
       disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
     }
-    # Get Range of plot
-    ymin = 0
-    ymax = 10
     # Get axis breaks
     x_breaks <- seq(0, max(x_expr_mod$start), 10000000)
     first_label <- x_breaks[1]
@@ -1462,33 +1390,62 @@ server <- function(input, output, session) {
                      axis.ticks = element_blank(),
                      panel.background = element_rect(fill = "white"))
     # Create plot (only if 'start' information is included)
-    if("start" %in% colnames(study0_df)){
-      p0 <- ggplot(data = study0_df, aes(x=start, y=start)) +
-        mytheme + ggtitle("X-Chromosome Escape Profile") +
-        xlab("X-Chromosome") + ylab("") + 
-        # Add points
-        geom_segment(data = study0_df, 
-                     aes(x=study0_df[, "start"], y=0,
-                         xend=study0_df[, "start"], yend=ymax-1),
-                     color=study0_df[,"color"]
-        ) + 
-        # Scaling and Legends
-        scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-        scale_y_continuous(limits = c(ymin,ymax), breaks = c(ymin, ymax), labels= c("  ","  "))
-      # Data points added by user reactive values: Gene of Interest
-      if(nrow(geneofinterest_df) != 0){
-        p0 <- p0 + geom_segment(data = geneofinterest_df, 
-                                aes(x=geneofinterest_df[, "start"], y=ymin,
-                                    xend=geneofinterest_df[, "start"], yend=ymax-1),
-                                color='red')
-      }
-      # Data points added by user reactive values: Disease of Interest
-      #if(nrow(disease_geneofinterest_df) != 0){
-      #  p0 <- p0 + geom_segment(data = disease_geneofinterest_df, 
-      #                          aes(x=disease_geneofinterest_df[, "start"], y=ymin,
-      #                              xend=disease_geneofinterest_df[, "start"], yend=ymax-1),
-      #                          color='red')
-      #}
+    p0 <- ggplot(data = study0_df_mod, aes(x=0, y=0)) +
+      mytheme + ggtitle("X-Chromosome Escape Profile") +
+      xlab("X-Chromosome") + ylab("") + 
+      # Add points
+      geom_rect(data = study0_df_mod, 
+                   aes(xmin=START, ymin=ymin,
+                       xmax=END, ymax=ymax),
+                   fill=study0_df_mod[,"COLOR"]) + 
+      # Scaling and Legends
+      # zoom in out
+      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
+      scale_y_continuous(limits = c(plot_ymin, plot_ymax), breaks = c(plot_ymin, plot_ymax), labels= c("  ","  "))
+    # Add gene names for zoom in out
+    # In case it is a multi-tissue study first need to simplify table
+    study0_df_mod_simple <- study0_df_mod[,c("GENE", "START", "END", "ESCAPE_FREQ")]
+    study0_df_mod_simple <- unique(study0_df_mod_simple)
+    if (nrow(study0_df_mod_simple) <= 20){
+      p0 <- p0 +
+        # Add annotations
+        annotate("text", label = study0_df_mod_simple$GENE,
+                 x = colMeans(rbind(study0_df_mod_simple$START, study0_df_mod_simple$END)),
+                 y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(study0_df_mod_simple)],
+                 color = ifelse(study0_df_mod_simple$ESCAPE_FREQ <= SV_threshold,
+                                col_inactive,
+                                ifelse(study0_df_mod_simple$ESCAPE_FREQ > SV_threshold & study0_df_mod_simple$ESCAPE_FREQ <= VE_threshold,
+                                       col_variable, col_escape)),
+                 vjust = -1, group = 2)
+    } else { # if the plot is zoomed out sufficiently, give instructions to user
+      p0 <- p0+ annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
+    }
+    # Add axis labels for zoom in out
+    if (xmax - xmin < 1.5*10^7){
+      p0 <- p0 +
+        scale_x_continuous(breaks=seq(xmin, xmax, 10^6),
+                           labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"),
+                           limits = c(xmin, xmax)) +
+        theme(axis.ticks.x = element_line())
+    }
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p0 <- p0 + geom_rect(data = geneofinterest_df, 
+                              aes(xmin=geneofinterest_df[, "START"], ymin=ymin,
+                                  xmax=geneofinterest_df[, "END"], ymax=ymax),
+                              fill='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p0 <- p0 + geom_rect(data = disease_geneofinterest_df, 
+                           aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin,
+                               xmax=disease_geneofinterest_df[, "END"], ymax=ymax),
+                           fill='red')
+    }
+    if (nrow(study0_df_mod) > 0){
       p0
     }
   })

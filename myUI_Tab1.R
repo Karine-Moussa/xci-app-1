@@ -142,13 +142,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              h4("1. CREATE A TEMPLATE"),
                              # Input: Select Template ----
                              radioButtons("template", "Template Type",
-                                          choices = c("Template 1 (gene, state)" = 1,
-                                                      "Template 2 (gene, state, tiss_samp)" = 2),
+                                          choices = c("Template 1 (gene, state, start, end)" = 1,
+                                                      "Template 2 (gene, state, sample, start, end)" = 2),
                                           selected = 1),
-                             # Input: Check box -------
-                             checkboxInput("includes_start", 
-                                           "Include 'start' position", 
-                                           value = TRUE),
                              # Input: Select separator ----
                              #radioButtons("sep", "Separator",
                              #             choices = c(Comma = ",",
@@ -156,6 +152,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              #             selected = ","),
                              # Download Template ------
                              (downloadButton("template_download", "Download Template")),
+                             br(), br(),
+                             (downloadButton("example_download", "Download Example")),
                              br(), br(),
                              # Input: Select a file ----
                              h4("2. UPLOAD DATA SET"),
@@ -188,7 +186,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          conditionalPanel(
                              condition = "output.plotStudy0",
                              withSpinner(plotOutput(outputId = "plot_study0", height = "175px", width = "1000px", 
-                                                    click = "myclick", hover = "myhover"), type = 2)
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE),
+                             ), type = 2)
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study1'",
@@ -333,9 +333,22 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              p("", style = "font-size:14px"),
                                              p("UPLOADED STUDY  ", style = "font-size:18px", 
                                                downloadLink('download_states_study0', '[download table]', style = "font-size:14px")),
-                                             checkboxInput("states_filter_study0", 
-                                                           "Filter by selected genes (if no genes/diseases are selected, returns all genes)", 
-                                                           value = TRUE),
+                                             fluidRow(
+                                                 column(4, offset = 0,
+                                                        radioButtons("filter_study0", "Filter results",
+                                                                     choices = c("Filter by searched genes (if no genes/diseases are selected, returns all genes)" = 1,
+                                                                                 "Filter by displayed genes (zoom in plot)" = 2, 
+                                                                                 "No filters (return all genes)" = 3),
+                                                                     selected = 1),
+                                                 ),
+                                                 # # Not displaying study statistics for manually uploaded study
+                                                 # column(4, offset = 2,
+                                                 #        br(),
+                                                 #        p(paste(meta_stat_dt$NUM_GENES[meta_stat_dt$NUMBER == 0], "genes"), style = "font-size:16px"),
+                                                 #        p(paste(meta_stat_dt$NUM_CALLS[meta_stat_dt$NUMBER == 0], "total calls"), style = "font-size:16px"),
+                                                 #        p(paste(meta_stat_dt$NUM_TISS[meta_stat_dt$NUMBER == 0], "tissue(s)"), style = "font-size:16px"),
+                                                 # ),
+                                             ),
                                              br(),
                                              (dataTableOutput(outputId = "status_table_study0"))
                                          ),

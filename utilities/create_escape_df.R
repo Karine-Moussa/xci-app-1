@@ -19,13 +19,13 @@ create_escape_df <- function(geneofinterest) {
 
     # Add STUDY 0
     ref_table <- readRDS("rds/study0_df.rds")
-    query <- "state"
+    query <- "STATE"
     study0_entries <- data.table()
     for (gene in geneofinterest) {
         if (nrow(ref_table) != 0) {
             # first need to make sure it's not empty
-            if (gene %in% ref_table$gene) {
-                status_abr <- unique(ref_table[ref_table$gene == gene, query])
+            if (gene %in% ref_table$GENE) {
+                status_abr <- unique(ref_table[ref_table$GENE == gene, query])
             } else {
                 status_abr <- "NA"
             }
