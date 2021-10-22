@@ -24,6 +24,8 @@ source("utilities/source_all_scripts.R", local = TRUE)
 col_escape = "purple"
 col_variable = "turquoise3"
 col_inactive = "black"
+zoom_instructions = "Select an area and double-click to zoom. \nTo reset, double-click any location, or click the 'Reset' button"
+zoom_instructions_color = "steelblue4"
 
 ### Save publication date
 publication_date <- Sys.time()
@@ -1589,6 +1591,11 @@ server <- function(input, output, session) {
                                 ifelse(x_expr_mod_mod_simple$perc_samples_esc > SV_threshold & x_expr_mod_mod_simple$perc_samples_esc <= VE_threshold,
                                        col_variable, col_escape)),
                  vjust = -1, group = 2)
+    } else { # if the plot is zoomed out sufficiently, give instructions to user
+      p1 <- p1 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -1703,6 +1710,11 @@ server <- function(input, output, session) {
         annotate("text", label = cott_df_mod$gene, x = colMeans(rbind(cott_df_mod$start_mapped, cott_df_mod$end_mapped)), 
                  y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(cott_df_mod)],
                  color = cott_df_mod$color_cott, vjust = -1, group = 2)
+    } else { # if the plot is zoomed out sufficiently, give instructions to user
+      p2 <- p2 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -1816,6 +1828,11 @@ server <- function(input, output, session) {
         annotate("text", label = carrwill_df_mod$gene, x = colMeans(rbind(carrwill_df_mod$start_mapped, carrwill_df_mod$end_mapped)), 
                  y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(carrwill_df_mod)],
                  color = carrwill_df_mod$color_carrwill, vjust = -1, group = 2)
+    } else { # if the plot is zoomed out sufficiently, give instructions to user
+      p3 <- p3 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -1924,6 +1941,11 @@ server <- function(input, output, session) {
       annotate("text", label = kat_lin_df_lb_mod$gene, x = colMeans(rbind(kat_lin_df_lb_mod$start_mapped, kat_lin_df_lb_mod$end_mapped)), 
                y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(kat_lin_df_lb_mod)],
                color = kat_lin_df_lb_mod$color_lb, vjust = -1, group = 2)
+    } else { # if the plot is zoomed out sufficiently, give instructions to user
+      p4 <- p4 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -2033,6 +2055,11 @@ server <- function(input, output, session) {
         annotate("text", label = kat_lin_df_fb_mod$gene, x = colMeans(rbind(kat_lin_df_fb_mod$start_mapped, kat_lin_df_fb_mod$end_mapped)), 
                  y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(kat_lin_df_fb_mod)],
                  color = kat_lin_df_fb_mod$color_fb, vjust = -1, group = 2)
+    } else { # if the plot is zoomed out sufficiently, give instructions to user
+      p5 <- p5 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -2156,6 +2183,11 @@ server <- function(input, output, session) {
                                 ifelse(as.numeric(unlist(TukGTExMod_merge_mod_simple[, "perc_tissues_esc"])) > SV_threshold & as.numeric(unlist(TukGTExMod_merge_mod_simple[, "perc_tissues_esc"])) <= VE_threshold, 
                                        col_variable, col_escape)), 
                  vjust = -1, group = 2)
+    }  else { # if the plot is zoomed out sufficiently, give instructions to user
+      p6 <- p6 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -2269,6 +2301,11 @@ server <- function(input, output, session) {
         annotate("text", label = cotton_mDNA_mod_simple$GENE, x = colMeans(rbind(cotton_mDNA_mod_simple$START, cotton_mDNA_mod_simple$STOP)), 
                  y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(cotton_mDNA_mod_simple)],
                  color = cotton_mDNA_mod_simple$COLOR, vjust = -1, group = 2)
+    }  else { # if the plot is zoomed out sufficiently, give instructions to user
+      p7 <- p7 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -2377,6 +2414,11 @@ server <- function(input, output, session) {
         annotate("text", label = balbrown_mCEMT_mod$GENE, x = colMeans(rbind(balbrown_mCEMT_mod$START, balbrown_mCEMT_mod$STOP)), 
                  y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(balbrown_mCEMT_mod)],
                  color = balbrown_mCEMT_mod$COLOR, vjust = -1, group = 2)
+    }  else { # if the plot is zoomed out sufficiently, give instructions to user
+      p8 <- p8 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -2486,6 +2528,11 @@ server <- function(input, output, session) {
         annotate("text", label = balbrown_CREST_mod$GENE, x = colMeans(rbind(balbrown_CREST_mod$START, balbrown_CREST_mod$STOP)), 
                  y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(balbrown_CREST_mod)],
                  color = balbrown_CREST_mod$COLOR, vjust = -1, group = 2)
+    }  else { # if the plot is zoomed out sufficiently, give instructions to user
+      p9 <- p9 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
@@ -2595,6 +2642,11 @@ server <- function(input, output, session) {
         annotate("text", label = TukDEG_mod$GENE, x = colMeans(rbind(TukDEG_mod$START, TukDEG_mod$STOP)), 
                  y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(TukDEG_mod)],
                  color = TukDEG_mod$COLOR, vjust = -1, group = 2)
+    } else { # if the plot is zoomed out sufficiently, give instructions to user
+      p10 <- p10 + annotate("text", label = zoom_instructions,
+                          x = xmin+100, y = ymax+6,
+                          hjust = 0, size = 4.5,
+                          color = zoom_instructions_color)
     }
     # Add axis labels for zoom in out
     if (xmax - xmin < 1.5*10^7){
