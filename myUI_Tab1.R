@@ -33,68 +33,68 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & output.plotStudy0",
                                  selectizeInput("geneofinterest1_0", "Gene of Interest:", c("Need genes"), multiple = TRUE), # need to update
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 1
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study1'",
                                  # selectizeInput("geneofinterest1", "Gene of Interest:", c("DUMMY",unique(x_expr_mod[,"GENE"])), multiple = TRUE),
                                  selectizeInput("geneofinterest1_1", "Gene of Interest:", sort(study1_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 2
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study2'",
                                  selectizeInput("geneofinterest1_2", "Gene of Interest:", sort(study2_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 3
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study3'",
                                  selectizeInput("geneofinterest1_3", "Gene of Interest:", sort(study3_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 4
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study4'",
                                  selectizeInput("geneofinterest1_4", "Gene of Interest:", sort(study4_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 5
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study5'",
                                  selectizeInput("geneofinterest1_5", "Gene of Interest:", sort(study5_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 6
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study6'",
                                  selectizeInput("geneofinterest1_6", "Gene of Interest:", sort(study6_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 7
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study7'",
                                  selectizeInput("geneofinterest1_7", "Gene of Interest:", sort(study7_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 8
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study8'",
-                                 selectizeInput("geneofinterest1_8", "Gene of Interest:", sort(study9_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 selectizeInput("geneofinterest1_8", "Gene of Interest:", sort(study8_genes), multiple = TRUE),
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 9
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study9'",
                                  selectizeInput("geneofinterest1_9", "Gene of Interest:", sort(study9_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # study 10
                              conditionalPanel(
                                  condition = "input.searchType == 'gene' & input.addStudies == 'study10'",
                                  selectizeInput("geneofinterest1_10", "Gene of Interest:", sort(study10_genes), multiple = TRUE),
-                                 p("(Click on individual data points to add more genes)", style = "font-size:14px")
+                                 #p("(Click on individual data points to add more genes)", style = "font-size:14px")
                              ),
                              # Disease search if the SearchType box exists
                              conditionalPanel(
@@ -105,7 +105,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                 #c("", unique(c(LIST_OF_TRAITS_GWAS$GWAS_NAME, LIST_OF_TRAITS_NELSON_2$NELS2_NAME)))),
                                                 ## search in only the GWAS traits
                                                 c("", unique(c("ALL FEMALE BIAS TRAITS", LIST_OF_TRAITS_GWAS$GWAS_NAME)))),
-                                 p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
+                                 #p("(Note: point-click is disabled in Disease/Trait mode)", style = "font-size:14px")
                              ), # end of inner conditional panels
                              actionButton("resetButton1", "Clear Genes"),
                              br(),
@@ -192,8 +192,10 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study1'",
-                             withSpinner(plotOutput(outputId = "plot_study1", height = "500px", width = "1000px", 
-                                                    click = "myclick", hover = "myhover"), type = 2)
+                             withSpinner(plotOutput(outputId = "plot_study1", height = "175px", width = "1000px", 
+                                                    dblclick = "study_dblclick",
+                                                    brush = brushOpts(id = "study_brush", resetOnNew = TRUE),
+                             ), type = 2)
                          ),
                          conditionalPanel(
                              condition = "input.addStudies == 'study2'",
@@ -275,9 +277,9 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                          ),
                          # LEGENDS
                          # Show this panel if we're looking at escape states
-                         # for non-GEUVADIS studies
+                         # for non-DGEA studies
                          conditionalPanel(
-                             condition = "input.addStudies != 'empty' & input.addStudies != 'study1' & input.addStudies != 'study10'",
+                             condition = "input.addStudies != 'empty' & input.addStudies != 'study10'",
                              p("", style = "font-size:4px"),
                              fluidRow(
                                  column(4, offset = 1,
@@ -285,6 +287,21 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                             height = 19))
                              ),
                              br(),
+                         ),
+                         # for DGEA study
+                         conditionalPanel(
+                             condition = "input.addStudies == 'study10'",
+                             p("", style = "font-size:4px"),
+                             fluidRow(
+                                 column(8, offset = 1,
+                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal_deg.png", 
+                                            height = "20", width = "425"))
+                             ),
+                             br(),
+                         ),
+                         # For all studies
+                         conditionalPanel(
+                             condition = "input.addStudies != 'empty'",
                              fluidRow(
                                  column(3, offset = 1,
                                         numericInput('xstart', 'Start bp:',
@@ -299,30 +316,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                         p(" l", style = "font-size:10px;color:white"),
                                         actionButton("resetPos", "Reset"))
                              ),
-                         ),
-                         conditionalPanel(
-                             condition = "input.addStudies == 'study10'",
-                             p("", style = "font-size:4px"),
-                             fluidRow(
-                                 column(8, offset = 1,
-                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal_deg.png", 
-                                            height = "20", width = "425"))
-                             ),
-                             br(),
-                         ),
-                         # Show this panel if we're looking at escape states
-                         # for GEUVADIS study
-                         conditionalPanel(
-                             condition = "input.addStudies == 'study1'",
-                             p("", style = "font-size:4px"),
-                             fluidRow(
-                                 column(4, offset = 1,
-                                        img(src = "mainplot_legend_horizontal.png", height = 23)),
-                                 column(4, offset = 2, # for GEUVADIS
-                                        img(src = "mainplot_additional_studies_legend_inactive_horizontal.png", 
-                                            height = 23))
-                                 ),
-                             br(),
                          ),
                          tabBox(title = "",
                                 tabPanel("Escape States",
@@ -352,9 +345,21 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              p("Sauteraud et al. GEUVADIS lymphoblast  ", style = "font-size:18px", 
                                                downloadLink('download_states_study1', '[download table]', style = "font-size:14px")),
                                              p(span(a("doi.org/10.1101/gr.275677.121", href="https://genome.cshlp.org/content/early/2021/08/23/gr.275677.121", target="_blank",)), style = "font-size:14px"),
-                                             checkboxInput("states_filter_study1", 
-                                                           "Filter by selected genes (if no genes/diseases are selected, returns all genes)", 
-                                                           value = TRUE),
+                                             fluidRow(
+                                                 column(4, offset = 0,
+                                                        radioButtons("filter_study1", "Filter results",
+                                                                     choices = c("Filter by searched genes (if no genes/diseases are selected, returns all genes)" = 1,
+                                                                                 "Filter by displayed genes (zoom in plot)" = 2, 
+                                                                                 "No filters (return all genes)" = 3),
+                                                                     selected = 1),
+                                                 ),
+                                                 column(4, offset = 2,
+                                                        br(),
+                                                        p(paste(meta_stat_dt$NUM_GENES[meta_stat_dt$NUMBER == 1], "genes"), style = "font-size:16px"),
+                                                        p(paste(meta_stat_dt$NUM_CALLS[meta_stat_dt$NUMBER == 1], "total calls"), style = "font-size:16px"),
+                                                        p(paste(meta_stat_dt$NUM_TISS[meta_stat_dt$NUMBER == 1], "tissue(s)"), style = "font-size:16px"),
+                                                 ),
+                                             ),
                                              checkboxInput("tissues_filter_study1", 
                                                            "View all states within samples", 
                                                            value = FALSE),
@@ -396,9 +401,6 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                                downloadLink('download_states_study2','[download table]', style = "font-size:14px")),
                                              p(span(a("doi.org/10.1186/gb-2013-14-11-r122", href="https://doi.org/10.1186/gb-2013-14-11-r122", target="_blank",)), style = "font-size:14px"),
                                              p("Escape states obtained from Suppl.Table.1 of ", span(a("doi.org/10.1038/nature24265", href="https://doi.org/10.1038/nature24265", target="_blank",)), style = "font-size:14px"),
-                                             # checkboxInput("states_filter_study2", # come back here
-                                             #               "Filter by selected genes (if no genes/diseases are selected, returns all genes)", 
-                                             #               value = TRUE),
                                              fluidRow(
                                                  column(4, offset = 0,
                                                         radioButtons("filter_study2", "Filter results",

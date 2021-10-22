@@ -23,7 +23,7 @@ source("utilities/source_all_scripts.R", local = TRUE)
 ### Global variables
 col_escape = "purple"
 col_variable = "turquoise3"
-col_inactive = "grey80"
+col_inactive = "black"
 
 ### Save publication date
 publication_date <- Sys.time()
@@ -126,7 +126,7 @@ server <- function(input, output, session) {
     SV_threshold = SV_threshold,
     VE_threshold = VE_threshold,
     states_filter_study0 = "on",
-    states_filter_study1 = "on",
+    filter_study1 = 1,
     tissues_filter_study1 = "on",
     filter_study6 = 1,
     tissues_filter_study6 = "on",
@@ -349,129 +349,129 @@ server <- function(input, output, session) {
     )
   })
   # MyClick (this is probably going to go away zoom in out)
-  observeEvent(input$myclick, {
-    if(rv$searchType == 'gene'){
-      rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
-      rv$plot_coord_y = c(rv$plot_coord_y, input$myclick$y)
-      # Query study 0
-      study0_tempdf <- readRDS("rds/study0_df.rds") # make sure there's start column
-      if(rv$addStudies == "study0" & "start" %in% colnames(study0_tempdf)){
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(rv$study0_df$start - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = rv$study0_df$gene[as.numeric(rv$closest_expr_index)]
-      }
-      # Query study 1
-      if(rv$addStudies == "study1"){
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(x_expr$start - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
-      }
-      # Query study 2
-      # zoom in out
-      # if(rv$addStudies == "study2"){
-      #   for(i in 1:length(rv$plot_coord_x)){
-      #     cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
-      #     index <- which.min(abs(cott_df$start_mapped - rv$plot_coord_x[i]))
-      #     rv$closest_expr_index[i] <- index
-      #   }
-      #   rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-      #   rv$mapped_gene = cott_df$gene[as.numeric(rv$closest_expr_index)]
-      # }
-      # Query study 3
-      if(rv$addStudies == "study3"){
-        for(i in 1:length(rv$plot_coord_x)){
-          carrwill_df <- cott_carr_will_df[cott_carr_will_df$status_carrwill != "NA",]
-          index <- which.min(abs(carrwill_df$start_mapped - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = carrwill_df$gene[as.numeric(rv$closest_expr_index)]
-      }
-      # Query study 4
-      if(rv$addStudies == "study4"){
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(kat_lin_df_lb$start_mapped - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = kat_lin_df_lb$gene[as.numeric(rv$closest_expr_index)]
-      }
-      # Query study 5
-      if(rv$addStudies == "study5"){
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(kat_lin_df_fb$start_mapped - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = kat_lin_df_fb$gene[as.numeric(rv$closest_expr_index)]
-      }
-      # Query study 6
-      if(rv$addStudies == "study6"){
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(TukGTExMod$`start_mapped` - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = TukGTExMod$`Gene name`[as.numeric(rv$closest_expr_index)]
-      }
-      # Query study 7
-      if(rv$addStudies == "study7"){
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(cotton_mDNA$POS - rv$plot_coord_x[i]))
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = cotton_mDNA$GENE[as.numeric(rv$closest_expr_index)]
-      }
-      # Query study 8
-      if(rv$addStudies == "study8"){ # change here
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(balbrown_mCEMT$START - rv$plot_coord_x[i])) # change here
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = balbrown_mCEMT$GENE[as.numeric(rv$closest_expr_index)] # change here
-      }
-      # Query study 9
-      if(rv$addStudies == "study9"){ # change here
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(balbrown_CREST$START - rv$plot_coord_x[i])) # change here
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = balbrown_CREST$GENE[as.numeric(rv$closest_expr_index)] # change here
-      }
-      # Query study 10
-      if(rv$addStudies == "study10"){ # change here
-        for(i in 1:length(rv$plot_coord_x)){
-          index <- which.min(abs(TukDEG$START - rv$plot_coord_x[i])) # change here
-          rv$closest_expr_index[i] <- index
-        }
-        rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
-        rv$mapped_gene = TukDEG$GENE[as.numeric(rv$closest_expr_index)] # change here
-      }
-      ###
-      if(rv$geneofinterest1[1] == ""){
-        rv$geneofinterest1 = rv$mapped_gene
-      } else {
-        rv$geneofinterest1 = unique(c(rv$geneofinterest1, rv$mapped_gene))
-      }
-    }
-  })
+  # observeEvent(input$myclick, {
+  #   if(rv$searchType == 'gene'){
+  #     rv$plot_coord_x = c(rv$plot_coord_x, input$myclick$x)
+  #     rv$plot_coord_y = c(rv$plot_coord_y, input$myclick$y)
+  #     # Query study 0
+  #     study0_tempdf <- readRDS("rds/study0_df.rds") # make sure there's start column
+  #     if(rv$addStudies == "study0" & "start" %in% colnames(study0_tempdf)){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(rv$study0_df$start - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = rv$study0_df$gene[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 1
+  #     if(rv$addStudies == "study1"){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(x_expr$start - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = x_expr$GENE[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 2
+  #     # zoom in out
+  #     if(rv$addStudies == "study2"){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         cott_df <- cott_carr_will_df[cott_carr_will_df$status_cott != "NA",]
+  #         index <- which.min(abs(cott_df$start_mapped - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = cott_df$gene[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 3
+  #     if(rv$addStudies == "study3"){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         carrwill_df <- cott_carr_will_df[cott_carr_will_df$status_carrwill != "NA",]
+  #         index <- which.min(abs(carrwill_df$start_mapped - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = carrwill_df$gene[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 4
+  #     if(rv$addStudies == "study4"){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(kat_lin_df_lb$start_mapped - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = kat_lin_df_lb$gene[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 5
+  #     if(rv$addStudies == "study5"){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(kat_lin_df_fb$start_mapped - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = kat_lin_df_fb$gene[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 6
+  #     if(rv$addStudies == "study6"){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(TukGTExMod$`start_mapped` - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = TukGTExMod$`Gene name`[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 7
+  #     if(rv$addStudies == "study7"){
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(cotton_mDNA$POS - rv$plot_coord_x[i]))
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = cotton_mDNA$GENE[as.numeric(rv$closest_expr_index)]
+  #     }
+  #     # Query study 8
+  #     if(rv$addStudies == "study8"){ # change here
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(balbrown_mCEMT$START - rv$plot_coord_x[i])) # change here
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = balbrown_mCEMT$GENE[as.numeric(rv$closest_expr_index)] # change here
+  #     }
+  #     # Query study 9
+  #     if(rv$addStudies == "study9"){ # change here
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(balbrown_CREST$START - rv$plot_coord_x[i])) # change here
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = balbrown_CREST$GENE[as.numeric(rv$closest_expr_index)] # change here
+  #     }
+  #     # Query study 10
+  #     if(rv$addStudies == "study10"){ # change here
+  #       for(i in 1:length(rv$plot_coord_x)){
+  #         index <- which.min(abs(TukDEG$START - rv$plot_coord_x[i])) # change here
+  #         rv$closest_expr_index[i] <- index
+  #       }
+  #       rv$closest_expr_index <- unique(rv$closest_expr_index) # remove duplicates
+  #       rv$mapped_gene = TukDEG$GENE[as.numeric(rv$closest_expr_index)] # change here
+  #     }
+  #     ###
+  #     if(rv$geneofinterest1[1] == ""){
+  #       rv$geneofinterest1 = rv$mapped_gene
+  #     } else {
+  #       rv$geneofinterest1 = unique(c(rv$geneofinterest1, rv$mapped_gene))
+  #     }
+  #   }
+  # })
   observeEvent(input$resetButton1, {
     rv$mapped_gene = ""
     rv$geneofinterest1 = ""
     rv$diseaseofinterest1 = ""
-    rv$plot_coord_x = c()
-    rv$plot_coord_y = c()
-    rv$closest_expr_index = ""
     rv$returned_genes_list = ""
+    #rv$plot_coord_x = c()
+    #rv$plot_coord_y = c()
+    #rv$closest_expr_index = ""
     #rv$addStudies = ""
   })
   observeEvent(input$slider1, {
@@ -497,8 +497,8 @@ server <- function(input, output, session) {
   observeEvent(input$states_filter_study0, {
     rv$states_filter_study0 <- input$states_filter_study0
   })
-  observeEvent(input$states_filter_study1, {
-    rv$states_filter_study1 <- input$states_filter_study1
+  observeEvent(input$filter_study1, {
+    rv$filter_study1 <- input$filter_study1
   })
   observeEvent(input$tissues_filter_study1, {
     rv$tissues_filter_study1 <- input$tissues_filter_study1
@@ -554,7 +554,7 @@ server <- function(input, output, session) {
   ##############################
   ## FOR TESTING ###############
   ##############################
-  ## for testing (disable/enable this in myUI.R)
+  ## (disable/enable this in myUI.R)
   output$test <- renderPrint({
     print(paste0("rv$slider1:", rv$slider1))
     print(paste0("rv$SV_threshold:", rv$SV_threshold))
@@ -877,7 +877,7 @@ server <- function(input, output, session) {
       df <- df[df$gene %in% to_display,]
       saveRDS(df[,1:last_column], "data_output/uploaded_study_escape_states.rds") # save for downloading
       saveRDS(df[,1:last_column], "rds/study0_df.rds") # save for tab 2
-      df[,1:last_column] # display table, exclude the color # commented out for testing
+      df[,1:last_column] # display table, exclude the color
     } # end of "if rv$study0_flag == TRUE"
   })
   ## Status Table (Study1)
@@ -903,7 +903,7 @@ server <- function(input, output, session) {
     # (only filter if the "filter" check box is true)
     # a. By default, it displays ALL genes
     to_display = df[,1]
-    if (isTruthy(rv$states_filter_study1)){
+    if (rv$filter_study1 == 1){
       # b. If the study search is 'gene' use 'geneofinterest' reactive value
       # c. If the study search is 'disease' use the 'returned_genes_list' reactive value
       if (isTruthy(rv$searchType == "gene" & rv$geneofinterest1 != "")) {
@@ -911,6 +911,13 @@ server <- function(input, output, session) {
       }
       if (isTruthy(rv$searchType == "disease" & rv$returned_genes_list != "")) {
         to_display <- rv$returned_genes_list
+      }
+    }
+    if (rv$filter_study1 == 2){ # zoom in out
+      # Return only the genes that are between the min and max of the plot
+      if(!is.null(ranges$x)){ # make sure we have ranges
+        to_display <- df$GENE[(as.numeric(df$`End (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`Start (bp) [hg38]`) < ranges$x[2])]
+        to_display <- to_display[!is.na(to_display)]
       }
     }
     df <- df[df[,1] %in% to_display,]
@@ -1483,13 +1490,31 @@ server <- function(input, output, session) {
       p0
     }
   })
-  output$plot_study1 <- renderCachedPlot({
+  output$plot_study1 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints
     diseaseofinterest <- rv$diseaseofinterest1
     # Select either geneofinterest or diseaseofinterest depending on the search engine
     searchType <- rv$searchType
+    # Get Y range of segments (zoom in out)
+    ymin = 0
+    plot_ymin = 0
+    ymax = 8
+    plot_ymax = 18
+    # Get X range of plot (zoom in out)
+    if (is.null(ranges$x)){
+      xmin <- plot1_xmin
+      xmax <- plot1_xmax
+    } else {
+      xmin <- ranges$x[1]
+      xmax <- ranges$x[2]
+    }
+    # Account for if a gene is cut off (due to zoom in zoom out):
+    x_expr_mod_mod <- x_expr_mod[x_expr_mod$end >= xmin & x_expr_mod$start <= xmax,]
+    x_expr_mod_mod$start <- ifelse(x_expr_mod_mod$start < xmin, xmin, x_expr_mod_mod$start)
+    x_expr_mod_mod$end <- ifelse(x_expr_mod_mod$end > xmax, xmax, x_expr_mod_mod$end)
+    x_expr_mod_mod <- x_expr_mod_mod[order(x_expr_mod_mod$start),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start),]
@@ -1510,66 +1535,10 @@ server <- function(input, output, session) {
     returned_genes_list_length <- (length(returned_genes_list)) # use this to set up graph dimensions
     disease_geneofinterest_df <- x_expr_mod[x_expr_mod$GENE %in% returned_genes_list,]
     disease_geneofinterest_df <- disease_geneofinterest_df[order(disease_geneofinterest_df$start),]
-    ##### Create the x-positions for the disease/gene annotations:
-    unique_disease_x_positions <- unique(disease_geneofinterest_df$start)
-    unique_gene_x_positions <- unique(geneofinterest_df$start)
-    ##### Create the x-positions for the disease/gene annotations:
-    # First get a vector of single unique positions
-    y_disease_annot_unique <- c(rep(0,returned_genes_list_length))
-    y_gene_annot_unique <- c(rep(0,length(geneofinterest)))
-    for(i in 2:(length(unique_disease_x_positions))){
-      current_pos <- (unique_disease_x_positions[i])
-      previous_pos <- (unique_disease_x_positions[i-1])
-      ifelse(current_pos - previous_pos > 15*10^6,
-             y_disease_annot_unique[i] <- 0,
-             y_disease_annot_unique[i] <- y_disease_annot_unique[i-1]-1/2)
-    }
-    for(i in 2:(length(unique_gene_x_positions))){
-      current_pos <- (unique_gene_x_positions[i])
-      previous_pos <- (unique_gene_x_positions[i-1])
-      ifelse(current_pos - previous_pos > 15*10^6,
-             y_gene_annot_unique[i] <- 0,
-             y_gene_annot_unique[i] <- y_gene_annot_unique[i-1]-1/2)
-    }
-    # Then map each position to its gene occurrence
-    y_disease_annot <- c()
-    y_gene_annot <- c()
-    for(i in 1:length(y_disease_annot_unique)){
-      gene_var <- unique(disease_geneofinterest_df$GENE)[i]
-      rep_length <- sum(disease_geneofinterest_df$GENE == gene_var)
-      y_disease_annot <- c(y_disease_annot, rep(y_disease_annot_unique[i], rep_length))
-    }
-    for(i in 1:length(y_gene_annot_unique)){
-      gene_var <- unique(geneofinterest_df$GENE)[i]
-      rep_length <- sum(geneofinterest_df$GENE == gene_var)
-      y_gene_annot <- c(y_gene_annot, rep(y_gene_annot_unique[i], rep_length))
-    }
-    # If there were no disease returns, then set y_disease_annot to 0
-    ifelse(returned_genes_list_length == 0, y_disease_annot <- 0, '')
-    ifelse(length(geneofinterest) == 0, y_gene_annot <- 0, '')
-    # Finally, if we're observing the a supplementary study, lower all annotations
-    # to make room for the color bar
-    if(rv$addStudies != 'empty' & rv$addStudies != 'study1'){
-      y_disease_annot <- y_disease_annot - 0.6
-      y_gene_annot <- y_gene_annot - 0.6
-    }
-    ###
     ##### Include supplementary information if user specifies it
     # Determine the "variable" state of genes in our data set
     SV_threshold <- rv$SV_threshold
     VE_threshold <- rv$VE_threshold
-    escape_states <- data.frame()
-    ifelse(rv$addStudies == 'study1',
-           escape_states <- x_expr_mod, "")
-    # Split data by -10log(p) > or < 300
-    p_less_300 <- x_expr_mod[x_expr_mod$p_mod_flag == FALSE,]
-    p_more_300 <- x_expr_mod[x_expr_mod$p_mod_flag == TRUE,]
-    # Range of plot
-    ymin = 0
-    ifelse(rv$addStudies != 'empty' & rv$addStudies != 'study1', ymin <- -1, '')
-    ifelse(returned_genes_list_length > 1, ymin <- min(y_disease_annot),'')
-    ifelse(length(geneofinterest) > 1, ymin <- min(y_gene_annot),'')
-    ymax = 330
     # Get axis breaks
     x_breaks <- seq(0, max(x_expr$start), 10000000)
     first_label <- x_breaks[1]
@@ -1590,59 +1559,65 @@ server <- function(input, output, session) {
                                                 face = "bold", angle=0, hjust=0.5),
                      panel.background = element_rect(fill = "white"))
     # Create plot
-    genepvalue_1 <- ggplot(data = p_less_300, aes(x=start, y=-log10(p_value_mod),
-                                                shape=p_mod_flag,
-                                                group=1)) +
+    p1 <- ggplot(data = x_expr_mod_mod, aes(x=0, y=0)) +
       mytheme + ggtitle("X-Chromosome Escape Profile") +
-      xlab("X-Chromosome Position") + ylab("-log10(p)") +
-      # Add PAR and CENTROMERE shading
-      geom_rect(data=NULL, aes(xmin=par1_boundaries[1], xmax=par1_boundaries[2], ymin=0, ymax=330),
-                fill="lightblue", alpha=0.25) +
-      geom_rect(data=NULL, aes(xmin=par2_boundaries[1], xmax=par2_boundaries[2], ymin=0, ymax=330),
-                fill="lightblue", alpha=0.25) +
-      geom_rect(data=NULL, aes(xmin=centre_boundaries[1], xmax=centre_boundaries[2], ymin=0, ymax=330),
-                fill="pink", alpha=0.25)
+      xlab("X-Chromosome Position") + ylab("") +
+    # Add points
+      geom_rect(data = x_expr_mod_mod,
+                aes(xmin=start, ymin=ymin,
+                    xmax=end, ymax=ymax),
+                fill=ifelse(as.numeric(x_expr_mod_mod$perc_samples_esc) <= SV_threshold,
+                            col_inactive,
+                            ifelse(as.numeric(x_expr_mod_mod$perc_samples_esc) > SV_threshold & as.numeric(x_expr_mod_mod$perc_samples_esc) <= VE_threshold,
+                                   col_variable, col_escape))) +
     # Scaling and Legends
-    genepvalue_1 <- genepvalue_1 +
-      scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(plot1_xmin, plot1_xmax)) +
-      scale_y_continuous(trans=scales::pseudo_log_trans(base = 10), breaks=c(1,5,20,100,300), limits = c(ymin,ymax)) +
-      # Annotations
-      geom_hline(yintercept = -log10(P_SIG), linetype='dotted') +
-      annotate("text", x = max(x_expr$start), y = -log10(P_SIG)+.40, hjust=-0.1, family = "serif",
-              # label = paste0("-log10(p) = ", format(-log10(P_SIG), digits = 3)), size = (4)) +
-              label = paste0("    p = ", P_SIG), size = (4))
-    # Add escape colors  
-    if(rv$addStudies == 'study1'){
-        genepvalue_1 <- genepvalue_1 +
-          # Add Escape State information after Main Data Points
-          geom_point(escape_states, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-                     fill=ifelse(escape_states$perc_samples_esc <= SV_threshold, col_inactive,
-                                 ifelse(escape_states$perc_samples_esc > SV_threshold & escape_states$perc_samples_esc <= VE_threshold, col_variable, col_escape)),
-                     size=3, group=2)
-      }
-      # Data points added by user reactive values: Gene of Interest
-      genepvalue_1 <- genepvalue_1 +
-        geom_point(geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-                 fill='red', size=3, group=2) +
-      # Change annotation color based on the displayed study
-      annotate("text", label = geneofinterest_df$GENE, x = geneofinterest_df$start, y = y_gene_annot,
-               color = "red",
-               vjust = 2, group = 5) +
-      # Data points added by user reactive values: Disease of Interest
-      geom_point(disease_geneofinterest_df, mapping=aes(x=start, y=-log10(p_value_mod), shape=p_mod_flag),
-                 fill='red', size=3, group=2) +
-      annotate("text", label = disease_geneofinterest_df$GENE, x = disease_geneofinterest_df$start, y = y_disease_annot,
-               color = "red", vjust = 2, group = 5) + 
-      # Scale shape manual (though right now this is disabled)
-      scale_shape_manual("-log10(p)", values=c(21,24), labels=c("< 300", ">= 300"))
-    genepvalue_1
-  }, 
-  cacheKeyExpr = { list(input$addStudies, input$diseaseofinterest1, 
-                        rv$mapped_gene, rv$geneofinterest1, 
-                        input$searchType,
-                        rv$SV_threshold, rv$VE_threshold) }, 
-  cache = "app",
-  )
+    # zoom in out
+    scale_x_continuous(breaks=x_breaks, labels = x_labels, limits = c(xmin, xmax)) +
+    scale_y_continuous(limits = c(plot_ymin, plot_ymax), breaks = c(plot_ymin, plot_ymax), labels= c("  ","  "))
+    # Add gene names for zoom in out
+    # For multi-tissue study first need to simplify table
+    x_expr_mod_mod_simple <- x_expr_mod_mod[,c("GENE", "start", "end", "perc_samples_esc")]
+    x_expr_mod_mod_simple <- unique(x_expr_mod_mod_simple)
+    if (nrow(x_expr_mod_mod_simple) <= 20){
+      p1 <- p1 +
+        # Add annotations
+        annotate("text", label = x_expr_mod_mod_simple$GENE,
+                 x = colMeans(rbind(x_expr_mod_mod_simple$start, x_expr_mod_mod_simple$end)),
+                 y = rep(c(ymax,ymax+2,ymax+4,ymax+6, ymax+8), 20)[1:nrow(x_expr_mod_mod_simple)],
+                 color = ifelse(x_expr_mod_mod_simple$perc_samples_esc <= SV_threshold,
+                                col_inactive,
+                                ifelse(x_expr_mod_mod_simple$perc_samples_esc > SV_threshold & x_expr_mod_mod_simple$perc_samples_esc <= VE_threshold,
+                                       col_variable, col_escape)),
+                 vjust = -1, group = 2)
+    }
+    # Add axis labels for zoom in out
+    if (xmax - xmin < 1.5*10^7){
+      p1 <- p1 +
+        scale_x_continuous(breaks=seq(xmin, xmax, 10^6),
+                           labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"),
+                           limits = c(xmin, xmax)) +
+        theme(axis.ticks.x = element_line())
+    }
+    # Data points added by user reactive values: Gene of Interest
+    if(nrow(geneofinterest_df) != 0){
+      p1 <- p1 +
+        geom_rect(data = geneofinterest_df,
+                  aes(xmin=start, ymin=ymin,
+                      xmax=end, ymax=ymax),
+                  fill='red')
+    }
+    # Data points added by user reactive values: Disease of Interest
+    if(nrow(disease_geneofinterest_df) != 0){
+      p1 <- p1 +
+        geom_rect(data = disease_geneofinterest_df,
+                  aes(xmin=start, ymin=ymin,
+                      xmax=end, ymax=ymax),
+                  fill='red')
+    }
+    if (nrow(x_expr_mod_mod) > 0){ 
+      p1
+    }
+  })
   output$plot_study2 <- renderPlot({
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
@@ -1670,6 +1645,7 @@ server <- function(input, output, session) {
     cott_df_mod <- cott_df[cott_df$end_mapped >= xmin & cott_df$start_mapped <= xmax,]
     cott_df_mod$start_mapped <- ifelse(cott_df_mod$start_mapped < xmin, xmin, cott_df_mod$start_mapped)
     cott_df_mod$end_mapped <- ifelse(cott_df_mod$end_mapped > xmax, xmax, cott_df_mod$end_mapped)
+    cott_df_mod <- cott_df_mod[order(cott_df_mod$start_mapped),] # sort by position
     # Create gene of interest df
     geneofinterest_df <- cott_df[cott_df$gene %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
@@ -1782,6 +1758,7 @@ server <- function(input, output, session) {
     carrwill_df_mod <- carrwill_df[carrwill_df$end_mapped >= xmin & carrwill_df$start_mapped <= xmax,]
     carrwill_df_mod$start_mapped <- ifelse(carrwill_df_mod$start_mapped < xmin, xmin, carrwill_df_mod$start_mapped)
     carrwill_df_mod$end_mapped <- ifelse(carrwill_df_mod$end_mapped > xmax, xmax, carrwill_df_mod$end_mapped)
+    carrwill_df_mod <- carrwill_df_mod[order(carrwill_df_mod$start_mapped),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- carrwill_df[carrwill_df$gene %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
@@ -1890,6 +1867,7 @@ server <- function(input, output, session) {
     kat_lin_df_lb_mod <- kat_lin_df_lb[kat_lin_df_lb$end_mapped >= xmin & kat_lin_df_lb$start_mapped <= xmax,]
     kat_lin_df_lb_mod$start_mapped <- ifelse(kat_lin_df_lb_mod$start_mapped < xmin, xmin, kat_lin_df_lb_mod$start_mapped)
     kat_lin_df_lb_mod$end_mapped <- ifelse(kat_lin_df_lb_mod$end_mapped > xmax, xmax, kat_lin_df_lb_mod$end_mapped)
+    kat_lin_df_lb_mod <- kat_lin_df_lb_mod[order(kat_lin_df_lb_mod$start_mapped),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- kat_lin_df_lb[kat_lin_df_lb$gene %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
@@ -1998,6 +1976,7 @@ server <- function(input, output, session) {
     kat_lin_df_fb_mod <- kat_lin_df_fb[kat_lin_df_fb$end_mapped >= xmin & kat_lin_df_fb$start_mapped <= xmax,]
     kat_lin_df_fb_mod$start_mapped <- ifelse(kat_lin_df_fb_mod$start_mapped < xmin, xmin, kat_lin_df_fb_mod$start_mapped)
     kat_lin_df_fb_mod$end_mapped <- ifelse(kat_lin_df_fb_mod$end_mapped > xmax, xmax, kat_lin_df_fb_mod$end_mapped)
+    kat_lin_df_fb_mod <- kat_lin_df_fb_mod[order(kat_lin_df_fb_mod$start_mapped),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- kat_lin_df_fb[kat_lin_df_fb$gene %in% geneofinterest,]
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$start_mapped),]
@@ -2105,6 +2084,8 @@ server <- function(input, output, session) {
     TukGTExMod_merge_mod <- TukGTExMod_merge[TukGTExMod_merge$STOP >= xmin & TukGTExMod_merge$START <= xmax,]
     TukGTExMod_merge_mod$START <- ifelse(TukGTExMod_merge_mod$START < xmin, xmin, TukGTExMod_merge_mod$START)
     TukGTExMod_merge_mod$STOP <- ifelse(TukGTExMod_merge_mod$STOP > xmax, xmax, TukGTExMod_merge_mod$STOP)
+    TukGTExMod_merge_mod <- TukGTExMod_merge_mod[order(TukGTExMod_merge_mod$START),] # sort by position
+    # come back here (sort by start position)
     # Save threshold information for colorizing
     SV_threshold <- rv$SV_threshold
     VE_threshold <- rv$VE_threshold
@@ -2227,6 +2208,7 @@ server <- function(input, output, session) {
     cotton_mDNA_mod <- cotton_mDNA[cotton_mDNA$STOP >= xmin & cotton_mDNA$START <= xmax,]
     cotton_mDNA_mod$START <- ifelse(cotton_mDNA_mod$START < xmin, xmin, cotton_mDNA_mod$START)
     cotton_mDNA_mod$STOP <- ifelse(cotton_mDNA_mod$STOP > xmax, xmax, cotton_mDNA_mod$STOP)
+    cotton_mDNA_mod <- cotton_mDNA_mod[order(cotton_mDNA_mod$START),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- cotton_mDNA[cotton_mDNA$GENE %in% geneofinterest,] # change here
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$POS),] # change here
@@ -2337,6 +2319,7 @@ server <- function(input, output, session) {
     balbrown_mCEMT_mod <- balbrown_mCEMT[balbrown_mCEMT$STOP >= xmin & balbrown_mCEMT$START <= xmax,]
     balbrown_mCEMT_mod$START <- ifelse(balbrown_mCEMT_mod$START < xmin, xmin, balbrown_mCEMT_mod$START)
     balbrown_mCEMT_mod$STOP <- ifelse(balbrown_mCEMT_mod$STOP > xmax, xmax, balbrown_mCEMT_mod$STOP)
+    balbrown_mCEMT_mod <- balbrown_mCEMT_mod[order(balbrown_mCEMT_mod$START),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- balbrown_mCEMT[balbrown_mCEMT$GENE %in% geneofinterest,] # change here
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$START),] # change here
@@ -2445,6 +2428,7 @@ server <- function(input, output, session) {
     balbrown_CREST_mod <- balbrown_CREST[balbrown_CREST$STOP >= xmin & balbrown_CREST$START <= xmax,]
     balbrown_CREST_mod$START <- ifelse(balbrown_CREST_mod$START < xmin, xmin, balbrown_CREST_mod$START)
     balbrown_CREST_mod$STOP <- ifelse(balbrown_CREST_mod$STOP > xmax, xmax, balbrown_CREST_mod$STOP)
+    balbrown_CREST_mod <- balbrown_CREST_mod[order(balbrown_CREST_mod$START),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- balbrown_CREST[balbrown_CREST$GENE %in% geneofinterest,] # change here
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$START),] # change here
@@ -2553,6 +2537,7 @@ server <- function(input, output, session) {
     TukDEG_mod <- TukDEG[TukDEG$STOP >= xmin & TukDEG$START <= xmax,]
     TukDEG_mod$START <- ifelse(TukDEG_mod$START < xmin, xmin, TukDEG_mod$START)
     TukDEG_mod$STOP <- ifelse(TukDEG_mod$STOP > xmax, xmax, TukDEG_mod$STOP)
+    TukDEG_mod <- TukDEG_mod[order(TukDEG_mod$START),] # sort by position
     # Create gene of interest data frame
     geneofinterest_df <- TukDEG[TukDEG$GENE %in% geneofinterest,] # change here
     geneofinterest_df <- geneofinterest_df[order(geneofinterest_df$START),] # change here (sometimes)
@@ -2638,10 +2623,8 @@ server <- function(input, output, session) {
     }
   })
   ## X chromosome "image"
-  ## commented out for testing
   output$xchromosome <- renderCachedPlot({
     # Scaling zoom in out
-    #chrom_segments_mod <- chrom_segments
     xchrom_map_colored_mod <- xchrom_map_colored
     if (is.null(ranges$x)){
       xmin <- plot1_xmin
@@ -2739,7 +2722,6 @@ server <- function(input, output, session) {
       need(input$geneofinterest3 !="", "Please input a gene of interest")
     )
     geneofinterest <- rv$geneofinterest3
-    #geneofinterest <- "XIST" # For testing
     assign("geneofinterest_stats", create_single_gene_stats(geneofinterest, x_expr))
     # Assign object attributes to variables
     avg_p_value <- geneofinterest_stats$avg_p_value
