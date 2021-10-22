@@ -1316,8 +1316,8 @@ server <- function(input, output, session) {
   ### TAB 1
   ##### Main Plot
   # Local variables and source materials
-  plot1_xmin = 0
-  plot1_xmax = max(x_expr$start) + 1.3e7
+  plot_xmin = 0
+  plot_xmax = max(x_expr$start) + 1.3e7
   # Output object
   output$plot_study0 <- renderPlot({
     validate(need(rv$study0_flag,""))
@@ -1334,8 +1334,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -1463,8 +1463,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -1596,8 +1596,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -1713,8 +1713,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -1831,8 +1831,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -1945,8 +1945,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -2058,8 +2058,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -2187,8 +2187,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -2303,8 +2303,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -2417,8 +2417,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -2531,8 +2531,8 @@ server <- function(input, output, session) {
     plot_ymax = 18
     # Get X range of plot (zoom in out)
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
     } else {
       xmin <- ranges$x[1]
       xmax <- ranges$x[2]
@@ -2636,8 +2636,8 @@ server <- function(input, output, session) {
     # Scaling zoom in out
     xchrom_map_colored_mod <- xchrom_map_colored
     if (is.null(ranges$x)){
-      xmin <- plot1_xmin
-      xmax <- plot1_xmax
+      xmin <- plot_xmin
+      xmax <- plot_xmax
       } 
     else {
       xmin <- ranges$x[1]
@@ -2667,7 +2667,7 @@ server <- function(input, output, session) {
       scale_x_continuous(breaks=x_region_breaks, labels = x_region_labels, limits=c(xmin, xmax)) + # zoom in out
       scale_y_continuous(breaks = c(0,1), labels= c("  ","  "), limits = c(-2,0))
     # Add annotions (if not zoomed in)
-    if (xmin == plot1_xmin & xmax == plot1_xmax) {
+    if (xmin == plot_xmin & xmax == plot_xmax) {
       xchromosome_plot <- xchromosome_plot +
         annotate("text", x=0, y=-0.5, label="PAR1", size=4, color = "steelblue", hjust=0) +
         annotate("text", x=max(x_expr$start), y=-0.5, label="PAR2", size=4, color = "steelblue", hjust=.9) +
@@ -2677,14 +2677,14 @@ server <- function(input, output, session) {
     # Add chromosome map (yes the ordering is important)
     # 1. "start" "end"   2. "segments"  3."par1" "par2" "centre"
     # 1) start,end - only plot them if we're not zoomed in
-    if ( xmin == plot1_xmin ) {
+    if ( xmin == plot_xmin ) {
       xchromosome_plot <- xchromosome_plot + 
         geom_segment(data = xchrom_map_colored_mod,
                      aes(x = max(xmin, 1), y = -1.5, 
                          xend = min(par1_boundaries[2], xmin), yend = -1.5),
                      size = 9, color = "lightblue", lineend = "round")
     }
-    if ( xmax == plot1_xmax) {
+    if ( xmax == plot_xmax) {
     xchromosome_plot <- xchromosome_plot + 
       geom_segment(data = xchrom_map_colored_mod,
                    aes(x = max(par2_boundaries[1], xmin), y = -1.5, 
