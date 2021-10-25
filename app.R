@@ -1435,14 +1435,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p0 <- p0 + geom_rect(data = geneofinterest_df, 
                               aes(xmin=geneofinterest_df[, "START"], ymin=ymin,
-                                  xmax=geneofinterest_df[, "END"], ymax=ymax),
+                                  xmax=geneofinterest_df[, "END"], ymax=ymax+1),
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p0 <- p0 + geom_rect(data = disease_geneofinterest_df, 
                            aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin,
-                               xmax=disease_geneofinterest_df[, "END"], ymax=ymax),
+                               xmax=disease_geneofinterest_df[, "END"], ymax=ymax+1),
                            fill='red')
     }
     if (nrow(study0_df_mod) > 0){
@@ -1567,7 +1567,7 @@ server <- function(input, output, session) {
       p1 <- p1 +
         geom_rect(data = geneofinterest_df,
                   aes(xmin=start, ymin=ymin,
-                      xmax=end, ymax=ymax),
+                      xmax=end, ymax=ymax+1),
                   fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
@@ -1575,7 +1575,7 @@ server <- function(input, output, session) {
       p1 <- p1 +
         geom_rect(data = disease_geneofinterest_df,
                   aes(xmin=start, ymin=ymin,
-                      xmax=end, ymax=ymax),
+                      xmax=end, ymax=ymax+1),
                   fill='red')
     }
     if (nrow(x_expr_mod_mod) > 0){ 
@@ -1685,14 +1685,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p2 <- p2 + geom_rect(data = geneofinterest_df, 
                            aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
-                               xmax=geneofinterest_df[, "end_mapped"], ymax=ymax),
+                               xmax=geneofinterest_df[, "end_mapped"], ymax=ymax+1),
                            fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p2 <- p2 + geom_rect(data = disease_geneofinterest_df, 
                            aes(xmin=disease_geneofinterest_df[, "start_mapped"], ymin=ymin,
-                               xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax),
+                               xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax+1),
                            fill='red')
     }
     if (nrow(cott_df_mod) > 0){ # only build plot if zoom in actually has genes
@@ -1803,14 +1803,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p3 <- p3 + geom_rect(data = geneofinterest_df, 
                            aes(xmin=as.numeric(geneofinterest_df[, "start_mapped"]), ymin=ymin,
-                               xmax=as.numeric(geneofinterest_df[, "end_mapped"]), ymax=ymax),
+                               xmax=as.numeric(geneofinterest_df[, "end_mapped"]), ymax=ymax+1),
                            fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p3 <- p3 + geom_rect(data = disease_geneofinterest_df, 
                            aes(xmin=as.numeric(disease_geneofinterest_df[, "start_mapped"]), ymin=ymin,
-                               xmax=as.numeric(disease_geneofinterest_df[, "end_mapped"]), ymax=ymax),
+                               xmax=as.numeric(disease_geneofinterest_df[, "end_mapped"]), ymax=ymax+1),
                            fill='red')
     }
     if (nrow(carrwill_df_mod) > 0){
@@ -1916,14 +1916,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p4 <- p4 + geom_rect(data = geneofinterest_df, 
                               aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
-                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax),
+                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax+1),
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p4 <- p4 + geom_rect(data = disease_geneofinterest_df, 
                               aes(xmin=disease_geneofinterest_df[, "start_mapped"], ymin=ymin,
-                                  xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax),
+                                  xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax+1),
                               fill='red')
     }
     # Only plot of genes are in zoom in out
@@ -2030,14 +2030,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p5 <- p5 + geom_rect(data = geneofinterest_df, 
                               aes(xmin=geneofinterest_df[, "start_mapped"], ymin=ymin,
-                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax),
+                                  xmax=geneofinterest_df[, "end_mapped"], ymax=ymax+1),
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p5 <- p5 + geom_rect(data = disease_geneofinterest_df, 
                               aes(xmin=disease_geneofinterest_df[, "start_mapped"], ymin=ymin,
-                                  xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax),
+                                  xmax=disease_geneofinterest_df[, "end_mapped"], ymax=ymax+1),
                               fill='red')
     }
     if (nrow(kat_lin_df_fb_mod) > 0){
@@ -2158,7 +2158,7 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p6 <- p6 + geom_rect(data = geneofinterest_df, 
                               aes(xmin=as.numeric(unlist(geneofinterest_df[, "START"])), ymin=ymin,
-                                  xmax=as.numeric(unlist(geneofinterest_df[, "STOP"])), ymax=ymax),
+                                  xmax=as.numeric(unlist(geneofinterest_df[, "STOP"])), ymax=ymax+1),
                               fill='red')
       
     }
@@ -2166,7 +2166,7 @@ server <- function(input, output, session) {
     if(nrow(disease_geneofinterest_df) != 0){
       p6 <- p6 + geom_rect(data = disease_geneofinterest_df, 
                               aes(xmin=as.numeric(unlist(disease_geneofinterest_df[, "START"])), ymin=ymin,
-                                  xmax=as.numeric(unlist(disease_geneofinterest_df[, "STOP"])), ymax=ymax-1),
+                                  xmax=as.numeric(unlist(disease_geneofinterest_df[, "STOP"])), ymax=ymax+1),
                               fill='red')
     }
     if (nrow(TukGTExMod_merge_mod) > 0){
@@ -2271,18 +2271,19 @@ server <- function(input, output, session) {
                            labels = paste(sprintf("%.2f", seq(xmin, xmax, 10^6)/(10^3)), "kbp"), 
                            limits = c(xmin, xmax)) + 
         theme(axis.ticks.x = element_line())
-    }    # Data points added by user reactive values: Gene of Interest
+    }    
+    # Data points added by user reactive values: Gene of Interest
     if(nrow(geneofinterest_df) != 0){
       p7 <- p7 + geom_rect(data = geneofinterest_df, # changed here
                               aes(xmin=geneofinterest_df[, "START"], ymin=ymin, # changed here
-                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p7 <- p7 + geom_rect(data = disease_geneofinterest_df, # changed here
                               aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin, # changed here
-                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here
                               fill='red')
     }
     if (nrow(cotton_mDNA_mod) > 0 ){
@@ -2389,14 +2390,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p8 <- p8 + geom_rect(data = geneofinterest_df, # changed here
                               aes(xmin=geneofinterest_df[, "START"], ymin=ymin, # changed here
-                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p8 <- p8 + geom_rect(data = disease_geneofinterest_df, # changed here
                               aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin, # changed here
-                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here
                               fill='red')
     }
     if (nrow(balbrown_mCEMT_mod) > 0) {
@@ -2503,14 +2504,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p9 <- p9 + geom_rect(data = geneofinterest_df, # changed here
                               aes(xmin=geneofinterest_df[, "START"], ymin=ymin, # changed here
-                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p9 <- p9 + geom_rect(data = disease_geneofinterest_df, # changed here
                               aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin, # changed here
-                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax), # changed here
+                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here
                               fill='red')
     }
     if (nrow(balbrown_CREST_mod) > 0){ # change here (when adding new study)
@@ -2617,14 +2618,14 @@ server <- function(input, output, session) {
     if(nrow(geneofinterest_df) != 0){
       p10 <- p10 + geom_rect(data = geneofinterest_df, # changed here
                               aes(xmin=geneofinterest_df[, "START"], ymin=ymin, # changed here (sometimes)
-                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax), # changed here (sometimes)
+                                  xmax=geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here (sometimes)
                               fill='red')
     }
     # Data points added by user reactive values: Disease of Interest
     if(nrow(disease_geneofinterest_df) != 0){
       p10 <- p10 + geom_rect(data = disease_geneofinterest_df, # changed here
                               aes(xmin=disease_geneofinterest_df[, "START"], ymin=ymin, # changed here (sometimes)
-                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax), # changed here (sometimes)
+                                  xmax=disease_geneofinterest_df[, "STOP"], ymax=ymax+1), # changed here (sometimes)
                               fill='red')
     }
     if (nrow(TukDEG_mod) > 0){ # change here (when adding new study)
