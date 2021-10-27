@@ -274,7 +274,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              fluidRow(
                                  column(4, offset = 1,
                                         img(src = "mainplot_additional_studies_legend_inactive_horizontal_update.png", 
-                                            height = 19))
+                                            height = 27))
                              ),
                              br(),
                          ),
@@ -525,8 +525,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              checkboxInput("tissues_filter_study7", 
                                                            "View states within each tissue", 
                                                            value = FALSE),
-                                             a('Why are there duplicate genes?', href = "Tutorial-Dup-Genes.pdf", target="_blank", style = "font-size:14px;font-style:italic"),
-                                             br(),br(),
+                                             #a('Why are there duplicate genes?', href = "Tutorial-Dup-Genes.pdf", target="_blank", style = "font-size:14px;font-style:italic"),
+                                             #br(),br(),
                                              (dataTableOutput(outputId = "status_table_study7"))
                                          ),
                                          conditionalPanel( # conditional panel within conditional panel

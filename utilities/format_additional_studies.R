@@ -97,10 +97,12 @@ cott_carr_will_df$status_cott <- ifelse(cott_carr_will_df$status_cott == "variab
 
 # Create color pallete
 # This also needs to be initated in app.R
-col_escape = "purple"
-col_variable = "turquoise3"
-col_inactive = "black"
-#col_inactive = "lightsteelblue3"
+#col_escape = "purple"
+col_escape = "#078EFF"
+#col_variable = "turquoise3"
+col_variable = "#734709"
+#col_inactive = "black"
+col_inactive = "grey80"
 col_na = "white"
 col_check = "green"
 for (i in 1:nrow(cott_carr_will_df)){

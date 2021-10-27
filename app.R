@@ -21,9 +21,11 @@ library(magrittr)
 source("utilities/source_all_scripts.R", local = TRUE)
 
 ### Global variables
-col_escape = "purple"
-col_variable = "turquoise3"
-col_inactive = "black"
+#col_escape = "purple"
+col_escape = "#078EFF"
+#col_variable = "turquoise3"
+col_variable = "#734709"
+col_inactive = "grey80"
 zoom_instructions = "Select an area and double-click to zoom. \nTo reset, double-click any location, or click the 'Reset' button"
 zoom_instructions_color = "steelblue4"
 
