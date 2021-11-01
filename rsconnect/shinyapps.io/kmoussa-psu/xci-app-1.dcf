@@ -5,10 +5,10 @@ account: kmoussa-psu
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3220450
-bundleId: 5168090
+bundleId: 5190254
 url: https://kmoussa-psu.shinyapps.io/xci-app-1/
-when: 1634932726.01615
-lastSyncTime: 1634932726.01617
+when: 1635509489.67664
+lastSyncTime: 1635509489.67666
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: temporary_rmd/citations.Rmd|temporary_rmd/terminology.Rmd|temporary_rmd/terminology_with_cite.Rmd|sandbox

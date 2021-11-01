@@ -833,7 +833,7 @@ server <- function(input, output, session) {
     if (rv$filter_study1 == 2){ # zoom in out
       # Return only the genes that are between the min and max of the plot
       if(!is.null(ranges$x)){ # make sure we have ranges
-        to_display <- df$GENE[(as.numeric(df$`End (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`Start (bp) [hg38]`) < ranges$x[2])]
+        to_display <- df[,1][(as.numeric(df$`End (bp) [hg38]`) > ranges$x[1] & as.numeric(df$`Start (bp) [hg38]`) < ranges$x[2])]
         to_display <- to_display[!is.na(to_display)]
       }
     }
@@ -868,7 +868,7 @@ server <- function(input, output, session) {
     saveRDS(df,'data_output/geuvadis_xstates.rds')
     # If df isn't empty, make hyperlinks for genes
     if(nrow(df) != 0){
-      df$GENE <- paste0('<a href="', df$gene_link,'" target="_blank">', df$GENE, '</a>')
+      df[,1] <- paste0('<a href="', df$gene_link,'" target="_blank">', df[,1], '</a>')
       df <- df[, -which(names(df) %in% c("gene_link"))] # remove Hyperlink column 
     }
     df
