@@ -141,7 +141,9 @@ server <- function(input, output, session) {
     study0_df = data.frame(),
     study0_genes = c(),
     study0_flag = FALSE,
-    ready1 = FALSE
+    ready1 = FALSE,
+    colFlag = FALSE,
+    valFlag = FALSE
   )
   # zoom in out
   ranges <- reactiveValues(x = NULL, y = NULL)
@@ -152,6 +154,8 @@ server <- function(input, output, session) {
     rv$study0_flag = FALSE
     rv$study0_df = data.frame()
     rv$study0_genes = c()
+    rv$colFlag <- FALSE
+    rv$valFlag <- FALSE
   })
   observeEvent(input$template, {
     # need to reset settings if template type changes
@@ -171,8 +175,51 @@ server <- function(input, output, session) {
                              sep = ",",
                              #sep = input$sep, # uncomment in myUI_Tab1.R
                              check.names = FALSE)
+    # Check the table for any errors
+    ### CORRECT COLUMN NAMES
+    columnnames <- names(rv$study0_df)
+    temp1_columnnames <- c("GENE", "STATE", "START", "END")
+    temp2_columnnames <- c("GENE", "STATE", "SAMPLE", "START", "END")
+    if(length(columnnames) == 4){
+      if(mean(toupper(columnnames) == temp1_columnnames) != 1){
+        rv$colFlag = TRUE
+      }
+    }
+    if(length(columnnames) == 5){
+      if(mean(toupper(columnnames) == temp2_columnnames) != 1){
+        rv$colFlag = TRUE
+      }
+    }
+    ### MAKE SURE SURE CORRECT VALUES ARE IN EACH COLUMN
+    check_df0 <- rv$study0_df
+    colnames(check_df0) <- toupper(names(check_df0))
+    states <- toupper(check_df0[,2])
+    start <- check_df0$START
+    end <- check_df0$END
+    ##### check States values
+    if(sum(states %in% c("ESCAPE", "INACTIVE")) != length(states)){
+      rv$valFlag = TRUE
+    }
+    ##### check if start/end position are numeric
+    check_numeric <- tryCatch({as.numeric(start)}, 
+                              warning = function(cond){
+                                return(rep(0,length(start)))
+                              }
+    )
+    if(sum(check_numeric) == 0){
+      rv$valFlag <- TRUE
+    }
+    check_numeric <- tryCatch({as.numeric(end)}, 
+                           warning = function(cond){
+                             return(rep(0,length(end)))
+                           }
+    )
+    if(sum(check_numeric) == 0){
+      rv$valFlag <- TRUE
+    }
+    #####
     # Create study0_genes
-    rv$study0_genes <- toupper(rv$study0_df[,1]) # first column of input df
+    rv$study0_genes <- toupper(as.character(rv$study0_df[,1])) # first column of input df
     rv$study0_flag <- TRUE
     updateSelectizeInput(session,
                          inputId = "geneofinterest1_0",
@@ -495,6 +542,18 @@ server <- function(input, output, session) {
     input$xstart > input$xend
   })
   outputOptions(output, "posWarning", suspendWhenHidden = FALSE)
+  
+  # The logic for the incorrect columns
+  output$columnWarning <- reactive({
+    rv$colFlag == TRUE
+  })
+  outputOptions(output, "columnWarning", suspendWhenHidden = FALSE)
+  
+  # The logic for the incorrect values in STATE, START, or END
+  output$valueWarning <- reactive({
+    rv$valFlag == TRUE
+  })
+  outputOptions(output, "valueWarning", suspendWhenHidden = FALSE)
   ##############################
   ## OUTPUT TEXT ###############
   ##############################
@@ -724,7 +783,7 @@ server <- function(input, output, session) {
     # input$file1 will be NULL initially. After the user selects
     # and uploads a file, head of that data file by default,
     # or all rows if selected, will be shown.
-    req(input$file1)
+    req(input$file1, !rv$colFlag, !rv$valFlag)
     input_df <- read.csv(input$file1$datapath,
                    sep = ",",
                    #sep = input$sep, # uncomment in myUI_Tab1.R
@@ -1329,6 +1388,7 @@ server <- function(input, output, session) {
   # Output object
   output$plot_study0 <- renderPlot({
     validate(need(rv$study0_flag,""))
+    req(!rv$colFlag, !rv$valFlag)
     # Save geneofinterest
     geneofinterest <- rv$geneofinterest1
     # Save disease of interest datapoints

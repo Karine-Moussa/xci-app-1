@@ -182,6 +182,19 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                              h2("Warning: X start position cannot be greater than X end position.
                                 Please adjust and resubmit.", style="font-size:14px;color:purple")
                          ),
+                         conditionalPanel(
+                             condition = "output.columnWarning",
+                             #   verbatimTextOutput("sliderWarningMessage"),
+                             h2("Warning: Check column names. Make sure column names correspond to
+                                Template 1 or Template 2", style="font-size:14px;color:purple")
+                         ),
+                         conditionalPanel(
+                             condition = "output.valueWarning",
+                             #   verbatimTextOutput("sliderWarningMessage"),
+                             h2("Warning: Check values of each column. Make sure STATE column is either
+                                'Escape' or 'Inactive'. Make sure START and END column are numeric values.", 
+                                style="font-size:14px;color:purple")
+                         ),
                          # Plots
                          conditionalPanel(
                              condition = "output.plotStudy0",
