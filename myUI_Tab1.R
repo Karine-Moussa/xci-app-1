@@ -307,8 +307,8 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                         actionButton("resetPos", "Reset"))
                              ),
                          ),
-                         tabBox(title = "",
-                                tabPanel("Escape States",
+                         tabBox(id = "01",
+                                tabPanel("Escape States", value = "1", 
                                          conditionalPanel(
                                              condition = "!output.ready1",
                                              span("Please wait until app is fully loaded before selecting a study...", style="font-size:18px;font-style:italic;color:purple"),br(),
@@ -611,7 +611,7 @@ TAB1 <- tabPanel(title = "All Escape Expressions",
                                              (dataTableOutput(outputId = "status_table_study10"))
                                          )
                                 ),
-                                tabPanel("Association Data",
+                                tabPanel("Association Data", value = "2",
                                          # Only show this message if no genes or diseases are inputted
                                          p("", style="font-size:10px"),
                                          span(textOutput("pleaseInput1"), style="font-size:18px;font-style:italic"),

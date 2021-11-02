@@ -161,6 +161,12 @@ server <- function(input, output, session) {
     create_template(input$template)
   })
   observeEvent(input$submitButton1, { # submit study 0
+    rv$geneofinterest1 <- "" 
+    rv$diseaseofinterest1 <- ""
+    updateTabsetPanel(session = session, 
+                      inputId = "01",
+                      selected = "1"
+    )
     rv$study0_df <- read.csv(input$file1$datapath,
                              sep = ",",
                              #sep = input$sep, # uncomment in myUI_Tab1.R
