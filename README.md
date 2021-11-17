@@ -8,12 +8,6 @@
 
 <br></br>
 
-
-*Or click to add genes*
-![](https://i.imgur.com/UDfQWT2.png)
-
-<br></br>
-
 **Observe GWAS catalog information:**
 ![](https://i.imgur.com/KZ7xXV6.png)
 
