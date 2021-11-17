@@ -57,49 +57,51 @@ ui <- fluidPage(title = "x-Viz",
                              strong("TAB 1: All Escape Expressions", style = "font-size:20px"),br(),
                              strong("Select a study:", style = "font-size:18px"),br(),
                              tags$div(
-                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502584?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='1'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642018101?h=bc2bd3dff4&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='1-Select a study'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                             ),
+                             strong("Zoom into plot", style = "font-size:18px"),br(),
+                             tags$div(
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642018175?h=e42a1ce440&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='2-Zoom in plot'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
                              ),
                              strong("Search for genes:", style = "font-size:18px"),br(),
                              em("Type to add genes and click ENTER", style = "font-size:18px"),br(),br(),
                              tags$img(type="png",src="HT-gene-select-type.png", height="400px"),br(),br(),
-                             em("Or click to add genes", style = "font-size:18px"),br(),
-                             tags$img(type="png",src="HT-gene-select-click.png", height="300px"),br(),
                              br(),
                              tags$div(
-                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502613?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='2'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642018179?h=9b21c34532&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='3-Select a gene'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
                              ),
                              strong("Observe GWAS catalog information:", style = "font-size:18px"),br(),
                              tags$img(type="png",src="HT-gwas.png", height="500px"),br(),br(),
                              a('Link: Additional GWAS information (PDF)', href = "Tutorial-GWAS.pdf", target="_blank", style = "font-size:18px"),
                              br(),br(),
                              tags$div(
-                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502668?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='3'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642018216?h=222fcb5b5d&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=5847' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='4-Observe GWAS'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
                              ),
                              strong("Search for diseases/traits:", style = "font-size:18px"),br(),
                              tags$img(type="png",src="HT-disease-type-1.png", height="300px"), br(),br(),
-                             tags$img(type="png",src="HT-disease-type-2.png", height="400px"),
+                             #tags$img(type="png",src="HT-disease-type-2.png", height="400px"),
                              br(),br(),
                              tags$div(
-                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502702?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='4'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642018253?h=7f929dc4c7&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='5-Observe disease of interest'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
                              ),
                              strong("Modify Escape Frequency Thresholds:", style = "font-size:18px"),br(),
                              a('Tutorial: Escape Frequency Tresholds (PDF)', href = "Tutorial-Sliders.pdf", target="_blank", style = "font-size:18px"),
                              br(),br(),
                              tags$div(
-                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502810?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='5'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642018351?h=b0e938b0cb&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='6-Escape Frequency'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
                              ),
                              strong("Manually upload studies:", style = "font-size:18px"),br(),
                              a('Tutorial: Manual Upload (PDF)', href = "Tutorial-Upload.pdf", target="_blank", style = "font-size:18px"),
                              br(),br(),
                              tags$div(
-                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502846?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='6'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642026154?h=52c7e9f35c&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='7-Upload Studies'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
                              ),
                              strong("TAB 2: Individual Gene Search", style = "font-size:20px"),br(),
                              strong("Search individual gene characteristics:", style = "font-size:18px"),br(),
                              tags$img(type="png",src="HT-individual-search.png", height="500px"),
                              br(),
                              tags$div(
-                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/578502928?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='tab 2'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
+                               HTML("<div style='padding:56.25% 0 0 0;position:relative;'><iframe src='https://player.vimeo.com/video/642018630?h=2ff5aa4ef6&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479' frameborder='0' allow='autoplay; fullscreen; picture-in-picture' allowfullscreen style='position:absolute;top:0;left:0;width:60%;height:60%;' title='tab 2'></iframe></div><script src='https://player.vimeo.com/api/player.js'></script>")
                              ),
                     )
                   )
@@ -165,6 +167,7 @@ server <- function(input, output, session) {
     create_template(input$template)
   })
   observeEvent(input$submitButton1, { # submit study 0
+    req(input$file1)
     rv$geneofinterest1 <- "" 
     rv$diseaseofinterest1 <- ""
     updateTabsetPanel(session = session, 
@@ -729,7 +732,7 @@ server <- function(input, output, session) {
     },
     content = function(file){
       # Get the data source
-      mydata <- readRDS('data_output/balbrown_mCREST_xstates.rds')
+      mydata <- readRDS('data_output/balbrown_CREST_xstates.rds')
       write.csv(mydata, file)
     }
   )
@@ -1256,7 +1259,7 @@ server <- function(input, output, session) {
       }
     }
     df <- df[df$Gene %in% to_display,]
-    saveRDS(df,'data_output/balbrown_mCEMT_xstates.rds')
+    saveRDS(df,'data_output/balbrown_CEMT_xstates.rds')
     # If df isn't empty, make hyperlinks for genes
     if(nrow(df) != 0){
       df$Gene <- paste0('<a href="', df$gene_link,'" target="_blank">', df$Gene, '</a>')
